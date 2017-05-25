@@ -16,6 +16,7 @@ addcircle=function(x0,y0,r,n=720,...){
 
 library(jpeg)
 library(fields)
+
 monalisaRGB=readJPEG("/Users/dlb/Research/SECR Book/monalisa.jpg")
 z=0.3*monalisaRGB[,,1] + 0.59*monalisaRGB[,,2] + 0.11*monalisaRGB[,,3]
 monalisa=tz=t(z)
@@ -28,8 +29,10 @@ y=y-ceiling(mean(y))
 image(x,y,monalisa)
 persp(x,y,monalisa)
 
-save(monalisa,file="/Users/dlb/Research/SECR Book/SECRbookR/monalisa.rda")
-load(file="/Users/dlb/Research/SECR Book/SECRbookR/monalisa.rda")
+#save(monalisa,file="/Users/dlb/Research/SECR Book/SECRbookR/monalisa.rda")
+#load(file="/Users/dlb/Research/SECR Book/SECRbookR/monalisa.rda")
+#save(monalisa,file="monalisa.rda")
+load(file="monalisa.rda")
 
 # just look at top half:
 x=1:2835
@@ -41,7 +44,7 @@ y=y[1989:3989]
 y=y-ceiling(mean(y))
 x=x-ceiling(mean(x))
 ml=ml/max(ml) # scale between 0 and 1
-writeJPEG(ml,target="/Users/dlb/Research/SECR Book/SECRbookR/ml.jpg",quality=0.1)
+#writeJPEG(ml,target="/Users/dlb/Research/SECR Book/SECRbookR/ml.jpg",quality=0.1)
 
 image(x,y,ml,col=gray(seq(0,1,length=100)),useRaster=TRUE,asp=1,
       xlab="",ylab="",xaxt="n",yaxt="n",bty="n")
