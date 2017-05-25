@@ -16,7 +16,8 @@ addcircle=function(x0,y0,r,n=720,...){
 
 library(jpeg)
 library(fields)
-monalisaRGB=readJPEG("/Users/dlb/Research/SCR book/bookV1/monalisa.jpg")
+#monalisaRGB=readJPEG("/Users/dlb/Research/SCR book/bookV1/monalisa.jpg")
+monalisaRGB=readJPEG("monalisa.jpg")
 z=0.3*monalisaRGB[,,1] + 0.59*monalisaRGB[,,2] + 0.11*monalisaRGB[,,3]
 monalisa=tz=t(z)
 nj=dim(tz)[2]
