@@ -81,7 +81,7 @@ We then used the density surface in the ``Low Res'' image to generate two realis
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{mona_inputdata}
+\includegraphics[width=1\textwidth]{mona_inputdata.png}
 \caption{Input data for the Mona Lisa simulation study. From a grayscale version of the Mona Lisa (``Original''), we created a downscaled 50x50 pixel version (``Low Res'') that represents the true underlying intensity surface and gives the long-run density of activity centers in each cell. We used this surface to generate a single realization of 7451 activity centers (``Simulated'') and 84 activity centers(``Simulated Small''); in wildlife survey terms this image represents the density of the activity centers of all animals present in the study region.}
 \label{mlinputs}
 \end{figure}
@@ -111,7 +111,7 @@ Figure \ref{binom} shows the expected number of activity centers for $N=50000$ a
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{binompp_inf}
+\includegraphics[width=1\textwidth]{binompp_inf.png}
 \caption{Estimated numbers of activity centers obtained from a binomial point process with $N=50000$ simulated animals and density decreasing linearly with $x$, no animal movement, and a step detection function that is perfect within cells and zero otherwise.}
 \label{binom}
 \end{figure}
@@ -125,14 +125,14 @@ Very different relative and absolute densities were obtained depending on where 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{many_faces_mona_loweffort}
+\includegraphics[width=1\textwidth]{many_faces_mona_loweffort.png}
 \caption{True activity center densities in this realisation (``Simulated'') compared with activity center surfaces estimated using different arrays after a single sampling occasion. High density areas are indicated in yellow, low density areas in blue. Detectors are shown as red crosses. Blue squares show the same 4x4 square centered at $(25,29)$, whose vertices are corner detectors from each of 3x4 arrays. Each plot in the second row shows an enlargement of the blue square in the plot above it. White triangles denote the five cells with the highest estimated densities in each of the second row plots.}
 \label{mona1low}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{many_faces_mona_higheffort}
+\includegraphics[width=1\textwidth]{many_faces_mona_higheffort.png}
 \caption{True activity center densities in this realisation (``Simulated'') compared with activity center surfaces estimated using different arrays after 20 sampling occasions. High density areas are indicated in yellow, low density areas in blue. See the caption to Figure \ref{mona1low} for further annotation details.}
 \label{mona1hi}
 \end{figure}
@@ -142,7 +142,7 @@ Introducing covariates into the density models allowed us to recover features of
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{mona_covariates}
+\includegraphics[width=1\textwidth]{mona_covariates.png}
 \caption{Intensity surfaces estimated using a model with density a function on one of four simulated spatially-varying covariates. Covariates are shown in the first row of plots, and were generating by manipulating the true intensity surface (Figure \ref{inputdata}, ``Low Res'') by blurring and shifting operations (see Section \ref{s:simcapthist} for details). High density areas are indicated in yellow, low density areas in blue. Detectors are shown as red crosses.} 
 \label{covariates}
 \end{figure}
@@ -159,7 +159,7 @@ Any covariate model returns a surface that is some multiple of the covariate sur
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{mona_peaky}
+\includegraphics[width=1\textwidth]{mona_peaky.png}
 \caption{Estimated activity center surfaces from a constant density model (first row) and estimated intensity surfaces from a model with density depending on ``strong'' or ``moderate'' covariates (second and third rows respectively, see Section \ref{s:simcapthist} for details of how covariates were simulated). 85 activity centers were generated across the entire image, drawn from a Poisson process with intensity given by the ``Low Res'' image in Figure \ref{mona_inputs}. High density areas are indicated in yellow, low density areas in blue. Detectors are shown as red crosses.}
 \label{peaky}
 \end{figure}
@@ -170,7 +170,7 @@ Space use density surfaces -- those that incorporate animal movement -- were smo
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{mona_with_movement}
+\includegraphics[width=1\textwidth]{mona_with_movement.png}
 \caption{Estimated activity center surfaces from a constant density model (first row) and space use density surfaces incorporating animal movement for both observed and unobserved animals (second row) and for observed animals only (third row). High density areas are indicated in yellow, low density areas in blue. Detectors are shown as red crosses.}
 \label{move}
 \end{figure}
@@ -187,7 +187,7 @@ With the second subset of traps, which exclude eight detectors from each of two 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{tiger_surfaces_nocovs}
+\includegraphics[width=1\textwidth]{tiger_surfaces_nocovs.png}
 \caption{Estimated activity center densities of tigers in Nagarahole Tiger Sanctuary, India, obtained using different camera trap arrays. Plots (a), (b), and (c) show estimated densities; plots (d) and (e) show differences between the estimated densities obtained using using trap subset \#1 and \#2 and those obtained using all traps. Detectors are shown as black crosses.}
 \label{tigernocov}
 \end{figure}
@@ -198,7 +198,7 @@ The model with the lowest AIC was one expressing mean intensity as a linear func
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{tiger_surfaces_covs}
+\includegraphics[width=1\textwidth]{tiger_surfaces_covs.png}
 \caption{Estimated mean intensity of tigers in Nagarahole Tiger Sanctuary, India, obtained using different camera trap arrays. Plots (a), (b), and (c) show estimated intensities; plots (d) and (e) show differences between the estimated intensities obtained using using trap subset \#1 and \#2 and those obtained using all traps. Detectors are shown as black crosses.}
 \label{tigercov}
 \end{figure}
@@ -209,7 +209,7 @@ The estimated space use density surface differed markedly from the activity cent
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.6\textwidth]{tiger_spaceuse}
+\includegraphics[width=0.6\textwidth]{tiger_spaceuse.png}
 \caption{Estimated (a) activity center surfaces from a constant density model and (b) space use density surfaces for tigers in Nagarahole Tiger Sanctuary, India. High density areas are indicated in blue, low density areas in yellow. Detectors are shown as red crosses.}
 \label{tigerspaceuse}
 \end{figure}
