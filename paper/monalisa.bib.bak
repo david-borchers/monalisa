@@ -1,0 +1,128 @@
+% Encoding: UTF-8
+
+@Article{Dorazio+Royle:03,
+  author  = {Dorazio, R. M. and Royle, J. A.},
+  title   = {Mixture models for estimating the size of a closed population when capture rates vary among individuals.},
+  journal = {Biometrics},
+  year    = {2003},
+  volume  = {59},
+  pages   = {351-364},
+}
+
+@Book{Royle+al:13a,
+  title     = {Spatial capture-recapture},
+  publisher = {Academic Press, Boston},
+  year      = {2013},
+  author    = {Royle, J.A. and Chandler, R.B. and Sollman, R. and Gardner, B.},
+  owner     = {david},
+  timestamp = {2013.12.02},
+}
+
+@Article{Efford:04,
+  author  = {Efford, M. G.},
+  title   = {Density estimation in live-trapping studies},
+  journal = {Oikos},
+  year    = {2004},
+  volume  = {106},
+  pages   = {598-610},
+}
+
+@Manual{secr:10,
+  title        = {secr: Spatially explicit capture-recapture, 1.5.0},
+  author       = {Efford, M.G.},
+  organization = {Univeristy of Otago},
+  address      = {http://www.otago.ac.nz/density},
+  edition      = {1.5.0},
+  month        = {October},
+  year         = {2010},
+  owner        = {David},
+  timestamp    = {2010.12.04},
+}
+
+@Article{Royle+Young:08,
+  author    = {Royle, J.A. and Young, K.V.},
+  title     = {A hierarchical model for spatial capture-recapture data.},
+  journal   = {Ecology},
+  year      = {2008},
+  volume    = {89},
+  pages     = {2281-2289},
+  owner     = {dlb},
+  timestamp = {2009.12.24},
+}
+
+@Article{Alexander+al:15,
+  author   = {Alexander, J. S. and Gopalaswamy, A. M. and Shi, K. and Riordan, P.},
+  title    = {Face value: towards robust estimates of snow leopard densities},
+  journal  = {PlosOne},
+  year     = {2015},
+  abstract = {When densities of large carnivores fall below certain thresholds, dramatic ecological effectscan follow, leading to oversimplified ecosystems. Understanding the population status ofsuch species remains a major challenge as they occur in low densities and their ranges arewide. This paper describes the use of non-invasive data collection techniques combinedwith recent spatial capture-recapture methods to estimate the density of snow leopardsPanthera uncia. It also investigates the influence of environmental and human activity indicatorson their spatial distribution. A total of 60 camera traps were systematically set up duringa three-month period over a 480 km2 study area in Qilianshan National Nature Reserve,Gansu Province, China. We recorded 76 separate snow leopard captures over 2,906 trapdays,representing an average capture success of 2.62 captures/100 trap-days. We identifieda total number of 20 unique individuals from photographs and estimated snow leoparddensity at 3.31 (SE = 1.01) individuals per 100 km2. Results of our simulation exercise indicatethat our estimates from the Spatial Capture Recapture models were not optimal torespect to bias and precision (RMSEs for density parameters less or equal to 0.87). Ourresults underline the critical challenge in achieving sufficient sample sizes of snow leopardcaptures and recaptures. Possible performance improvements are discussed, principally byoptimising effective camera capture and photographic data quality.},
+  doi      = {10.1371/journal.pone.0134815},
+}
+
+@Article{Kidney+al:13,
+  author    = {Kidney, D and Rawson, B. and Borchers, D.L. and Thomas, L.J. and Marques, T.A. and Stevenson, B.C.},
+  title     = {An efficient acoustic density estimation method with human detectors, applied to gibbons in Cambodia},
+  journal   = {Ecology},
+  year      = {2013},
+  pages     = {submitted},
+  owner     = {david},
+  timestamp = {2013.01.21},
+}
+
+@Article{Stevenson+al:15,
+  author   = {Stevenson, B. C. and Borchers, D. L. and Altwegg, R. and Swift, R. J. and Gillespie, D. M. and Measey, G. J.},
+  title    = {A general framework for animal density estimation from acoustic detections across a fixed microphone array},
+  journal  = {Methods in Ecology and Evolution},
+  year     = {2015},
+  volume   = {6},
+  pages    = {38-48},
+  abstract = {1. Acoustic monitoring can be an efficient, cheap, non-invasive alternative to physical trapping of individuals.Spatially explicit capture–recapture (SECR) methods have been proposed to estimate calling animal abundanceand density from data collected by a fixed array ofmicrophones.However, thesemethodsmake some assumptionsthat areunlikely tohold inmany situations, and the consequences of violating these are yet to be investigated.
+2. We generalize existing acoustic SECRmethodology, enabling these methods to be used in a much wider varietyof situations. We incorporate time-of-arrival (TOA) data collected by the microphone array, increasing theprecision of calling animal density estimates. We use our method to estimate calling male density of the CapePeninsulaMoss Frog Arthroleptella lightfooti.
+3. Our method gives rise to an estimator of calling animal density that has negligible bias, and 95% confidenceintervals with appropriate coverage. We show that using TOA information can substantially improve estimateprecision.
+4. Our analysis of the A. lightfooti data provides the first statistically rigorous estimate of calling male densityfor an anuran population using amicrophone array. This method fills amethodological gap in themonitoring offrog populations and is applicable to acoustic monitoring of other species that call or vocalize.},
+  doi      = {10.1111/2041-210X.12291},
+  keywords = {anura, bootstrap, frog advertisement call, maximum likelihood, Pyxicephalidae, spatiallyexplicit capture–recapture, time of arrival},
+}
+
+@Article{Borchers+al:15,
+  author   = {Borchers, D. L. and Stevenson, B. C. and Kidney, D. and Thomas, L. and Marques, T. A.},
+  title    = {A Unifying Model for Capture–Recapture and Distance Sampling Surveys of Wildlife Populations},
+  journal  = {Journal of the American Statistical Association},
+  year     = {2015},
+  volume   = {110},
+  pages    = {195-204},
+  abstract = {A fundamental problem in wildlife ecology and management is estimation of population size or density. The two dominant methods in this
+area are capture–recapture (CR) and distance sampling (DS), each with its own largely separate literature. We develop a class of models that
+synthesizes them. It accommodates a spectrum of models ranging from nonspatial CR models (with no information on animal locations)
+through to DS and mark-recapture distance sampling (MRDS) models, in which animal locations are observed without error. Between
+these lie spatially explicit capture–recapture (SECR) models that include only capture locations, and a variety of models with less location
+data than are typical of DS surveys but more than are normally used on SECR surveys. In addition to unifying CR and DS models, the
+class provides a means of improving inference from SECR models by adding supplementary location data, and a means of incorporating
+measurement error into DS and MRDS models. We illustrate their utility by comparing inference on acoustic surveys of gibbons and frogs
+using only capture locations, using estimated angles (gibbons) and combinations of received signal strength and time-of-arrival data (frogs),
+and on a visual MRDS survey of whales, comparing estimates with exact and estimated distances. Supplementary materials for this article
+are available online.},
+  doi      = {10.1080/01621459.2014.893884},
+  keywords = {Abundance estimation, Acoustic survey, Closed population, Measurement error, Visual survey},
+}
+
+@Article{Loveridge+al:17,
+  author  = {Loveridge, R. and Kidney, D. and Ty S. and Eang S. and Eames, J. C. and Borchers, D. L.},
+  title   = {First systematic survey of green peafowl Pavo muticus in northeastern Cambodia reveals a population stronghold and preference for disappearing riverine habitat},
+  journal = {CambodianJournal of Natural History},
+  year    = {2017},
+  pages   = {157–167},
+}
+
+@Article{Borchers+Efford:08,
+  author    = {Borchers, D. L. and Efford, M. G.},
+  title     = {Spatially explicit maximum likelihood methods for capture-recapture studies.},
+  journal   = {Biometrics},
+  year      = {2008},
+  volume    = {64},
+  pages     = {377-385.},
+  owner     = {dlb},
+  timestamp = {2009.12.24},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}
