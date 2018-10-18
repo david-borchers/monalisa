@@ -1,30 +1,65 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[10pt,a4paper]{article}
+\usepackage{authblk}
 \usepackage{graphicx}
 \usepackage{subcaption}
-\usepackage{lineno}
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{bm}
- \usepackage[authoryear,round, longnamesfirst]{natbib}
+\usepackage[authoryear,round, longnamesfirst]{natbib}
 \usepackage{textcomp}
+\usepackage{setspace}
+\doublespacing
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\rhead{This is not a density surface}
+\lhead{}
+
+\usepackage{lineno}
 \linenumbers
-\linespread{1.6}
+%\linespread{1.6}
+
+\author[1,*]{David L. Borchers}
+\author[1]{Ian Durbach}
+\author[2]{Ben C. Stevenson}
+\author[2]{Ben S. Student}
+\author[1]{Rachel Phillip}
+\author[3]{Koustubh Sharma}
+
+\affil[1]{Centre for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
+\affil[2]{Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
+\affil[3]{Snow Leopard Trust, Seattle, Washington, United States of America}
+\affil[*]{Corresponding author: dlb@st-andrews.ac.uk}
+
+\date{}
+
+\title{This is not a density surface: misinterpretation of spatial capture-recapture model estimates}
+
+
 \begin{document}
-\title{Title}
-\author{Authors}
 \maketitle
 
-\begin{abstract}
+\section{Summary}
 
-\end{abstract}
+\begin{enumerate}
+\item First point
+\item Second point
+\item Third point
+\item Fourth point
+\end{enumerate}
+
+\textbf{Keywords}: Spatial capture-recapture, density surface
 
 \section{Introduction}
 
-Spatial capture-recapture (SCR) models are a set of methods for modelling capture-recapture data obtained from detectors such as camera-traps, hair snag traps and live-capture surveys in which individuals can be identified. Using the location of the detectors (traps) and also the detections of individuals over several occasion (capture histories), a estimate of density of individuals within a population can be obtained as well as an estimate of population size \citep*{Borchers2012}. In order to do this, a spatial model of the population and a spatial model of the detection process are fitted to the capture histories of detected individuals, using either inverse prediction and maximum likelihood \cite{} or data augmentation and Markov chain Monte Carlo methods \cite{}. 
+Spatial capture-recapture (SCR) models \citep*{Efford:04,Borchers+Efford:08, Royle+Young:08} are now widely used to estimate animal abundance and distribution from a variety of data types, including that from camera-traps \citep[][for example]{}, hair snares and dung surveys \citep[][for example]{}, live-captures \citep[][for example]{}, acoustic detectors \citep[][for example]{Kidney+al:13,Stevenson+al:15,Borchers+al:15,Loveridge+al:17}. These methods use the location of the detectors (traps) and the locations a which animals were detected (their spatial capture histories) to estimate animal density. The methods have two basic components: a spatial model that quantifies animal activity centre density at all points in the survey region, and a detection model that quatifies the probabilities of detection, given the activity centre locations and the detector locations. 
 
-SCR model results are often presented graphically in the form of spatial ``animal density'' maps, these being, on the surface of it, easy to absorb and interpret. However, there are a number of different ways in which ``animal density'' can be interpreted, and the term been used in different contexts in the literature, resulting in substantial confusion around what SCR maps can and cannot do. 
+SCR model results are often presented graphically in the form of estimated density maps, these being easy to absorb and interpret, on the face of it. It is, however, quite easy to misinterpret the maps, and there are a number of examples in the literature in which this has happened. 
 
-Our main motivation for writing this paper is to correct a misconception that maps of posterior activity center densities can be interpreted as species distribution models (SDMs), as is claimed in \cite[e.g.][]{???}. We argue that this is a mistake because posterior activity center densities chiefly reflect the activity centres of the animals that we have detected on our particular survey. This means that the surface (a) depends heavily on where traps are located, and (b) is very much dependent on a particular realisation of the state process, and does not tell you much at all about the population as a whole. In contrast, all SDMs that we have encountered attempt to establish {\it generally} favourable habitats by estimating relationships between spatially-varying environmental covariates and observed patterns of presence and absence. The area of highest density in a SDM is not necessarily where there are currently most animals (if, for example, animals are {\it not} found in other locations with similar environmental conditions). 
+The problems with interpretation arises from (a) the fact that there are various kinds of ``density'', (b) the fact that detection probability varies spatially and this fact must be (but is often not) taken into account when interpreting estimated density surfaces from SCR surveys, and (c) confusion betwen activity centre density and animal denstiy. 
+
+We start by describing the various kinds of densities involved in SCR surveys, because in any discussion of density surfaces, we need to be clear about what ``density surface'' means. We then deal with the issue of confounding of spatially varying detection probability and spatially varying density, before moving on to the issue of activity centre density \textit{vs} animal density.
+
+%Our motivation for writing this paper is to clarify to what exactly the various kinds of density map are, correct a misconception that maps of posterior activity center densities can be interpreted as species distribution models (SDMs), as is claimed in \cite[e.g.][]{???}. We argue that this is a mistake because posterior activity center densities chiefly reflect the activity centres of the animals that we have detected on our particular survey. This means that the surface (a) depends heavily on where traps are located, and (b) is very much dependent on a particular realisation of the state process, and does not tell you much at all about the population as a whole. In contrast, all SDMs that we have encountered attempt to establish {\it generally} favourable habitats by estimating relationships between spatially-varying environmental covariates and observed patterns of presence and absence. The area of highest density in a SDM is not necessarily where there are currently most animals (if, for example, animals are {\it not} found in other locations with similar environmental conditions). 
 
 The remainder of the paper illustrates and elaborates on points (a) and (b) above, and suggests a way forward. We argue that confusion around what SCR maps can and cannot do would be minimized by explicitly distinguishing between three kinds of ``animal density'' maps produced by SCR models, each of which conveys useful ecological information:
 
@@ -53,17 +88,7 @@ The second example (Section \ref{monalisa}) simulates a more realistic two-dimen
 
 A third and final example (Section \ref{nagarahole}) reanalyses data from a previously published study using SCR to estimate the realised activity center density of tigers in the Nagarahole Tiger Sanctuary \cite{?}. This survey used a dense network of traps; by removing some of these we show the dependency of the density surface on trap locations using real data. A discussion section (Section \ref{discussion}) summarizes our main points, and a final section concludes.
 
-%f we use the introduction to (1) define what a species distribution model is, (2) describe how the posterior AC method works, and (3) cite a few papers that have erroneously interpreted the posterior ACs as a species distribution model. Once we start presenting some results in the following sections, it will hopefully be obvious to the reader why posterior ACs shouldn't be interpreted at species distribution models. At the moment, there is a chance they may not see the 'big picture' until they've reached the end of the paper.
 
-
-%SCR combines a state model describing the distribution of activity centres in the landscape and an observation model relating the probability of detecting an individual at a particular detector to the distance from a central point in each animal's home range.
-%
-%Consider a survey in which $K$ traps are placed in a region containing animals having home ranges with fixed centres (also known as activity centres). Once an animal is caught in a trap it remains there until it is released. These traps are checked at regular intervals and marked in such a way that their complete capture history is known and are released.  There are $S$ trapping occasions, trap k is located at Cartesian co-ordinates $x_k$ and the location of traps within the survey are at $x=(x_1, ..., x_k)$. The number of unique animals caught are n. $\bm{X}$ is the animal's location and this is it's activity centre.
-%
-%Let $\omega_{i}=1$ if animal $i$ was captured on any of the $s$ occasions and $0$ if otherwise. If animal $i$ was captured on trap $k$ on occasion $s$ ($s=1, ...,S$) then $\omega_{is}=1$ and $0$ otherwise. The capture history for animal $i$ is $\omega_{i}=(\omega_{i1}, ..., \omega_{iS})$. Let $p_{ks}(\bm{X};\bm{\theta})$ be the probability that an animal with activity centre at $x$ is caught in trap $k$ on occasion $s$, where $\bm{\theta}$ is the capture probability parameter vector.
-
-
-%Estimated density surfaces and activity centre distributions are usually presented as images, these being easier to absorb and interpret. In order to present our argument and results in a way that is easy to interpret we also largely present our results as images.
 
 \section{Simulating a 1-D binomial point process} \label{1dbinom}
 
@@ -173,7 +198,7 @@ Estimated realised animal density surfaces -- those that incorporate animal move
 \section{Camera-trap survey of tigers in Nagarahole, India}
 
 \subsection{Materials and methods}
-We reanalysed data obtained from a camera trap survey of tigers {\it Panthera tigris} living in and around the Nagarahole Tiger Reserve of Karnataka, India, as reported in \cite{Dorazio2017}. A full description of the survey can be found in the original reference. The original survey used a spatial array of 162 motion-activated camera traps, these being placed at 2–3 km intervals throughout the area (Figure \ref{tigernocov}, ``All traps''). 
+We reanalysed data obtained from a camera trap survey of tigers {\it Panthera tigris} living in and around the Nagarahole Tiger Reserve of Karnataka, India, as reported in \cite{Dorazio+Royle:03}. A full description of the survey can be found in the original reference. The original survey used a spatial array of 162 motion-activated camera traps, these being placed at 2–3 km intervals throughout the area (Figure \ref{tigernocov}, ``All traps''). 
 
 We reanalyzed this data in a likelihood-based framework, first with a model assuming constant density and with three different trap arrays. The first array was the same one employed in the original study. The second was a subset of traps that excluded a large number traps in the interior of the study region, thus leaving a substantial part of the study area unsurveyed (Figure \ref{tigernocov}, ``Subset \#1''). The third used another subset of traps that excluded eight detectors from each of two interior areas of the survey area in which the original survey showed the density of activity centers to be particularly high (Figure \ref{tigernocov}, ``Subset \#2''). 
 
@@ -225,7 +250,7 @@ The realised activity centre density obtained from an SCR model cannot be interp
 
 In contrast, the density on a realised activity center surface is often placed in spikes where the model is most certain that an activity center is located. The shape and location of these spikes depends on where traps are located and also on survey effort. Different arrays produce different results and these results can be improbable, in the sense that high density spikes can occur at locations in unfavourable habitats, if there happen to be activity centers at these locations at the time of the survey. A useful metaphor here is of SCR as a torch shining a light onto the true activity center density surface -- what you see depends on where you shine the torch (trap locations) and how brightly you shine it (survey effort). 
 
-Realised activity center surfaces tend to be flat away from where traps are located. It is crucial to understand that this flatness reflects a lack of knowledge about the density surface, and not the distribution of activity centers in this realisation. This point is clearly stated in standard SCR texts\footnote{``As we more away from `where the data live' (away from the trap array) we see that the density approaches the mean density. This is a property of the estimator as long as the detection function decreases sufficiently rapidly as a function of distance. Relatedly, it is also a property of statistical smoothers such as splines, kernel smoothers, and regression smoothers---predictions tend toward the global mean as the influence of data diminishes'' \citep[p165-166][]{Royle}} but is misinterpreted whenever researchers explicitly or implicitly treat realised activity center densities as maps of the spatial distribution of activity centers across the study area (unless the study area is very densely surveyed), as is done in \cite{Alexander,???}. Another way to see that flatness away from traps reflects uncertainty rather than homogenous density is to plot lower and upper percentiles at each pixel, rather than just the posterior mean -- the differences between these percentiles would be large away from traps and small close to traps. It seems that this is rarely done, or at least reported in the literature; a practice that would be worth changing. 
+Realised activity center surfaces tend to be flat away from where traps are located. It is crucial to understand that this flatness reflects a lack of knowledge about the density surface, and not the distribution of activity centers in this realisation. This point is clearly stated in standard SCR texts\footnote{``As we more away from `where the data live' (away from the trap array) we see that the density approaches the mean density. This is a property of the estimator as long as the detection function decreases sufficiently rapidly as a function of distance. Relatedly, it is also a property of statistical smoothers such as splines, kernel smoothers, and regression smoothers---predictions tend toward the global mean as the influence of data diminishes'' \citep[p165-166][]{Royle+al:13a}} but is misinterpreted whenever researchers explicitly or implicitly treat realised activity center densities as maps of the spatial distribution of activity centers across the study area (unless the study area is very densely surveyed), as is done in \cite{Alexander+al:15}. Another way to see that flatness away from traps reflects uncertainty rather than homogenous density is to plot lower and upper percentiles at each pixel, rather than just the posterior mean -- the differences between these percentiles would be large away from traps and small close to traps. It seems that this is rarely done, or at least reported in the literature; a practice that would be worth changing. 
 
 More important for people actually conducting SCR surveys is that the densities obtained close to traps (and even inside the trap array) {\it also} depend on where traps are located. The inset plots of Figure \ref{mona1low} and \ref{mona1hi} show the same region in space, and this region lies within a $2.5\sigma$ range of all trap arrays, where one would expect to be making inferences about activity centers. We obtained very different density surfaces in this area depending on where traps were located. If one was using SCR to identify areas of high density e.g.\ for conservation purposes, or to locate animals, different areas would be identified depending on which array was used. 
 
@@ -254,7 +279,7 @@ This paper demonstrates that the summed posterior distribution of estimated rang
 
 %"OK everyone, put your traps where you'd like to shine your torch, and you'll get a perfectly good estimate of animal density there using our posterior AC map".
 
-\bibliographystyle{newapa}
-\bibliography{/Users/Rachel/OneDrive/Summer2017/ML/refs}
+\bibliographystyle{mee}
+\bibliography{monalisa}
 
 \end{document}

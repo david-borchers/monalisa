@@ -1,3 +1,65 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{10}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Alexander \emph{et~al.}(2015)Alexander, Gopalaswamy, Shi \&
+  Riordan}]{Alexander+al:15}
+Alexander, J.S., Gopalaswamy, A.M., Shi, K. \& Riordan, P. (2015) Face value:
+  towards robust estimates of snow leopard densities.
+\newblock \emph{PlosOne}.
+
+\bibitem[{Borchers \& Efford(2008)}]{Borchers+Efford:08}
+Borchers, D.L. \& Efford, M.G. (2008) Spatially explicit maximum likelihood
+  methods for capture-recapture studies.
+\newblock \emph{Biometrics}, \textbf{64}, 377--385.
+
+\bibitem[{Borchers \emph{et~al.}(2015)Borchers, Stevenson, Kidney, Thomas \&
+  Marques}]{Borchers+al:15}
+Borchers, D.L., Stevenson, B.C., Kidney, D., Thomas, L. \& Marques, T.A. (2015)
+  A unifying model for capture–recapture and distance sampling surveys of
+  wildlife populations.
+\newblock \emph{Journal of the American Statistical Association}, \textbf{110},
+  195--204.
+
+\bibitem[{Dorazio \& Royle(2003)}]{Dorazio+Royle:03}
+Dorazio, R.M. \& Royle, J.A. (2003) Mixture models for estimating the size of a
+  closed population when capture rates vary among individuals.
+\newblock \emph{Biometrics}, \textbf{59}, 351--364.
+
+\bibitem[{Efford(2004)}]{Efford:04}
+Efford, M.G. (2004) Density estimation in live-trapping studies.
+\newblock \emph{Oikos}, \textbf{106}, 598--610.
+
+\bibitem[{Kidney \emph{et~al.}(2013)Kidney, Rawson, Borchers, Thomas, Marques
+  \& Stevenson}]{Kidney+al:13}
+Kidney, D., Rawson, B., Borchers, D., Thomas, L., Marques, T. \& Stevenson, B.
+  (2013) An efficient acoustic density estimation method with human detectors,
+  applied to gibbons in cambodia.
+\newblock \emph{Ecology}, p. submitted.
+
+\bibitem[{Loveridge \emph{et~al.}(2017)Loveridge, Kidney, S., S., Eames \&
+  Borchers}]{Loveridge+al:17}
+Loveridge, R., Kidney, D., S., T., S., E., Eames, J.C. \& Borchers, D.L. (2017)
+  First systematic survey of green peafowl pavo muticus in northeastern
+  cambodia reveals a population stronghold and preference for disappearing
+  riverine habitat.
+\newblock \emph{CambodianJournal of Natural History}, p. 157–167.
+
+\bibitem[{Royle \emph{et~al.}(2013)Royle, Chandler, Sollman \&
+  Gardner}]{Royle+al:13a}
+Royle, J., Chandler, R., Sollman, R. \& Gardner, B. (2013) \emph{Spatial
+  capture-recapture}.
+\newblock Academic Press, Boston.
+
+\bibitem[{Royle \& Young(2008)}]{Royle+Young:08}
+Royle, J. \& Young, K. (2008) A hierarchical model for spatial
+  capture-recapture data.
+\newblock \emph{Ecology}, \textbf{89}, 2281--2289.
+
+\bibitem[{Stevenson \emph{et~al.}(2015)Stevenson, Borchers, Altwegg, Swift,
+  Gillespie \& Measey}]{Stevenson+al:15}
+Stevenson, B.C., Borchers, D.L., Altwegg, R., Swift, R.J., Gillespie, D.M. \&
+  Measey, G.J. (2015) A general framework for animal density estimation from
+  acoustic detections across a fixed microphone array.
+\newblock \emph{Methods in Ecology and Evolution}, \textbf{6}, 38--48.
 
 \end{thebibliography}
