@@ -10,6 +10,9 @@
 \usepackage{setspace}
 \doublespacing
 \usepackage{fancyhdr}
+\usepackage[]{todonotes}
+\presetkeys{todonotes}{fancyline, color=white}{}
+
 \pagestyle{fancy}
 \rhead{This is not a density surface}
 \lhead{}
@@ -51,38 +54,82 @@
 
 \section{Introduction}
 
-Spatial capture-recapture (SCR) models \citep*{Efford:04,Borchers+Efford:08, Royle+Young:08} are now widely used to estimate animal abundance and distribution from a variety of data types, including that from camera-traps \citep[][for example]{}, hair snares and dung surveys \citep[][for example]{}, live-captures \citep[][for example]{}, acoustic detectors \citep[][for example]{Kidney+al:13,Stevenson+al:15,Borchers+al:15,Loveridge+al:17}. These methods use the location of the detectors (traps) and the locations a which animals were detected (their spatial capture histories) to estimate animal density. The methods have two basic components: a spatial model that quantifies animal activity centre density at all points in the survey region, and a detection model that quatifies the probabilities of detection, given the activity centre locations and the detector locations. 
+Spatial capture-recapture (SCR) models \citep*{Efford:04,Borchers+Efford:08, Royle+Young:08} are now widely used to estimate animal abundance and distribution from a variety of data types, including that from camera-traps \citep[][for example]{}, hair snares and dung surveys \citep[][for example]{}, live-captures \citep[][for example]{}, acoustic detectors \citep[][for example]{Dawson+Efford:09,Kidney+al:13,Stevenson+al:15,Borchers+al:15,Loveridge+al:17}. These methods use the location of the detectors (traps) and the locations a which animals were detected (their spatial capture histories) to estimate animal density. The methods have two basic components: a spatial model that quantifies animal activity centre density at all points in the survey region, and a detection model that quatifies the probabilities of detection, given the activity centre locations and the detector locations. 
 
-SCR model results are often presented graphically in the form of estimated density maps, these being easy to absorb and interpret, on the face of it. It is, however, quite easy to misinterpret the maps, and there are a number of examples in the literature in which this has happened. 
+SCR density estimates are often presented graphically in the form of estimated density maps, these being easy to absorb and interpret, at least on the face of it.  However there are various kinds of density map that one can produce from SCR analyses and depending on what is presented, it is quite easy to misinterpret the maps, and there are a number of examples in the literature where this has happened. The most common form of misinterpretation is treating maps that include both spatially varying uncertainty about location and spatially varying activity centre density estimates as if they are maps of activity centre density alone.
 
-The problems with interpretation arises from (a) the fact that there are various kinds of ``density'', (b) the fact that detection probability varies spatially and this fact must be (but is often not) taken into account when interpreting estimated density surfaces from SCR surveys, and (c) confusion betwen activity centre density and animal denstiy. 
+Examples include \cite{Dorzaio+Karanth:17} which says that such maps effectively provide  ``a species distribution model, even in cases where spatial covariates of abundance are unknown or unavailable'', \cite{Alexander+al:15}, which presents a map (Figure 4) that include both spatially varying uncertainty about location and spatially varying activity centre density and calls it the ``spatial distribution of snow leopards'', and \cite{Elliot+Gopalaswamy:16}, which presents the same kind of map (Figure 2) and calls it ``pixel-specific lion density''. \todo{Add more refs?}
 
-We start by describing the various kinds of densities involved in SCR surveys, because in any discussion of density surfaces, we need to be clear about what ``density surface'' means. We then deal with the issue of confounding of spatially varying detection probability and spatially varying density, before moving on to the issue of activity centre density \textit{vs} animal density.
+The problems with interpretation of such maps arises from (a) the fact that there are various kinds of ``density'', (b) the fact that detection probability varies spatially and this fact must be (but is often not) taken into account when interpreting estimated density surfaces from SCR surveys, and (c) confusion betwen activity centre density and usage denstiy. 
+
+We start by describing diffrent kinds of densities involved in SCR surveys, because in any discussion of density surfaces, we need to be clear about what ``density'' means. %We then deal with the issue of confounding of spatially varying detection probability and spatially varying density, before moving on to the issue of activity centre density \textit{vs} usage density.
 
 %Our motivation for writing this paper is to clarify to what exactly the various kinds of density map are, correct a misconception that maps of posterior activity center densities can be interpreted as species distribution models (SDMs), as is claimed in \cite[e.g.][]{???}. We argue that this is a mistake because posterior activity center densities chiefly reflect the activity centres of the animals that we have detected on our particular survey. This means that the surface (a) depends heavily on where traps are located, and (b) is very much dependent on a particular realisation of the state process, and does not tell you much at all about the population as a whole. In contrast, all SDMs that we have encountered attempt to establish {\it generally} favourable habitats by estimating relationships between spatially-varying environmental covariates and observed patterns of presence and absence. The area of highest density in a SDM is not necessarily where there are currently most animals (if, for example, animals are {\it not} found in other locations with similar environmental conditions). 
 
-The remainder of the paper illustrates and elaborates on points (a) and (b) above, and suggests a way forward. We argue that confusion around what SCR maps can and cannot do would be minimized by explicitly distinguishing between three kinds of ``animal density'' maps produced by SCR models, each of which conveys useful ecological information:
+%The remainder of the paper illustrates and elaborates on points (a) and (b) above, and suggests a way forward. We argue that confusion around what SCR maps can and cannot do would be minimized by explicitly 
+
+\subsection{Different kinds of density}
+
+It is useful to distinguish between four kinds of spatial `` density'', two of them dealing with activity centres, and two dealing with space usage. Conceptually, we have some point process that governs how many activiy centres there are in the survey region, and where they are. Animals then use (move through) the space around their activity centres. Activity centres are governed by the point process alone; usage is governed by both the point process and the movement process about the points. With this in mind, we refer to four kinds of density as follows:
 
 \begin{enumerate}
-\item the intensity of the underlying state process determining where animals are likely to have their activity centers ``on average''  i.e.\ over many realizations of the process. Or, the expected number of activity centres within a region under the state model, divided by the area of the region\footnote{More precisely, the ``expected number of activity centres per unit area'' is the limit of this quantity as the area of the region approaches zero. Similar interpretations apply to the other definitions.}. We call this the {\it expected activity center density}.
-\item the number of activity centres within some region, divided by the area of the region, under a single realisation of the state model i.e.\ the current survey. We call this the {\it realised activity center density}.
-\item the average number of animals within some region, divided by the area of the region, under a single realisation of the state model. We call this the {\it realised animal density}.
+\item \textbf{The expected activity centre density} at a point is the intensity of the underlying point process that models where animals' activity centers are ``on average''  i.e.\ over many realizations of the process. It is the expected number of activity centres per unit area within a region, in the limit as the area of the region shrinks to zero. The expected activity centre density surface is the set of these densities at evey point. The expected number of activity centres within some reqion is the volume under this surface.
+\item \textbf{The realised activity centre density} is only defined if continuous space is partitioned into what we will call cells. The realised activity centre density in a cell is the actual (as opposed to expected) number of activity centres per unit area within the cell (i.e., the number divided by the area of the cell) at the time of the survey. The realised activity centres are points in space, not densities.
+\item \textbf{The expected usage density} in a region is the expected number of visits per unit area of animals to the area, averaged over all possible activity centre locations, over the course of a survey (it is the expected number of visits divided by the area). The expected usage density at a point is the limit of this value as the area shrinks to zero. 
+\item \textbf{The realised usage density} in a region is the expected number of visits per unit area of animals to the area over the course of the survey (the expected number of visits divided by the area), \textit{conditional} on the activity centre locations. The realised usage density at a point is the limit of this value as the area shrinks to zero. 
 \end{enumerate}
+
+If the movement process is the same everywhere, then the expected usage density surface will have the same shape as the expected activity centre density, but with height that depends on how much animals move.  This makes it less interesting for our purposes here, and we focus on the other three kinds of density in what follows. Figure~\ref{fig:densities} shows examples of each, except that we show the realised activity center locations rather than realised activity centre densities in sub-regions of space. Realised activity centre densities can only be plotted when space has been cut into cells; in continuous space the density is zero everywhere except at activity centre locations, where it is infinite.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{densities.pdf}
+\caption{Examples of (a) an expected activity centre density surface, (b) a realisation of activy centres from this density surface, and (c) the associated realised usage density surface (with activity centres shown as grey dots).}
+\label{fig:densities}
+\end{figure}
+
+\subsection{Estimated density surfaces}
+
+If we are interested in explaining why density tends to be high in some places and lower in others, or characterising the process that governs the distribution of activity centres, then we are primarily interesting in estimating a density surface like that shown in Figure~\ref{fig:densities}(a). In this example, it is easting that influences this density, but in general it might be any of a wide variety of habitat or environmental covariates, some of which may be unobserved and evidenced only by spatial clustering of activity centres. 
+
+If we are interested only in where the activity centres are, and not in explaining why they are there, then Figure~\ref{fig:densities}(b) suffices. But suppose that we observe activity centres with some error. For example, Figure~\ref{fig:acesterr} shows the distributions of estimated activity centre locations when the locations are estimaed with bivariate normal errors with (a) small standard errors, and (b) larger standard errors, and (c) standard errors increasing linearly from the centre of the plot. The estimation uncertainty ``spreads'' each activity centre according to a bivariate normal distribution, with greater spreading when there is greater uncerainty.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{acesterr.pdf}
+\includegraphics[width=\textwidth]{sigmas.pdf}
+\caption{Examples of the density of the activity centres of Figure~\ref{fig:densities}(b), when observed with bivariate normal estimation errors with standard errors (a) $\sigma=2.5$, (b) $\sigma=15$, and (c) $\sigma=2.5$ at the centre of the plot, rising linearly to $\sigma=2.5$ by the edge of the plot. True activity centres shown as grey dots. The colour scales of panels (a) to (c) are such that the highest and lowest densities in each plot is the same.
+Panesl (d) to (f) plot the standard errors of the observation errors against the x-axis. Vertical dashed lines show the extent of the survey region in panels (a) to (c); a buffer beyond this is included because spreading of points outside it affect the plot within the survey region.}
+\label{fig:acesterr}
+\end{figure}
+
+Figure~\ref{fig:acesterr}(a) gives a reasonable visual representation of where the activity centres are. It is much more difficult to pick out individual activity centres from Figure~\ref{fig:acesterr}(b), but it gives a reasonable representation of where the high- and low-density regions of activity centres are -- much like Figure~\ref{fig:densities}(a), but customised somewhat for this particular realisation of activity centre locations rather than their long-run average locations. But what about Figure~\ref{fig:acesterr}(c)? If this is interpreted as indicating where the high and low-density regions are, it is misleading. It says that the highest density region is in the centre of the plot, and that the region with most variation in density is the central region, which is not true. 
+
+The fact that there is only small observation error in the centre of the plot and large observation error at the edges means that the activity centres near the centre are not spread much and therefore appear has higher peaks in the surface, with low regions where there are no activity centres. Near the edges of the plot, on the other hand, observation error is high and activity centres are spread a lot, which both flattens the peaks at individual activity centre locations and ``fills in'' the troughs where the are no activity centres. We see the same effect with the usage density maps (Figure~\ref{fig:acuseesterr}), but less pronounced because the usage about the activity centres already ``spreads'' points before any observation error occurs.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{acuseesterr.pdf}
+\caption{Examples of the usage density of Figure~\ref{fig:densities}(c), when observed with bivariate normal estimation errors with standard errors (a) $\sigma=2.5$, (b) $\sigma=15$, and (c) $\sigma=2.5$ at the centre of the plot, rising linearly to $\sigma=2.5$ by the edge of the plot. True activity centres shown as grey dots. The colour scales of the three plots are such that the highest and lowest densities in each plot is the same.}
+\label{fig:acuseesterr}
+\end{figure}
+
+\section{Some examples from the SCR literature}
 
 FROM BEN: Give examples of papers where people have misinterpreted the sum of posterior AC distributions under either definition (1) or (3) above. Dorazio uses interpretation (1) because they explicitly talk about the distribution of activity centres. Alexander et al. is a little ambiguous, and could be either definition (1) or (3) depending on whether or not they are talking about density under their particular realisation of the state process, but not (2), because they refer to "density of animals" and not "activity centres". Elliot \& Gopalaswamy (2017) do the same thing as Alexander et al. in their caption of Fig 2.
 
 As a motivating example for the categorisation above, suppose that animals' activity centers have been generated by a point process whose intensity surface is shown in Figure \ref{introplot}a (with intensity increasing eastwards), and with a single realisation of this process overlain (as black dots). In reality the locations of the dots are unknown and must be estimated, but whether the estimated locations of the dots are of interest themselves, or only as a means of estimating the underlying intensity surface, depends on what the goal of the analysis is. If one is interested in where activity centers currently are, one is looking for the dots. If one is interested in which areas are favourable for the location of activity centers {\it in general}, then the dots are only a means with which to estimate the underlying intensity surface. The interpretation of these surfaces differs, but so does their estimation. Expected activity center densities are estimated by modelling the intensity of the state process as a function of environmental covariates, realised activity center densities by summing posterior activity center densities across detected and undetected animals.
 
-Figure \ref{introplot}b imagines that these realised locations were observed with some small amount of measurement error, and plots the sum of the ``posterior distributions'' for each point that account for this uncertainty. This is -- ignoring for now the complexities of fitting an SCR model -- the surface that we argue is incorrectly interpreted as a species distribution model. It is clearly different to the underlying surface shown in Figure \ref{introplot}a. Figure \ref{introplot}c introduces animal movement around the activity centres, representing the expected density of animals at locations at an arbitrary discrete point in time. The estimation of realised animal densities has not been previously described, but also sums posterior densities across animals (we describe this in more detail in Section ???). The surfaces in Figure \ref{introplot}a-c represent the three kinds of animal density surfaces described above -- expected activity center density, realised activity center density, and realised animal density, respectively. A key point we return to in several places in the paper is that these three surfaces are all of potential ecological interest, but that they differ in fundamental ways, and that it is important to keep the distinctions between the surfaces clear.
+%Figure \ref{introplot}b imagines that these realised locations were observed with some small amount of measurement error, and plots the sum of the ``posterior distributions'' for each point that account for this uncertainty. This is -- ignoring for now the complexities of fitting an SCR model -- the surface that we argue is incorrectly interpreted as a species distribution model. It is clearly different to the underlying surface shown in Figure \ref{introplot}a. Figure \ref{introplot}c introduces animal movement around the activity centres, representing the expected density of animals at locations at an arbitrary discrete point in time. The estimation of realised animal densities has not been previously described, but also sums posterior densities across animals (we describe this in more detail in Section ???). The surfaces in Figure \ref{introplot}a-c represent the three kinds of animal density surfaces described above -- expected activity center density, realised activity center density, and realised animal density, respectively. A key point we return to in several places in the paper is that these three surfaces are all of potential ecological interest, but that they differ in fundamental ways, and that it is important to keep the distinctions between the surfaces clear.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{density-plots.png}
-\caption{Simulated activity centers (black dots, left-hand panel) generated from a point process with intensity increasing from left to right (surface in left-hand panel), estimates of those activity centers (central panel), and estimates of animal locations (right-hand panel). These represent, respectively, what we term expected activity center, realised activity center, and realised animal density surfaces.}
-\label{introplot}
-\end{figure}
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=\textwidth]{density-plots.png}
+%\caption{Simulated activity centers (black dots, left-hand panel) generated from a point process with intensity increasing from left to right (surface in left-hand panel), estimates of those activity centers (central panel), and estimates of animal locations (right-hand panel). These represent, respectively, what we term expected activity center, realised activity center, and realised animal density surfaces.}
+%\label{introplot}
+%\end{figure}
 
-The remainder of the paper illustrates the dependency of the realised activity center density on trap location using three example datasets of increasing complexity. The first (Section \ref{1dbinom}) simulates a fixed number of animals from a one-dimensional binomial point process, assumes that animals do not move and also assumes an extremely simple detection process. This example primarily illustrates that flat density surfaces away from traps reflect a lack of knowledge of the locations of unobserved animals, and not that the realised activity center density is constant.
+%The remainder of the paper illustrates the dependency of the realised activity center density on trap location using three example datasets of increasing complexity. The first (Section \ref{1dbinom}) simulates a fixed number of animals from a one-dimensional binomial point process, assumes that animals do not move and also assumes an extremely simple detection process. This example primarily illustrates that flat density surfaces away from traps reflect a lack of knowledge of the locations of unobserved animals, and not that the realised activity center density is constant.
 
 The second example (Section \ref{monalisa}) simulates a more realistic two-dimensional Poisson point process. For visual impact our simulated data is drawn from a density surface model based on one of the most recognisable images in Western culture, the Mona Lisa. This example demonstrates that the realised activity center density is dependent on where traps are located, both far from the traps and, perhaps less obviously, in and around the traps. It also introduces the use of covariates as a means of estimating expected activity center densities, and also incorporates animal movement into realised animal density maps.  
 
@@ -90,26 +137,26 @@ A third and final example (Section \ref{nagarahole}) reanalyses data from a prev
 
 
 
-\section{Simulating a 1-D binomial point process} \label{1dbinom}
+%\section{Simulating a 1-D binomial point process} \label{1dbinom}
 
-\subsection{Materials and methods}
-We simulate a fixed number of animals distributed across a single dimension according to a linear trend, and then model this data using a binomial point process that incorrectly assumes a uniform distribution of animals across space. Here one can think of, for example, a situation in which true density strongly depends on a covariate that varies in space, but that this covariate is unknown. 
+%\subsection{Materials and methods}
+%We simulate a fixed number of animals distributed across a single dimension according to a linear trend, and then model this data using a binomial point process that incorrectly assumes a uniform distribution of animals across space. Here one can think of, for example, a situation in which true density strongly depends on a covariate that varies in space, but that this covariate is unknown. 
 
-We place a fixed number of points $N$ at random locations on the interval $0<x<R$, with $R=15$. Points are generated according to a probability density that makes them more likely to appear near $x=0$ than $x=15$ i.e.\ $f(x)\propto 1-x/15$ for $0<x<15$ and $f(x)=0$ otherwise.
+%We place a fixed number of points $N$ at random locations on the interval $0<x<R$, with $R=15$. Points are generated according to a probability density that makes them more likely to appear near $x=0$ than $x=15$ i.e.\ $f(x)\propto 1-x/15$ for $0<x<15$ and $f(x)=0$ otherwise.
 
-For simplicity we divide the interval into $R=15$ equal-sized regions, thinking of these as cells in a one-dimensional grid. Traps are placed in $T=5$ cells. We make the simplifying assumptions that animals do not move from the cell they are placed in, and that each trap detects animals perfectly within the cell it occupies but cannot detect animals beyond that cell. 
+%For simplicity we divide the interval into $R=15$ equal-sized regions, thinking of these as cells in a one-dimensional grid. Traps are placed in $T=5$ cells. We make the simplifying assumptions that animals do not move from the cell they are placed in, and that each trap detects animals perfectly within the cell it occupies but cannot detect animals beyond that cell. 
 
-We simulate with $N=50000$ animals and with different trap configurations.
+%We simulate with $N=50000$ animals and with different trap configurations.
 
-\subsection{Results}
-Figure \ref{binom} shows the estimated realised activity center densities -- the estimated number of activity centers for $N=50000$ animals distributed according a binomial point process with density decreasing linearly with $x$. Under the extremely simplified conditions of this example (no movement of animals, perfect detection within cells), SCR recovers the true number of activity centers in each cell that contained a detector, knows how many animals were {\it not} detected\footnote{Here this is because $N$ is known but if $N$ is unknown it can be estimated. A model assuming a constant density and detecting $n$ animals from a perfect survey of $T/R$ of the study area estimates the total number of animals to be $\hat{N}=n/(T/R)$, implying there are $\hat{N}-n$ animals in the area that were not detected by any trap.}, and distributes the activity centers of these undetected animals evenly across the cells that do not contain a detector\footnote{$\hat{N}-n$ activity centers distributed uniformly between $R-T$ trapless cells gives a mean of $(N-n)/(R-T)$ activity centers per cell, close to the mean of the underlying process $N/R$ when $n\ll N$ and $T\ll R$, as would usually be for wildlife surveys.}. 
+%\subsection{Results}
+%Figure \ref{binom} shows the estimated realised activity center densities -- the estimated number of activity centers for $N=50000$ animals distributed according a binomial point process with density decreasing linearly with $x$. Under the extremely simplified conditions of this example (no movement of animals, perfect detection within cells), SCR recovers the true number of activity centers in each cell that contained a detector, knows how many animals were {\it not} detected\footnote{Here this is because $N$ is known but if $N$ is unknown it can be estimated. A model assuming a constant density and detecting $n$ animals from a perfect survey of $T/R$ of the study area estimates the total number of animals to be $\hat{N}=n/(T/R)$, implying there are $\hat{N}-n$ animals in the area that were not detected by any trap.}, and distributes the activity centers of these undetected animals evenly across the cells that do not contain a detector\footnote{$\hat{N}-n$ activity centers distributed uniformly between $R-T$ trapless cells gives a mean of $(N-n)/(R-T)$ activity centers per cell, close to the mean of the underlying process $N/R$ when $n\ll N$ and $T\ll R$, as would usually be for wildlife surveys.}. 
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=1\textwidth]{binompp_inf.png}
-\caption{Estimated numbers of activity centers obtained from a binomial point process with $N=50000$ simulated animals and density decreasing linearly with $x$, no animal movement, and a step detection function that is perfect within cells and zero otherwise.}
-\label{binom}
-\end{figure}
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=1\textwidth]{binompp_inf.png}
+%\caption{Estimated numbers of activity centers obtained from a binomial point process with $N=50000$ simulated animals and density decreasing linearly with $x$, no animal movement, and a step detection function that is perfect within cells and zero otherwise.}
+%\label{binom}
+%\end{figure}
 
 \section{Simulating the Mona Lisa as a Poisson point process} \label{monalisa}
 
@@ -141,7 +188,7 @@ We simulated capture histories and created an estimated realised animal density 
 
 The same patterns hold in two dimensions under the standard wildlife survey assumptions of Poisson-distributed activity centers (with constant intensity) and detectability inversely related to distance from activity center (Figure \ref{mona1low} and \ref{mona1hi}). A single sampling occasion was sufficient to capture the broad features of the Mona Lisa, but only close to where detectors were located (Figure \ref{mona1low}, first row). Away from the detectors the estimated density quickly reverted to close to the estimated mean intensity of the process. Additional sampling occasions resulted in the density of activity centers close to detectors being estimated in much greater detail, but did not affect the surface away from detectors (Figure \ref{mona1hi}, first row). 
 
-Very different relative and absolute densities were obtained depending on where traps are located, even when estimating density {\it in exactly the same region of the surface and where that region is close to the array} (Figure \ref{mona1low} and \ref{mona1hi}, second row). With a single occasion, density was always estimated to be highest nearest the corner where the trap is located (Figure \ref{mona1low}, second row). This pattern occured because the inset region happened to occur in an area of above average density. If instead it occured in a low density region one would see the opposite pattern -- low density in the corner containing a trap, increasing away from the trap. This was clearly visible when a single sampling occasion was used, because the estimated surface reverted quickly to the mean intensity. Additional sampling allowed fine detail in the density surface to be estimated close to traps, with slower reversion to mean intensity, but there was still very clear disagreement between the density surfaces returned by the different arrays (Figure \ref{mona1hi}, second row).
+Very different relative and absolute densities were obtained depending on where traps are located, even when estimating density {\it in exactly the same region of the surface and where that region is close to the array} (Figure \ref{mona1low} and \ref{mona1hi}, second row). With a single occasion, density was always estimated to be highest nearest the corner where the trap is located (Figure \ref{mona1low}, second row). This pattern occured because the inset region happened to occur in a region of above average density. If instead it occured in a low density region one would see the opposite pattern -- low density in the corner containing a trap, increasing away from the trap. This was clearly visible when a single sampling occasion was used, because the estimated surface reverted quickly to the mean intensity. Additional sampling allowed fine detail in the density surface to be estimated close to traps, with slower reversion to mean intensity, but there was still very clear disagreement between the density surfaces returned by the different arrays (Figure \ref{mona1hi}, second row).
 
 \begin{figure}[htbp]
 \centering
