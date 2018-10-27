@@ -217,7 +217,10 @@ plot(inspdf.errtrend,col=terrain.colors(40),what="image",add=TRUE)
 points(errpts,pch="+")
 
 
-pdf(file="../paper/densities.pdf",h=2,w=6)
+# Plot various kinds of densities
+# ===============================
+
+pdf(file="./paper/densities.pdf",h=2,w=6)
 par(mfrow=c(1,3),mar=c(0.25,0.25,1.5,0.25))
 # Plot the ac density surface
 plot(trapboundary,main="(a)")
@@ -234,7 +237,7 @@ plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
 dev.off()
 
 
-pdf(file="../paper/sigmas.pdf",h=2,w=6)
+pdf(file="./paper/sigmas.pdf",h=2,w=6)
 par(mfrow=c(1,3),mar=c(1,4,1,1))
 plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),ylab=expression(sigma))
 segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
@@ -254,7 +257,7 @@ xmid = errpts[1,1]
 x = c(x0,(xmid-dmax),xmid,(xmid+dmax),xmax)
 sigma = c(max.error.sigma,max.error.sigma,error.sigma,max.error.sigma,max.error.sigma)
 
-pdf(file="../paper/sigmas.pdf",h=1,w=6)
+pdf(file="./paper/sigmas.pdf",h=1,w=6)
 par(mfrow=c(1,3),mar=c(1,2,1.5,2))
 #plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab=expression(sigma),main="(d)")
 plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab="",main="(d)")
@@ -267,7 +270,7 @@ plot(x,sigma,type="l",xaxt="n",xlab="",ylab="",ylim=c(0,max.error.sigma),main="(
 segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
 dev.off()
 
-pdf(file="../paper/acesterr.pdf",h=2,w=6)
+pdf(file="./paper/acesterr.pdf",h=2,w=6)
 # Plot with small error
 par(mfrow=c(1,3),mar=c(0.25,0.25,1.5,0.25))
 plot(trapboundary,main="(a)")
@@ -287,7 +290,7 @@ dev.off()
 
 
 
-pdf(file="../paper/acuseesterr.pdf",h=2,w=6)
+pdf(file="./paper/acuseesterr.pdf",h=2,w=6)
 par(mfrow=c(1,3),mar=c(0.25,0.25,1.5,0.25))
 # Plot with small error
 plot(trapboundary,main="(a)")
@@ -304,3 +307,36 @@ plot(trapboundary,main="(c)")
 plot(inspdf.acuseerrtrend,col=heat.colors(40),what="image",add=TRUE)
 plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
 dev.off()
+
+
+# Do an SCR survey to illustrate prediction error size change
+# ===========================================================
+scrtraps = make.grid(nx=4,ny=4,spacex=10,detector="count",origin=c(35,35))
+plot(boundary)
+plot(scrtraps,add=TRUE)
+plot(trapboundary,add=TRUE)
+set.seed(1)
+simch = sim.capthist(scrtraps,pop,detectpar=list(g0=1,sigma=10),noccasions=1)
+summary(simch)
+plot(simch,tracks=TRUE,border=0)
+simfit = secr.fit(simch,mask=mask)
+fxtot = fx.total(simfit,mask=mask)
+#plotcovariate(fxtot,covariate="D.sum",what="image")
+#plot(scrtraps,add=TRUE)
+simfit$capthist[1,,] = c(rep(0,15),1) # make top right only detection for this animal
+
+
+pdf(file="./paper/screrr.pdf",h=4,w=4)
+par(mar=c(1,1,1,1))
+plot(trapboundary)
+fxi.contour(simfit,i=1,nx=200,add=TRUE,drawlabels=FALSE)
+fxi.contour(simfit,i=9,nx=200,add=TRUE,drawlabels=FALSE) # this is an animal in the centre of the grid
+plot(scrtraps,add=TRUE)
+ch9 = simfit$capthist[9,1,]
+detected9 = which(ch9>0)
+points(scrtraps$x[detected9],scrtraps$y[detected9],pch=15)
+ch1 = simfit$capthist[1,1,]
+detected1 = which(ch1>0)
+points(scrtraps$x[detected1],scrtraps$y[detected1],pch=17)
+dev.off()
+
