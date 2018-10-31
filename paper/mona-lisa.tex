@@ -14,7 +14,7 @@
 \presetkeys{todonotes}{fancyline, color=white}{}
 
 \pagestyle{fancy}
-\rhead{This is not a density surface}
+\rhead{That's not the Mona Lisa}
 \lhead{}
 
 \usepackage{lineno}
@@ -35,7 +35,7 @@
 
 \date{}
 
-\title{This is not a density surface: misinterpretation of spatial capture-recapture density surface estimates}
+\title{That's not the Mona Lisa!: how to interpret spatial capture-recapture density surface estimates}
 
 
 \begin{document}
@@ -58,7 +58,7 @@ Spatial capture-recapture (SCR) models \citep*{Efford:04,Borchers+Efford:08, Roy
 
 SCR density estimates are often presented graphically in the form of estimated density maps, these being easy to absorb and interpret, at least on the face of it.  However, there are various kinds of density map that one can produce from SCR analyses and depending on what is presented, it is quite easy to misinterpret the maps. The most common form of misinterpretation is treating maps that include both spatially varying uncertainty about location and spatially varying activity centre density estimates as if they are maps of activity centre density alone, but there is also a lack of clarity about whether it is activity cente density or habitat use density that is being presented..
 
-Examples include \cite{Dorzaio+Karanth:17} which says that such maps effectively provide  ``a species distribution model, even in cases where spatial covariates of abundance are unknown or unavailable'', \cite{Alexander+al:15}, which presents a map (Figure 4) that include both spatially varying uncertainty about location and spatially varying activity centre density and calls it the ``spatial distribution of snow leopards'', and \cite{Elliot+Gopalaswamy:16}, which presents the same kind of map (Figure 2) and calls it ``pixel-specific lion density''. \todo{Add more refs?}
+Examples include \cite{Dorzaio+Karanth:17} which says that such maps effectively provide  ``a species distribution model, even in cases where spatial covariates of abundance are unknown or unavailable'', \cite{Alexander+al:15}, which presents a map (Figure 4) that include both spatially varying uncertainty about location and spatially varying activity centre density and calls it the ``spatial distribution of snow leopards'', and \cite{Elliot+Gopalaswamy:16}, which presents the same kind of map (Figure 2) and calls it ``pixel-specific lion density''. \todo[size=\footnotesize]{Add more refs?}
 
 The problems with interpretation of such maps arises from (a) the fact that there are various kinds of ``density'', (b) the fact that detection probability varies spatially and this fact must be (but is often not) taken into account when interpreting estimated density surfaces from SCR surveys, and (c) confusion betwen activity centre density and usage denstiy. 
 
@@ -116,7 +116,7 @@ The fact that there is only small observation error in the centre of the plot an
 \label{fig:acuseesterr}
 \end{figure}
 
-It is a feature of SCR surveys that the locations of individuals farther from the trap array tend to be estimated with greater uncertainty than individuals within the array. This is illustrated in Figure~\ref{fig:screrr}, which shows the estimated probability density functions for two animals detected on a 4$\times$4 array placed in the centre of the population shown in Figure~\ref{fig:densities}(b).
+It is a feature of SCR surveys that the locations of individuals farther from the trap array tend to be estimated with greater uncertainty than individuals within the array. This is illustrated in Figure~\ref{fig:screrr}, which shows the estimated probability density functions for two animals detected on a 4$\times$4 array placed in the centre of the population shown in Figure~\ref{fig:densities}(b) (from a simulated SCR survey).
 
 \begin{figure}[htbp]
 \centering
@@ -169,16 +169,36 @@ It is a feature of SCR surveys that the locations of individuals farther from th
 %\label{binom}
 %\end{figure}
 
-\section{Estimation methods}
+\section{SCR density estimation methods}
 
-\todo[inline]{Need to describe (without much detail, and referring to published papers that contain the detail) the methods for estimating (a) intensity surface and (b) the activity centre locations. Need to cover both frequentist and Bayesian methods.}
+Maximum likelihood (ML) and Bayesian SCR estimation methods are documented in a good number of papers, starting with \cite{Borchers+Efford:08} and \cite{Royle+Young:08}, and we do not repeat the details here. Both ML and Bayesian inference are based on SCR likelihood functions that include a component specifying the activity centre density surface, which may depend on spatially-referenced covariates. (The linear density surface shown in Figure~\ref{fig:densities}(a) is an example.) The density surface is typically of the form $D(\bm{s})=\exp\left\{\beta_0 + \sum_{k=1}^K\beta_kx_k(\bm{s})\right\}$, where $\bm{s}$ is a point in the plane, $x_k(\bm{s})$ is the $k$th of $K$ spatially-referenced covariates, evaluated at $\bm{s}$, $\beta_0$ is and intercept parameer, and $\beta_k$ is the slope parameter for the $k$th spatially-referenced covariate. ML and Bayesian methods are able to estimate $\beta_0,\ldots,\beta_K$, and hence to estimate the densiy surface. We refer to this as the ``estimated density surface''.
 
-\section{The Mona Lisa as a Poisson point process} \label{monalisa}
+Given spatial capture histories, ML and Bayesian methods are also able to estimate the locations of activity centres. (Locations like those shown in Figure~\ref{fig:densities}(b), for example.) While activity centres are points, there is always uncertainty associated with estimating their locations, so that SCR estimates of activity centre locations are probability density functions (PDFs), not points. Estimates of these PDFs are conditional on the spatial capture histories of the individuals concerned -- because the capture histories contain information on where each animal's activity centre was (see the capture histories and estimated location densities in Figure~\ref{fig:screrr}, for example). Details of how one obtains these estimated activity centre PDFs are contained in Section 4.3 of \cite{Borchers+Efford:08} for ML methods and the section ``Estimating derived parameters'' on page 3238 of \cite{Royle+al:09b} for Bayesian methods.
 
-\subsection{Materials and methods}
-In order to investigate and illustrate density estimation methods with SCR surveys, we simulate data from a density surface based on one of the most recognisable images in Western culture, the Mona Lisa. We created a greyscale version of a region of the original image (Figure \ref{mlinputs}, ``Original'') and downscaled this to $50\times 50$ pixel resolution (Figure \ref{mlinputs}, ``Low Res''). The greyscale values give the true density of activity centers, with lighter areas indicating higher densities. 
+Note that you can obtain activity centre PDFs for undetected animals, because although the animals were unobserved, we know their capture histories -- namely no capture at every detector. Note also that all undetected animals will have the same activity centre PDF\footnote{This is not the case if there are individual-level covariates that affect detection probability estimates, but this is a complication that we ignore here in order to present as clear and uncomplicated an exposition of they key points of this paper as we can.} because they all have the same capture history. 
 
-We then used the density surface \todo[size=\tiny]{Ian, you had ``in the ``Low Res'' image'' here. We dont' need that image at all, do we?} to generate two realisations of points from the underlying process. In the first of these we generated the number of points from a single draw from a Poisson distribution with mean 7500, resulting in 7451 activity centers being generated (Figure \ref{mlinputs}, ``Simulated''). This realisation has the advantage of closely reproducing the source image, and conducting an SCR survey with this population gives us an indication of the behaviour of SCR density estimators as sample size gets very large. We also generated a much smaller second realisation of 84 points (Figure \ref{mlinputs}, ``Simulated small''). This realisation clearly no longer captures the Mona Lisa, but is a useful aid to understanding some aspects of SCR estimators.
+Suppose that we estimate from an SCR survey that there are $\hat{N}$ animals within the survey region. If one adds up the activity centre PDFs for all $n$ detected animals, and the $\hat{N}-n$ activity centre PDFs of the undetected animals, at all points in the survey region, one gets a surface that is in many publications (including those lised in the Introduction) interpreted as density surface for animal locations.  We refer to this as the ``estimated activity centre surface''.
+
+What we call an ``estimated activity centre surface'' has been referred to as the estimated distribution, or density of \textit{animals}. However, animals distribute themselves around their activity centres, so that activity centre density and animal density are not the same thing. Suppose for example, that we are certain that there is exactly one activity centre in a region that has surface area 1 (so that activity centre density in this region is 1). Suppose also that the animal with activity centre in this region ranges wider than this region, and spends exactly half its time in this region. It is not cerain that there is an animal in the region at any time, so that animal density will be less than 1. In this example, it would be fair to say that the \textit{animal} density in the region is 0.5. To avoid confusion, we refer to this as the ``usage density'' rather than ``animal density''. Details of how one obtains an estimated usage denstiy surface from an estimated activity centre surface are given in Appendix~\ref{appx:usage-details}.\todo[inline,size=\footnotesize]{Ben/Ian: Can you insert mathematical details? I think we need to do this because there are (to my knowledge) no publications that contain the details.}
+
+In summary, there are three kinds of estimated surface of interest here: 
+\begin{itemize}
+\item The \textbf{estimated density surface}: This is an estimate of the density model component of the SCR model, which governs the location of activity centres.
+\item The \textbf{estimated activity centre surface}: This is the combined estimated activity centre densities of all animals, conditional on each animal's capture history.
+\item The \textbf{estimated usage surface}:  This is the combined space usage density of animals, conditional on each animal's capture history.
+\end{itemize}
+
+
+
+\section{Methods}
+
+We investigate and illustrate what the three kinds of estimated surface gives the practitioner, and what interpretations of the surfaces are valid and useful, by (a) simulating data from a density surface that has easy visual interpretation, and (b) using the Ngarahole SCR tiger survey data kindly provided by the first author of \cite{Dorazio+Karanth:17}.
+
+\subsection{Reproducing the Mona Lisa} \label{monalisa}
+
+For easy visual interpretation, we turned one of the most recognisable images in Western culture, the Mona Lisa, into a density surface. We created a greyscale version of a region of the original image (Figure \ref{mlinputs}, ``Original'') and downscaled this to $50\times 50$ pixel resolution (Figure \ref{mlinputs}, ``Low Res''). \todo[size=\footnotesize]{David: I think we should remove the Low Res version.} The greyscale values give the true density of activity centers, with lighter areas indicating higher densities. 
+
+We then used the density surface \todo[size=\footnotesize]{Ian, you had ``in the ``Low Res'' image'' here. We dont' need that image at all, do we?} to generate two realisations of points from the underlying process. In the first of these we generated the number of points from a single draw from a Poisson distribution with mean 7500, resulting in 7451 activity centers being generated (Figure \ref{mlinputs}, ``Simulated''). This realisation has the advantage of closely reproducing the source image, and when we conduct SCR surveys with this population, it gives us an indication of the behaviour of SCR density estimators as sample size gets very large. We also generated a much smaller second realisation of 84 points (Figure \ref{mlinputs}, ``Simulated small''). This realisation captures the Mona Lisa only at an extremely gross level (the darkest region corresponding to the hair can be picked out if you squint at the image long enough!), but is a useful aid to understanding some properties of the estimators.
 
 \begin{figure}[htbp]
 \centering
@@ -188,7 +208,7 @@ We then used the density surface \todo[size=\tiny]{Ian, you had ``in the ``Low R
 \end{figure}
 \todo[inline,size=\footnotesize]{David: I don't see the point of the Low Res image.}
 
-We conducted various simulated surveys of the population, using different arrays of detectors and also varying the number of detection occasions.\todo[inline,size=\footnotesize]{I think occasions are a red herring here. If these are count data, then occasion is irrelevant. What we should report is the sample size (total number of detections and number of unique individuals detected).} Different arrays and detection functions were used for the large and small populations described above. With the large number of activity centers, we used four different 3x4 arrays (Figure \ref{mona1low}), with array centers $(19,21)$, $(19,33)$, $(28, 21)$, or $(28, 33)$. All arrays were spaced such that they have length 8 in the $x$-plane and 12 in the $y$-plane, and so have an average spacing of $4=2\sigma$. We simulated capture histories using a half-normal detection function with $g_0$, the probability of detection at a single detector placed at an activity centre, set to 0.5, and $\sigma$, the spatial scale parameter, set to 2. We then simulated a capture history for either one or 20 occasions on each array.\todo[inline,size=\footnotesize]{Same comment about occasions applies.}
+We conducted various simulated surveys of the population, using different arrays of detectors and also varying the number of detection occasions.\todo[inline,size=\footnotesize]{I think occasions are a red herring here. If these are count data, then occasion is irrelevant. What we should report is the sample size (total number of detections and number of unique individuals detected).} Different arrays and detection functions were used for the large and small populations described above. With the large number of activity centers, we used four different 3x4 arrays (Figure \ref{mona1low}), with array centers $(19,21)$, $(19,33)$, $(28, 21)$, or $(28, 33)$. All arrays were spaced such that they have length 8 in the $x$-plane and 12 in the $y$-plane, and so have an average spacing of $4=2\sigma$. We simulated capture histories using a half-normal detection function with $g_0$, the probability of detection at a single detector placed at an activity centre, set to 0.5, and $\sigma$, the spatial scale parameter, set to 2. We then simulated a capture history for either one or 20 occasions on each array.\todo[size=\footnotesize]{Same comment about occasions applies.}
 
 When using relatively few activity centers, visual interpretation was made easier by increasing the spatial scale parameter, effectively increasing the distance animals travel from the activity centers, and also by increasing the distance between detectors. For these cases, we increased $\sigma$ to 4, holding other detection function parameters at their previous values, and used a 3x4 array centered on $(18,34)$ and with an average spacing of 8 between detectors, double that used previously. We simulated capture histories after one, three, ten, and 20 occasions. 
 
@@ -212,6 +232,9 @@ Very different relative and absolute densities were obtained depending on where 
 \caption{True activity center densities in this realisation (``Simulated'') compared with realised activity center surfaces estimated using different arrays after a single sampling occasion. High density areas are indicated in yellow, low density areas in blue. Detectors are shown as red crosses. Blue squares show the same 4x4 square centered at $(25,29)$, whose vertices are corner detectors from each of 3x4 arrays. Each plot in the second row shows an enlargement of the blue square in the plot above it. White triangles denote the five cells with the highest estimated densities in each of the second row plots.}
 \label{mona1low}
 \end{figure}
+
+\todo[inline,size=\footnotesize]{The densities in these plots should really be expected densities (i.e. averages over lots of simulations) - particularly for the bottom row of estimates, since you might expect substantial random variation in these from sample to sample. The top images illustrate fairly convincingly how the SCR ``torch'' does pretty well where it ``shines'' but can't see beyond, without the need to use expected values, but because you can't see pattern in the bottom ones, you are more inclined to say ``So what that they are not the same - there is sampling variation.''
+Also, we need to give sample sizes for these surveys (number detections and number of different individuals).}
 
 \begin{figure}[htbp]
 \centering
