@@ -5,8 +5,8 @@ library(devtools)
 #install_github("rachelphillip/SCR-Book/scrmlebook")
 library(scrmlebook)
 
-source("code/predicted_densities_for_D0.R")
-source("code/run_secr.R")
+source("code_monalisa/predicted_densities_for_D0.R")
+source("code_monalisa/run_secr.R")
 
 load("output/mona_inputs.RData")
 
@@ -48,7 +48,7 @@ parlist1 <- expand.grid(secr.fitformula = "D~1",
                         noccasions = c(1,20),
                         stringsAsFactors = FALSE)
 
-fig34_results <- pmap(parlist1, .f = run_secr, simulated_points = simulated_points_lots, my.seed = 123)
+fig34_results <- pmap(parlist1, .f = run_secr, simulated_points = simulated_points_lots, my.seed = 12345)
 
 # runs for figure 5: various covariate, after 1 and 20 occasions, bot-left and top-rt arrays only 
 parlist2a <- expand.grid(secr.fitformula = c("D~Dgood", "D~Dblur", "D~Dshift", "D~Drept"),

@@ -137,7 +137,6 @@ run_secr <- function(simulated_points,
   
   return(list(predicted_densities = predicted_densities, 
               detectors_df = detectors_df,
-              estimated_sigma = estimated_sigma,
-              capture_history = capture_history_max_occasions))
+              estimated_sigma = estimated_sigma))
   
 }
