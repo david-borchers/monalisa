@@ -38,10 +38,25 @@ grids_for_rest <- c("Low Res", "Simulated", "Simulated Small")
 predicted_densities_orig <- predicted_densities_all %>% filter(grid == "Original") %>% droplevels()
 predicted_densities_rest <- predicted_densities_all %>% filter(grid %in% grids_for_rest) %>% droplevels()
 
-p1 <- predicted_densities_all %>% 
+# p1 <- predicted_densities_all %>% 
+#   ggplot(aes(x, y)) + 
+#   geom_raster(data = predicted_densities_orig, aes(fill = value)) +
+#   geom_raster(data = predicted_densities_rest, aes(fill = value)) +
+#   scale_fill_viridis(limits = c(minvalue, maxvalue)) +
+#   facet_wrap(~ grid, nrow = 1) +
+#   theme(axis.line=element_blank(),axis.text.x=element_blank(),
+#         axis.text.y=element_blank(),axis.ticks=element_blank(),
+#         axis.title.x=element_blank(),
+#         axis.title.y=element_blank(),legend.position="none",
+#         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+#         panel.grid.minor=element_blank(),plot.background=element_blank())
+
+p1 <- predicted_densities_rest %>% 
+  mutate(grid = recode_factor(grid, "Low Res" = "True Density",
+                              "Simulated" = "Realisation 1",
+                              "Simulated Small" = "Realisation 2")) %>%
   ggplot(aes(x, y)) + 
-  geom_raster(data = predicted_densities_orig, aes(fill = value)) +
-  geom_raster(data = predicted_densities_rest, aes(fill = value)) +
+  geom_raster(aes(fill = value)) +
   scale_fill_viridis(limits = c(minvalue, maxvalue)) +
   facet_wrap(~ grid, nrow = 1) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
@@ -51,4 +66,4 @@ p1 <- predicted_densities_all %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-ggsave("mona_results/mona_inputdata.png", p1, width=9, height=3, dpi = 300)
+ggsave("paper/mona_inputdata.png", p1, width=7, height=3, dpi = 300)

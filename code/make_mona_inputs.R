@@ -43,6 +43,16 @@ local_small_mona <- imappend(list(imsub(blurry_shifted_small_mona, x <= width/2)
                                       imsub(half_mona, x > width/2)), 'x')  
 plot(local_small_mona)
 
+# Leonardo da Vinci as a covariate
+
+# load hi-res image of part of mona lisa created by make_hires_mona_jpg.R
+ldv <- load.image("output/hires_ldv.jpg")
+plot(ldv)
+
+# make a low res version, this is the true density surface
+small_ldv <- resize(ldv, resized_x, resized_x)
+plot(small_ldv)
+
 # turn into data frames
 
 good_small_mona <- as.data.frame(good_small_mona) %>% 
@@ -57,13 +67,17 @@ blurry_shifted_small_mona <- as.data.frame(blurry_shifted_small_mona) %>%
 local_small_mona <- as.data.frame(local_small_mona) %>% 
   mutate(y = max(y) - y + 1, Drept = value) %>% select(-value)
 
+small_ldv <- as.data.frame(small_ldv) %>% 
+  mutate(y = max(y) - y + 1, Dldv = value) %>% select(-value)
+
 mona_df <- as.data.frame(small_mona) %>% 
   mutate(y = max(y) - y + 1, 
          D = value) %>% select(-value) %>%
   left_join(good_small_mona) %>%
   left_join(blurry_small_mona) %>%
   left_join(blurry_shifted_small_mona) %>%
-  left_join(local_small_mona)
+  left_join(local_small_mona) %>%
+  left_join(small_ldv)
 
 # check correlations
 cor(mona_df)

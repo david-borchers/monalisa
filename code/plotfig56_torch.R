@@ -6,6 +6,7 @@ library(viridis)
 
 load("output/mona_raw_outputs.RData")
 load("output/simulated_densities_for_paper.RData")
+load("output/capthist_summaries.RData")
 
 # add a variable to the simulated data so that can rbind to results a bit later
 simulated_densities_df <- simulated_densities_df %>% mutate(occasions = 1, array_origin = "none") %>%
@@ -120,7 +121,15 @@ array_levels <- c("none", "15_31", "27_31", "15_15","27_15",
                   "inset_none", "inset_15_31", "inset_27_31", 
                   "inset_15_15","inset_27_15")
 
-array_labels <- c("Simulated", "Top Left", "Top Right", "Bottom Left", "Bottom Right",
+# capture histories from get_capthist_summaries.r
+paster <- function(d,nd,na){
+  paste0(d,"\n",nd," detections\n(",na, " individuals)")
+}
+
+capthist_labels <- pmap(list(d = ch_fig5$detector, nd = ch_fig5$n_detections, na = ch_fig5$n_animals), .f = paster) %>% unlist() 
+capthist_labels <- capthist_labels[c(3,4,1,2)]
+
+array_labels <- c("Simulated", capthist_labels,
                   "Simulated Inset", "Top Left Inset", "Top Right Inset", "Bottom Left Inset", 
                   "Bottom Right Inset") 
 
@@ -176,9 +185,34 @@ p1 <- predicted_densities_all %>% filter(occasions == 1) %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-ggsave("mona_results/mona_torch_loweffort.png", p1, width=8, height=4, dpi = 600)
+ggsave("paper/mona_torch_loweffort.png", p1, width=8, height=4.5, dpi = 600)
 
 # figure 4, 20 occasions
+
+capthist_labels <- pmap(list(d = ch_fig6$detector, nd = ch_fig6$n_detections, na = ch_fig6$n_animals), .f = paster) %>% unlist() 
+capthist_labels <- capthist_labels[c(3,4,1,2)]
+
+array_labels_p2 <- c("Simulated", capthist_labels,
+                  "Simulated Inset", "Top Left Inset", "Top Right Inset", "Bottom Left Inset", 
+                  "Bottom Right Inset") 
+
+levels(predicted_densities_all$array_origin) <- array_labels_p2
+levels(detectors_df_all$array_origin) <- array_labels_p2
+levels(detectors_insets$array_origin) <- array_labels_p2
+levels(focus_area$array_origin) <- array_labels_p2
+levels(focus_area_insets$array_origin) <- array_labels_p2
+levels(top5_insets$array_origin) <- array_labels_p2
+
+predicted_densities_all$array_origin <- droplevels(predicted_densities_all$array_origin)
+detectors_df_all$array_origin <- droplevels(detectors_df_all$array_origin)
+detectors_insets$array_origin <- droplevels(detectors_insets$array_origin)
+focus_area$array_origin <- droplevels(focus_area$array_origin)
+focus_area_insets$array_origin <- droplevels(focus_area_insets$array_origin)
+top5_insets$array_origin <- droplevels(top5_insets$array_origin)
+
+# split data frame into one for inset and one for the rest, for plotting
+predicted_densities_rest <- predicted_densities_all %>% filter(!str_detect(array_origin, "inset")) %>% droplevels()
+predicted_densities_inset <- predicted_densities_all %>% filter(str_detect(array_origin, "inset")) %>% droplevels()
 
 p2 <- predicted_densities_all %>% filter(occasions == 20) %>%
   ggplot(aes(x, y)) + 
@@ -202,4 +236,4 @@ p2 <- predicted_densities_all %>% filter(occasions == 20) %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-ggsave("mona_results/mona_torch_higheffort.png", p2, width=8, height=4, dpi = 600)
+ggsave("paper/mona_torch_higheffort.png", p2, width=8, height=4.5, dpi = 600)

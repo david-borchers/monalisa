@@ -12,7 +12,8 @@ predicted_densities_covs <- mona_df %>% select(-D) %>%
   gather(grid, value, -x, -y) %>% arrange(x,y) %>% 
   mutate(covtype = grid,
          array_origin = "none") %>%
-  select(-grid) 
+  select(-grid) %>% 
+  filter(covtype %in% c("Dgood", "Dblur", "Dldv"))
 
 # scale the plots to all sum to one
 predicted_densities_covs <- predicted_densities_covs %>% 
@@ -44,12 +45,12 @@ predicted_densities_all <- rbind(predicted_densities_all, predicted_densities_co
 
 # recode and reorder factor levels
 predicted_densities_all$covtype <- factor(predicted_densities_all$covtype, 
-                                          levels = c("Dgood", "Dblur", "Dshift", "Drept"),
-                                          labels = c("Strong", "Moderate", "Weak", "Locally strong"))
+                                          levels = c("Dgood", "Dblur", "Dldv"),
+                                          labels = c("Strong", "Moderate", "Weak"))
 
 detectors_df_all$covtype <- factor(detectors_df_all$covtype, 
-                                   levels = c("Dgood", "Dblur", "Dshift", "Drept"),
-                                   labels = c("Strong", "Moderate", "Weak", "Locally strong"))
+                                   levels = c("Dgood", "Dblur", "Dldv"),
+                                   labels = c("Strong", "Moderate", "Weak"))
 
 predicted_densities_all$array_origin <- factor(predicted_densities_all$array_origin,
                                          levels = c("none", "27_31", "15_15"),
@@ -73,4 +74,4 @@ p1 <- predicted_densities_all %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-ggsave("mona_results/mona_covariates.png", p1, width=7.9, height=6, dpi = 600)
+ggsave("paper/mona_covariates.png", p1, width=6, height=6, dpi = 600)

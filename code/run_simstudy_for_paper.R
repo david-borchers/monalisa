@@ -51,13 +51,13 @@ parlist1 <- expand.grid(secr.fitformula = "D~1",
 fig34_results <- pmap(parlist1, .f = run_secr, simulated_points = simulated_points_lots, my.seed = 123)
 
 # runs for figure 5: various covariate, after 1 and 20 occasions, bot-left and top-rt arrays only 
-parlist2a <- expand.grid(secr.fitformula = c("D~Dgood", "D~Dblur", "D~Dshift", "D~Drept"),
+parlist2a <- expand.grid(secr.fitformula = c("D~Dgood", "D~Dblur", "D~Dldv"),
                         dx = 4, dy = 4, nx = 3, ny = 4, 
                         xorig = 15, yorig = 15, 
                         sigma = 2, lambda0 = 0.69, 
                         noccasions = c(1,20),
                         stringsAsFactors = FALSE)
-parlist2b <- expand.grid(secr.fitformula = c("D~Dgood", "D~Dblur", "D~Dshift", "D~Drept"),
+parlist2b <- expand.grid(secr.fitformula = c("D~Dgood", "D~Dblur", "D~Dldv"),
                         dx = 4, dy = 4, nx = 3, ny = 4, 
                         xorig = 27, yorig = 31, 
                         sigma = 2, lambda0 = 0.69, 

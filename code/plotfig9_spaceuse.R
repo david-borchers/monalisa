@@ -3,9 +3,10 @@
 library(tidyverse)
 library(viridis)
 
-source("add_movement_to_acs.R")
+source("code/add_movement_to_acs.R")
 
 load("output/mona_raw_outputs.RData")
+load("output/capthist_summaries.RData")
 
 # process the outputs for all animals
 predicted_densities_all <- fig6_results %>% 
@@ -129,10 +130,16 @@ ac_densities_with_movement <- ac_densities_with_movement %>%
 # detectors are the same for all plots so just extract unique combos of (x,y)
 detectors <- detectors_df_all %>% group_by(x,y) %>% count()
 
+# capture histories from get_capthist_summaries.r
+paster <- function(nd,na){
+  paste0(nd," detections\n(",na, " individuals)")
+}
+capthist_labels <- map2(.x = ch_fig8$n_detections, .y = ch_fig8$n_animals, .f = paster) %>% unlist() 
+
 # relabel factor levels for occasion variable
 ac_densities_with_movement$occasions <- factor(ac_densities_with_movement$occasions, 
                                             levels = c(1,3,10,20),
-                                            labels = c("1 occasion", "3 occasions", "10 occasions", "20 occasions"))
+                                            labels = capthist_labels)
 
 
 p1 <- ac_densities_with_movement %>% 
@@ -149,5 +156,5 @@ p1 <- ac_densities_with_movement %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-ggsave("mona_results/mona_with_movement.png", p1, width=8, height=6, dpi = 600)
+ggsave("paper/mona_with_movement.png", p1, width=8, height=6, dpi = 600)
 

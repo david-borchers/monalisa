@@ -4,6 +4,7 @@ library(tidyverse)
 library(viridis)
 
 load("output/mona_raw_outputs.RData")
+load("output/capthist_summaries.RData")
 
 # process the outputs
 predicted_densities_all <- fig6_results %>% purrr::map("predicted_densities") %>% map_df(bind_rows)
@@ -23,20 +24,26 @@ predicted_densities_all <- predicted_densities_all %>%
 
 # recode and reorder factor levels
 predicted_densities_all$covtype <- factor(predicted_densities_all$covtype, 
-                                          levels = c("1", "Dgood", "Dblur"),
-                                          labels = c("None", "Strong", "Moderate"))
+                                          levels = c("1", "Dgood", "Dblur", "Dldv"),
+                                          labels = c("None", "Strong", "Moderate", "Weak"))
 
 detectors_df_all$covtype <- factor(detectors_df_all$covtype, 
-                                   levels = c("1", "Dgood", "Dblur"),
-                                   labels = c("None", "Strong", "Moderate"))
+                                   levels = c("1", "Dgood", "Dblur", "Dldv"),
+                                   labels = c("None", "Strong", "Moderate", "Weak"))
+
+# capture histories from get_capthist_summaries.r
+paster <- function(nd,na){
+  paste0(nd," detections\n(",na, " individuals)")
+}
+capthist_labels <- map2(.x = ch_fig8$n_detections, .y = ch_fig8$n_animals, .f = paster) %>% unlist() 
 
 predicted_densities_all$occasions <- factor(predicted_densities_all$occasions, 
                                           levels = c(1,3,10,20),
-                                          labels = c("1 occasion", "3 occasions", "10 occasions", "20 occasions"))
+                                          labels = capthist_labels)
 
 detectors_df_all$occasions <- factor(detectors_df_all$occasions, 
                                      levels = c(1,3,10,20),
-                                     labels = c("1 occasion", "3 occasions", "10 occasions", "20 occasions"))
+                                     labels = capthist_labels)
 
 p1 <- predicted_densities_all %>%
   ggplot(aes(x, y)) + 
@@ -52,4 +59,4 @@ p1 <- predicted_densities_all %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-ggsave("mona_results/mona_peaky.png", p1, width=8, height=6, dpi = 600)
+ggsave("paper/mona_peaky.png", p1, width=8, height=7.5, dpi = 600)
