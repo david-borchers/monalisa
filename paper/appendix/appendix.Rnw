@@ -166,7 +166,7 @@ were sampled on the $j$th of $M$ total MCMC iterations,
 respectively. The estimated usage distribution is therefore not
 conditional on one particular set of estimated parameter values, but
 instead considers the range of values across the posterior
-distribution.
+distribution of $\bm{\theta}$.
 
 \bibliographystyle{../mee} \bibliography{../monalisa}
 
