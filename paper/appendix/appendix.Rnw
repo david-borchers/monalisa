@@ -98,7 +98,7 @@ where
 \item $f_{\bm{s} \mid \bm{\omega}}(\bm{s} \mid
   \bm{\omega}_i; \bm{\widehat{\theta}})$ is the estimated usage distribution, providing the
   probability density of finding an individual with capture history
-  $\bm{\omega}_i$ at location $\bm{x}$ at a randomly selected point in
+  $\bm{\omega}_i$ at location $\bm{s}$ at a randomly selected point in
   time;
 \item $f_{\bm{x} \mid \bm{\omega}}(\bm{x} \mid \bm{\omega}_i;
   \bm{\widehat{\theta}})$ is the estimated PDF of the activity centre
