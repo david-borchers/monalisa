@@ -147,7 +147,7 @@ as geography and other stuff like that ([SOME OF CHRIS SUTHERLAND'S
   this yet. However I think this is a suitable place to deal with
   these issues.}
 
-\subsection{The Bayesian alternative}
+\subsection{The Bayesian approach}
 
 Bayesian models fitted via MCMC can directly sample activity centres
 of detected individuals, and also of undetected individuals using data
