@@ -74,9 +74,100 @@ in the main manuscript based on maximum-likelihood models.
 \subsection{Discussion}
 \label{sec:appendix-discussion}
 
-\section{Appendix S2}
+\section{Estimation of realised usage density}
 
-\bibliographystyle{../mee}
-\bibliography{../monalisa}
+Estimation of realised usage density is a similar process for both
+maximum likelihood and Bayesian approaches: we sum usage densities for
+each individual animal, each of which is calculated via convolving the
+estimated PDF of its activity centre with an individual usage
+distribution.
+
+\subsection{The maximum likelihood approach}
+
+For maximum likelihood, the estimated usage density for the $i$th
+animal, with capture history $\bm{\omega}_i$, is given by
+\begin{equation}
+f_{\bm{s} \mid \bm{\omega}}(\bm{s} \mid \bm{\omega}_i; \bm{\widehat{\theta}}) =
+\int f_{\bm{x} \mid \bm{\omega}}(\bm{x} \mid \bm{\omega}_i; \bm{\widehat{\theta}})
+f_{\bm{s} \mid \bm{x}}(\bm{s} \mid \bm{x}; \bm{\widehat{\theta}}) d\bm{x}, \label{eq:ind-usage}
+\end{equation}
+where
+\begin{itemize}
+\item $\bm{\widehat{\theta}}$ is a vector containing the maximum
+  likelihood estimates of the encounter function parameters;
+\item $f_{\bm{s} \mid \bm{\omega}}(\bm{s} \mid
+  \bm{\omega}_i; \bm{\widehat{\theta}})$ is the estimated usage distribution, providing the
+  probability density of finding an individual with capture history
+  $\bm{\omega}_i$ at location $\bm{x}$ at a randomly selected point in
+  time;
+\item $f_{\bm{x} \mid \bm{\omega}}(\bm{x} \mid \bm{\omega}_i;
+  \bm{\widehat{\theta}})$ is the estimated PDF of the activity centre
+  of an individual with capture history $\bm{\omega}_i$ (see Section
+  3); and
+\item $f_{\bm{s} \mid \bm{x}}(\bm{s} \mid \bm{x}; \bm{\widehat{\theta}})$ is the
+  estimated usage distribution of the individual conditional on the
+  activity centre, providing the probability density of the individual
+  being at location $\bm{s}$ given that its activity centre is at
+  $\bm{x}$.
+\end{itemize}
+Estimated usage density at location $\bm{s}$ is then given by
+$\widehat{D}_u(\bm{s}) = \sum_i f_{\bm{s} \mid
+  \bm{\omega}}(\bm{s} \mid \bm{\omega}_i; \bm{\widehat{\theta}})$, noting that the sum is
+over individuals that were not detected, with capture histories $(0,
+\cdots, 0)$, along with those that were.
+
+\todo[inline]{It's unclear to me whether we directly estimate a
+  detection function or an encounter function in our models. Below I
+  assume the reader will know what an encounter fucntion is, but it
+  might need to be explained more explicitly. It's important that we
+  construct the individual usage distribution using an encounter
+  function rather than a detection function, because the rate at which
+  an animal visits a location is proportional to the encounter
+  function, but not to the detection function.} Here we constructed
+the individual usage distribution under the assumption that the
+density of an individual being at location $\bm{s}$ given its activity
+centre is at $\bm{x}$ is proportional to the encounter function
+$h\{d(\bm{s}, \bm{x}); \widehat{\bm{\theta}}\}$, where $d(\bm{s},
+\bm{x})$ is the Euclidean distance between $\bm{s}$ and $\bm{x}$, and
+so
+\begin{equation}
+  f_{\bm{s} \mid \bm{x}}(\bm{s} \mid \bm{x}; \widehat{\bm{\theta}}) = \frac{h\{d(\bm{s}, \bm{x}); \widehat{\bm{\theta}}\}}{\int h\{d(\bm{s}^\prime, \bm{x}); \widehat{\bm{\theta}}\} d\bm{s}^\prime},
+\end{equation}
+where the denominator is a normalising constant. This is a simple
+assumption that uses the detection function estimated by the SCR model
+to characterise each individual's usage distributions, although if
+alternative data sources are available (e.g., telemetry) they may be
+used instead. Indeed, the range of the encounter function may not
+appropriately estimate the size of the region used by an individual
+(e.g., see [SOME REFS IN HERE THAT I AM SURE EXIST BUT HAVEN'T FOUND
+  YET]), and it is likely that other variables affect its shape, such
+as geography and other stuff like that ([SOME OF CHRIS SUTHERLAND'S
+  CONNECTIVITY REFERENCES IN HERE]). \todo[inline]{Sorry, needs to be
+  written better, but I haven't read the papers to do a good job of
+  this yet. However I think this is a suitable place to deal with
+  these issues.}
+
+\subsection{The Bayesian alternative}
+
+Bayesian models fitted via MCMC can directly sample activity centres
+of detected individuals, and also of undetected individuals using data
+augmentation (ROYLE TEXTBOOK REFERENCE), thus obtaining samples from
+$f_{\bm{x} \mid \bm{\omega}}(\bm{x} \mid \bm{\omega})$ for each
+individual. We can use these samples directly to obtain the following
+approximation of the $i$th individual's usage distribution:
+\begin{equation}
+  f_{\bm{s} \mid \bm{\omega}}(\bm{s} \mid \bm{\omega}_i) \approx
+  \frac{1}{M} \sum_{j = 1}^M f_{\bm{s} \mid \bm{x}}(\bm{s} \mid
+  \bm{x}_{(j)}, \bm{\theta}_{(j)}),
+\end{equation}
+where $\bm{x}_{(j)}$ and $\bm{\widehat{\theta}}_{(j)}$ are the
+activity centre and a vector of encounter function parameters that
+were sampled on the $j$th of $M$ total MCMC iterations,
+respectively. The estimated usage distribution is therefore not
+conditional on one particular set of estimated parameter values, but
+instead considers the range of values across the posterior
+distribution.
+
+\bibliographystyle{../mee} \bibliography{../monalisa}
 
 \end{document}
