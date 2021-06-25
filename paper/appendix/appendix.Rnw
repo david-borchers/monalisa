@@ -78,7 +78,7 @@ in the main manuscript based on maximum-likelihood models.
 
 Estimation of realised usage density is a similar process for both
 maximum likelihood and Bayesian approaches: we sum usage densities for
-each individual animal, each of which is calculated via convolving the
+each individual animal, each of which is calculated by convolving the
 estimated PDF of its activity centre with an individual usage
 distribution.
 
