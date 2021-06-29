@@ -301,9 +301,10 @@ When we reran the survey on a subset of traps that excludes traps in the interio
 
 With the second subset of traps, which exclude eight detectors from each of two high density interior areas, the constant density model still recognized that activity centers are located in these areas, but the estimated locations of these activity centers showed a clear shift from what was found in the original survey (Figure \ref{tigernocov}, ``Subset \#2, no cov.''). The estimated location of the northernmost of the two activity centers moved to the south east, while the other activity center moved to the south.
 
+% ID -- added two options for relative differences v1 and v2. v2 makes change relative to density with all traps if change is negative, and relative to density with reduced set of traps if positive. This makes all changes lie between -100 and +100, and avoids very large positive relative changes where density was tiny in the all traps density surface. Bit weird so I prefer v1, but that makes the colour scales asymmetric (see plot legend). Can squash the blue side but needs more ggplot than I know.
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{tiger_surfaces_nocovs.png}
+\includegraphics[width=1\textwidth]{tiger_surfaces_nocovs_v1.png}
 \caption{Estimated realised activity center densities of tigers in Nagarahole Tiger Sanctuary, India, obtained using different camera trap arrays. Plots (a), (b), and (c) show estimated densities; plots (d) and (e) show differences between the estimated densities obtained using using trap subset \#1 and \#2 and those obtained using all traps. Detectors are shown as black crosses.}
 \label{tigernocov}
 \end{figure}
