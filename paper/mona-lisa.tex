@@ -417,7 +417,7 @@ f_\cdot(\bm{x}|\bm{\Omega})&=&\sum_{i=1}^nf(\bm{x}|\bm{\omega}_i)\;+\;(N-n)f(\bm
 \noindent
 where $\bm{\Omega}=(\bm{\omega}_1,\ldots,\bm{\omega}_n)$ and $\bm{\omega}_0$ is the zero capture history (not detected at any detector).
 
-Now let $\mu(\bm{u}|\bm{x})$ at a point $\bm{u}$ in the plane be an animal's expected usage of the point, given that an animal has its AC at the point $\bm{x}$.
+Now let $\mu(\bm{u}|\bm{x})$ at a point $\bm{u}$ in the plane be an animal's expected usage intensity at the point, given that an animal has its AC at the point $\bm{x}$.
 %suppose that there is a point process with intensity $\mu(\bm{u}|\bm{x})$ at a point $\bm{u}$ in the plane, that governs an animal's usage at the point, given that an animal has its AC at the point $\bm{x}$ (the interpretation being that each point of this process defines a point in space that was used by the animal).
 We define the realised usage density of the animal at $\bm{u}$, given its capture history $\bm{\omega}$ to be 
 \begin{eqnarray*}
@@ -431,7 +431,7 @@ The realised usage density for the population of $N$ animals is then defined as
 u_\cdot(\bm{x}|\bm{\Omega})&=&\sum_{i=1}^nu(\bm{x}|\bm{\omega}_i)\;+\;(N-n)u(\bm{x}|\bm{\omega}_0).
 \end{eqnarray*}
 
-To implement this, we discretize the surcey region into a mesh of $M$ pixels and set the expected usage function $\mu(\bm{u}_m|\bm{x})$ for pixel $\bm{u}_m$ ($m=1,\ldots,M$) to be equal to the encounter function (the expected number of times an animal with AC at $\bm{x}$ visits the pixel). In our application we used
+To implement this, we discretize the survey region into a mesh of $M$ pixels and set the expected usage function $\mu(\bm{u}_m|\bm{x})$ for pixel $\bm{u}_m$ ($m=1,\ldots,M$) to be equal to the encounter function (the expected number of times an animal with AC at $\bm{x}$ visits the pixel). In our application we used
 \begin{eqnarray*}
 \mu(\bm{u}_m|\bm{x})&=&\lambda_0\exp\left\{-\frac{\lVert \bm{x}-\bm{u}_m\rVert^2}{2\sigma^2}\right\}.
 \end{eqnarray*}
