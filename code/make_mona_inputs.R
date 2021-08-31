@@ -50,7 +50,7 @@ ldv <- load.image("output/hires_ldv.jpg")
 plot(ldv)
 
 # make a low res version, this is the true density surface
-small_ldv <- resize(ldv, resized_x, resized_x)
+small_ldv <- resize(ldv, resized_x, resized_x, size_c = 1)
 plot(small_ldv)
 
 # turn into data frames

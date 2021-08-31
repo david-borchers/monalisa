@@ -16,7 +16,8 @@ make_simulated_points_plottable <- function(simulated_points){
   # put into a small df to convert into an image
   simulated_densities_df <- data.frame(x = simulated_densities$xbin, 
                                        y = simulated_densities$ybin, 
-                                       value = simulated_densities$density)
+                                       dvalue = simulated_densities$density,
+                                       value = simulated_densities$count)
   
   return(simulated_densities_df)
 }

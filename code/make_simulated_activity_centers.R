@@ -5,7 +5,7 @@ library(tidyverse)
 #install_github("rachelphillip/SCR-Book/scrmlebook")
 library(scrmlebook)
 
-source("make_simulated_points_plottable.R")
+source("code/make_simulated_points_plottable.R")
 
 load("output/mona_inputs.RData")
 
@@ -45,6 +45,8 @@ simulated_densities_small_df <- make_simulated_points_plottable(simulated_points
 simulated_densities_small_df <- simulated_densities_small_df %>% 
   complete(x  = 1:50, y = 1:50, fill = list(value = 0))
 
+# name changed from "output/simulated_densities_for_paper.Rdata" in tidy up (31/8/2021)
 save(simulated_points_lots, simulated_points_few,
      simulated_densities_df, simulated_densities_small_df,
-     file = "output/simulated_densities_for_paper.Rdata")
+     file = "output/simulated_densities.Rdata")
+
