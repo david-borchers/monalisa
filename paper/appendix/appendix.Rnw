@@ -202,10 +202,9 @@ not detect any such inconsistency for a population of fishers
 they may be incoprorated for improved estimation of individual usage
 distributions \citep{Tenan+al:17}.
 
-Our assumption also assumes that home ranges are circular, however
-their shapes are likely to be modified by variables relating to
-population and landscape connectivity \citep[see][for a
-  review]{Drake+al:ip}.
+Our method also assumes that home ranges are circular, however their
+shapes are likely to be modified by variables relating to population
+and landscape connectivity \citep[see][for a review]{Drake+al:ip}.
 
 
 \bibliographystyle{../mee} \bibliography{../monalisa}
