@@ -41,6 +41,7 @@
 
 
 \begin{document}
+
 \maketitle
 
 \section{Simulation study for Bayesian models}
@@ -181,26 +182,30 @@ distribution of $\bm{\theta}$.
 \todo[inline]{I'm not sure that this is the best place for the
   discussion below, but leaving it here for now.}
 
-Here we constructed the individual usage distribution by assuming it
-is proportional to the encounter function from our SCR model, but if
-alternative data sources are available (e.g., telemetry, or
-opportunistic data such as hair or scat samples) they may be
-incoprorated for improved precision \citep{Tenan+al:17}.
+We constructed individual usage distributions using the encounter
+function from our SCR model, but this may not always be
+appropriate. For example, if individuals cannot fully explore their
+home range within the duration of the survey, then we would not expect
+the spatial range of the detection function to match the extent of an
+animal's usage distribution.
 
-Importantly, it may not be always be appropriate to relate the range
-of the encounter function to the size of the region used by an
-individual, and care should be taken when this practice is
-used. \citet{Tenan+al:17} found that estimates of this parameter from
-an SCR model fitted to noninvasive genetic detection data of brown
-bears (\emph{Ursus arctos}) was not consistent with spatial usage
-parameters estimated from other data sources, although
-\citet{Popescu+al:14} did not detect any such inconsistency for a
-population of fishers (\emph{Pekania pennanti}). 
+It may not be sensible to relate the range of the encounter function
+to the size of the region used by an individual even for longer
+surveys, and care should be taken when this practice is used. For
+example, \citet{Tenan+al:17} found that the spatial scale of the
+encounter rate function for brown bears (\emph{Ursus arctos})
+estimated using SCR was not consistent with spatial usage parameters
+estimated from other data sources, although \citet{Popescu+al:14} did
+not detect any such inconsistency for a population of fishers
+(\emph{Pekania pennanti}). If alternative data sources are available
+(e.g., telemetry, or opportunistic data such as hair or scat samples)
+they may be incoprorated for improved estimation of individual usage
+distributions \citep{Tenan+al:17}.
 
-Moreover, our assumption assumes that a home range is circular,
-however it is likely its shape is modified by variables relating to
+Our assumption also assumes that home ranges are circular, however
+their shapes are likely to be modified by variables relating to
 population and landscape connectivity \citep[see][for a
-  review]{Drake+al:ip}
+  review]{Drake+al:ip}.
 
 
 \bibliographystyle{../mee} \bibliography{../monalisa}
