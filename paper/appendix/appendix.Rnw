@@ -133,20 +133,7 @@ so
 \begin{equation}
   f_{\bm{s} \mid \bm{x}}(\bm{s} \mid \bm{x}; \widehat{\bm{\theta}}) = \frac{h\{d(\bm{s}, \bm{x}); \widehat{\bm{\theta}}\}}{\int h\{d(\bm{s}^\prime, \bm{x}); \widehat{\bm{\theta}}\} d\bm{s}^\prime},
 \end{equation}
-where the denominator is a normalising constant. This is a simple
-assumption that uses the detection function estimated by the SCR model
-to characterise each individual's usage distributions, although if
-alternative data sources are available (e.g., telemetry) they may be
-used instead. Indeed, the range of the encounter function may not
-appropriately estimate the size of the region used by an individual
-(e.g., see [SOME REFS IN HERE THAT I AM SURE EXIST BUT HAVEN'T FOUND
-  YET]), and it is likely that other variables affect its shape, such
-as geography and other stuff like that ([SOME OF CHRIS SUTHERLAND'S
-  CONNECTIVITY REFERENCES IN HERE]). \todo[inline]{Sorry, needs to be
-  written better, but I haven't read the papers to do a good job of
-  this yet. However I think this is a suitable place to deal with
-  these issues.}
-
+where the denominator is a normalising constant.
 \subsection{The Bayesian approach}
 
 Bayesian models fitted via MCMC can directly sample activity centres
@@ -167,6 +154,33 @@ respectively. The estimated usage distribution is therefore not
 conditional on one particular set of estimated parameter values, but
 instead considers the range of values across the posterior
 distribution of $\bm{\theta}$.
+
+\subsection{Discussion}
+
+\todo[inline]{I'm not sure that this is the best place for the
+  discussion below, but leaving it here for now.}
+
+Here we constructed the individual usage distribution by assuming it
+is proportional to the encounter function from our SCR model, but if
+alternative data sources are available (e.g., telemetry, or
+opportunistic data such as hair or scat samples) they may be
+incoprorated for improved precision \citep{Tenan+al:17}.
+
+Importantly, it may not be always be appropriate to relate the range
+of the encounter function to the size of the region used by an
+individual, and care should be taken when this practice is
+used. \citet{Tenan+al:17} found that estimates of this parameter from
+an SCR model fitted to noninvasive genetic detection data of brown
+bears (\emph{Ursus arctos}) was not consistent with spatial usage
+parameters estimated from other data sources, although
+\citet{Popescu+al:14} did not detect any such inconsistency for a
+population of fishers (\emph{Pekania pennanti}). 
+
+Moreover, our assumption assumes that a home range is circular,
+however it is likely its shape is modified by variables relating to
+population and landscape connectivity \citep[see][for a
+  review]{Drake+al:ip}
+
 
 \bibliographystyle{../mee} \bibliography{../monalisa}
 
