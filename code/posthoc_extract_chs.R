@@ -1,3 +1,5 @@
+load("output/mona_raw_outputs_100sim.RData")
+
 ## Figure 6
 # uses fig34_results_100sim
 # results are averaged over models fitted to 100 simulated capture histories
@@ -5,6 +7,7 @@
 # fig34_results_100sim[[i]] is list length 8: 1-4 = 1 occasion (not used), 5-8 = 20 occasions
 
 # capture histories for Figure 6
+ch6a <- list(); ch6b <- list(); ch6c <- list(); ch6d <- list()
 for(i in 1:100){ch6a[[i]] <- fig34_results_100sim[[i]][[5]]$capture_history} # 6b
 for(i in 1:100){ch6b[[i]] <- fig34_results_100sim[[i]][[6]]$capture_history} # 6c
 for(i in 1:100){ch6c[[i]] <- fig34_results_100sim[[i]][[7]]$capture_history} # 6d
@@ -33,14 +36,18 @@ ch7f <- fig5_results[[5]]$capture_history
 
 # capture histories for Figure 8
 # top row 
+# capture histories for Figure 6
+ch8a <- list(); ch8b <- list(); ch8c <- list()
 for(i in 1:100){ch8a[[i]] <- fig67_results_100sim[[i]][[4]]$capture_history} 
 for(i in 1:100){ch8b[[i]] <- fig67_results_100sim[[i]][[7]]$capture_history} 
 for(i in 1:100){ch8c[[i]] <- fig67_results_100sim[[i]][[10]]$capture_history} 
 # 2nd row
+ch8d <- list(); ch8e <- list(); ch8f <- list()
 for(i in 1:100){ch8d[[i]] <- fig67_results_100sim[[i]][[5]]$capture_history} 
 for(i in 1:100){ch8e[[i]] <- fig67_results_100sim[[i]][[8]]$capture_history} 
 for(i in 1:100){ch8f[[i]] <- fig67_results_100sim[[i]][[11]]$capture_history} 
 # 3rd row 
+ch8g <- list(); ch8h <- list(); ch8i <- list()
 for(i in 1:100){ch8g[[i]] <- fig67_results_100sim[[i]][[6]]$capture_history} 
 for(i in 1:100){ch8h[[i]] <- fig67_results_100sim[[i]][[9]]$capture_history} 
 for(i in 1:100){ch8i[[i]] <- fig67_results_100sim[[i]][[12]]$capture_history} 
