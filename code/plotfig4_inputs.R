@@ -6,7 +6,7 @@ library(viridis)
 resized_x <- 50
 
 load("output/mona_inputs.RData")
-load("output/simulated_densities_for_paper.Rdata")
+load("output/simulated_densities.Rdata")
 
 actual_densities <- data.frame(x = mona_df$x, y = mona_df$y, value = mona_df$D)
 

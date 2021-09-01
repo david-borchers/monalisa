@@ -41,6 +41,7 @@
 
 
 \begin{document}
+
 \maketitle
 
 \section{Simulation study for Bayesian models}
@@ -57,16 +58,37 @@ whereas the maximum-likelihood alternative creates the activity centre
 location surface based on the maximum likelihood estimates of the
 parameters.
 
-In this appendix we reproduce results from Section 4, but using
-Bayesian models fitted via MCMC. In Section
-\ref{sec:appendix-model-fitting} we describe our model-fitting
-approach, in Section \ref{sec:appendix-results} present results of our
-simulation study, and in Section \ref{sec:appendix-discussion} discuss
-similarities and differences between these results and those presented
-in the main manuscript based on maximum-likelihood models.
+In this appendix we reproduce results from Section 4 using Bayesian
+models fitted via MCMC to demonstrate that our results are not simply
+a consequence of adopting a classical approach. In Section
+\ref{sec:appendix-model-fitting} we describe our Baysian models, in
+Section \ref{sec:appendix-results} we present results of our
+simulation study, and in Section \ref{sec:appendix-discussion} we
+discuss similarities and differences between these results and those
+presented in the main manuscript based on maximum-likelihood models.
 
 \subsection{Model fitting}
 \label{sec:appendix-model-fitting}
+
+We fitted Bayesian versions of the maximum-likelihood models presented
+in Section 4 to each data set. Again, we used models with constant
+density to estimate realised AC and realised usage surfaces, and a
+model with inhomogeneous density characterised by a log-linear
+relationship with a spatial covariate to estimate expected AC density
+surfaces.
+
+We fitted our models in NIMBLE (insert reference) using [something or
+  other about data augmentation and superpopulations and stuff], which
+has become the prevailing way to fit SCR models under a Bayesian
+framework. For both the constant and inhomoegeneous density models, we
+set the following uninformative priors on the detection function
+parameters: \todo[inline]{Put some priors in here.}  For the constant
+density model, the activity centres were given a uniform prior
+distribution over the survey region. For the inhomogeneous density
+model, density at location $\bm{x}$ is given by [log-linear equation],
+where [covariate] is a spatial covariate. We used the following
+uninformative priors for the coefficients $\beta_0$ and $\beta_1$:
+\todo[inline]{priors here}.
 
 \subsection{Results}
 \label{sec:appendix-results}
@@ -133,20 +155,7 @@ so
 \begin{equation}
   f_{\bm{s} \mid \bm{x}}(\bm{s} \mid \bm{x}; \widehat{\bm{\theta}}) = \frac{h\{d(\bm{s}, \bm{x}); \widehat{\bm{\theta}}\}}{\int h\{d(\bm{s}^\prime, \bm{x}); \widehat{\bm{\theta}}\} d\bm{s}^\prime},
 \end{equation}
-where the denominator is a normalising constant. This is a simple
-assumption that uses the detection function estimated by the SCR model
-to characterise each individual's usage distributions, although if
-alternative data sources are available (e.g., telemetry) they may be
-used instead. Indeed, the range of the encounter function may not
-appropriately estimate the size of the region used by an individual
-(e.g., see [SOME REFS IN HERE THAT I AM SURE EXIST BUT HAVEN'T FOUND
-  YET]), and it is likely that other variables affect its shape, such
-as geography and other stuff like that ([SOME OF CHRIS SUTHERLAND'S
-  CONNECTIVITY REFERENCES IN HERE]). \todo[inline]{Sorry, needs to be
-  written better, but I haven't read the papers to do a good job of
-  this yet. However I think this is a suitable place to deal with
-  these issues.}
-
+where the denominator is a normalising constant.
 \subsection{The Bayesian approach}
 
 Bayesian models fitted via MCMC can directly sample activity centres
@@ -160,13 +169,43 @@ approximation of the $i$th individual's usage distribution:
   \frac{1}{M} \sum_{j = 1}^M f_{\bm{s} \mid \bm{x}}(\bm{s} \mid
   \bm{x}_{(j)}, \bm{\theta}_{(j)}),
 \end{equation}
-where $\bm{x}_{(j)}$ and $\bm{\widehat{\theta}}_{(j)}$ are the
+where $\bm{x}_{(j)}$ and $\bm{{\theta}}_{(j)}$ are the
 activity centre and a vector of encounter function parameters that
 were sampled on the $j$th of $M$ total MCMC iterations,
 respectively. The estimated usage distribution is therefore not
 conditional on one particular set of estimated parameter values, but
 instead considers the range of values across the posterior
 distribution of $\bm{\theta}$.
+
+\subsection{Discussion}
+
+\todo[inline]{I'm not sure that this is the best place for the
+  discussion below, but leaving it here for now.}
+
+We constructed individual usage distributions using the encounter
+function from our SCR model, but this may not always be
+appropriate. For example, if individuals cannot fully explore their
+home range within the duration of the survey, then we would not expect
+the spatial range of the detection function to match the extent of an
+animal's usage distribution.
+
+It may not be sensible to relate the range of the encounter function
+to the size of the region used by an individual even for longer
+surveys, and care should be taken when this practice is used. For
+example, \citet{Tenan+al:17} found that the spatial scale of the
+encounter rate function for brown bears (\emph{Ursus arctos})
+estimated using SCR was not consistent with spatial usage parameters
+estimated from other data sources, although \citet{Popescu+al:14} did
+not detect any such inconsistency for a population of fishers
+(\emph{Pekania pennanti}). If alternative data sources are available
+(e.g., telemetry, or opportunistic data such as hair or scat samples)
+they may be incoprorated for improved estimation of individual usage
+distributions \citep{Tenan+al:17}.
+
+Our method also assumes that home ranges are circular, however their
+shapes are likely to be modified by variables relating to population
+and landscape connectivity \citep[see][for a review]{Drake+al:ip}.
+
 
 \bibliographystyle{../mee} \bibliography{../monalisa}
 
