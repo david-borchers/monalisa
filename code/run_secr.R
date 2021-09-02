@@ -39,7 +39,10 @@ run_secr <- function(simulated_points,
   
   predicted_densities <- data.frame(x = as.integer(), 
                                     y = as.integer(), 
-                                    value = as.numeric(),
+                                    prob_ac = as.numeric(),
+                                    expnumber_ac = as.numeric(),
+                                    prob_ac_seenonly = as.numeric(),
+                                    expnumber_ac_seenonly = as.numeric(),
                                     covtype = as.character(),
                                     occasions = as.integer(),
                                     array_size = as.character(),
@@ -83,7 +86,7 @@ run_secr <- function(simulated_points,
                      model = list(as.formula(secr.fitformula)),  
                      mask = mlmesh, detectfn = "HHN", 
                      start = list(D = D, lambda0 = lambda0, sigma = sigma),
-                     ncores = 1, method = "Nelder-Mead")
+                     ncores = 1, method = "Nelder-Mead", trace = TRUE)
     
     # with covariates predicted densities come straight from the fitted model, 
     # with no covariates need to compute density of activity centers in this realization
@@ -91,15 +94,25 @@ run_secr <- function(simulated_points,
     
     # caution: if there is ANY "1" in secr.fitformula then assumes its a "no covariate" model!
     if (str_detect(secr.fitformula, "1")) { 
-      preds <- predicted_densities_for_D0(cfit, detectors, mlmesh, captures.only)$value
+      predsD0 <- predicted_densities_for_D0(cfit, detectors, mlmesh, captures.only)
+      prob_ac <- predsD0$prob_ac
+      expnumber_ac <- predsD0$expnumber_ac
+      prob_ac_seenonly <- predsD0$prob_ac_seenonly
+      expnumber_ac_seenonly <- predsD0$expnumber_ac_seenonly
     } else {
-      preds <- covariates(predictDsurface(cfit))$D.0
+      prob_ac <- covariates(predictDsurface(cfit))$D.0
+      expnumber_ac <- prob_ac * region.N(cfit)["R.N","estimate"]
+      prob_ac_seenonly <- rep(NA, length(prob_ac))
+      expnumber_ac_seenonly <- rep(NA, length(prob_ac))
     }
     
     # append results
     predicted_densities <- rbind(predicted_densities,
                                  data.frame(x = mlmesh$x, y = mlmesh$y, 
-                                            value = preds,
+                                            prob_ac = prob_ac,
+                                            expnumber_ac = expnumber_ac,
+                                            prob_ac_seenonly = prob_ac_seenonly,
+                                            expnumber_ac_seenonly = expnumber_ac_seenonly,
                                             covtype = secr.fitformula,
                                             occasions = i,
                                             array_size = paste0(nx,"x",ny),

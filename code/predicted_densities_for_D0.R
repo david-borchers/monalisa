@@ -40,14 +40,19 @@ predicted_densities_for_D0 <- function(cfit, detectors, mymesh, captures.only){
     unseen_n * prob_activity_center_all_unseen_indiv
   prob_activity_center <- expnumber_activity_center / estimated_N
   
-  # if you only want predicted densities for the CAPTURED animals (captures.only = T)
-  # ... could output both but the "captures only" scenario seems unlikely so won't bother 
-  if(captures.only == T){prob_activity_center <- prob_activity_center_all_seen_indiv}
+  # # if you only want predicted densities for the CAPTURED animals (captures.only = T)
+  # # ... could output both but the "captures only" scenario seems unlikely so won't bother 
+  # if(captures.only == T){
+  #   prob_activity_center <- prob_activity_center_all_seen_indiv
+  #   expnumber_activity_center <- expnumber_activity_center_all_seen_indiv}
   
   # make data frame with actual densities
   predicted_densities <- data.frame(x = mymesh$x, y = mymesh$y, 
-                                          value = prob_activity_center)
-
+                                    prob_ac = prob_activity_center,
+                                    expnumber_ac = expnumber_activity_center,
+                                    prob_ac_seenonly = prob_activity_center_all_seen_indiv,
+                                    expnumber_ac_seenonly = expnumber_activity_center_all_seen_indiv)
+  
   return(predicted_densities)
   
 }
