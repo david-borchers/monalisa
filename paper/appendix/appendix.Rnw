@@ -77,18 +77,62 @@ model with inhomogeneous density characterised by a log-linear
 relationship with a spatial covariate to estimate expected AC density
 surfaces.
 
-We fitted our models in NIMBLE (insert reference) using [something or
-  other about data augmentation and superpopulations and stuff], which
+We fitted our models in NIMBLE (insert reference) using data augmentation 
+(REFERENCE: Tanner and Wong, 1987), which
 has become the prevailing way to fit SCR models under a Bayesian
-framework. For both the constant and inhomoegeneous density models, we
-set the following uninformative priors on the detection function
-parameters: \todo[inline]{Put some priors in here.}  For the constant
-density model, the activity centres were given a uniform prior
-distribution over the survey region. For the inhomogeneous density
+framework. Utilising data augmentation means that we become able
+to move from estimating N (the size of the population of interest)
+to estimating the data augmentation parameter, $\psi$. This allows us to
+avoid technical issues that are likely to arise if we were to try and 
+estimate N, as we would need to account for the fact that N can be 
+different on each MCMC iteration (REFERENCE: Kery and Schaub, 2012, p.141). 
+Implementing data augmentation involves specifying M, the upper limit 
+for N and the size of our `augmented' dataset. On each MCMC iteration, 
+an estimate is genereated for $\psi$, which gives us the probability 
+of a member of the augmented dataset being a member of the population. 
+The estimated $\psi$ then provides the parameter for the Bernoulli 
+prior that we place on the indicator variable $z_i$. This indicator 
+denotes whether the $i$th animal in the augmented population is `exists' 
+in a given MCMC iteration. Summing all values of $z_i$ from an MCMC 
+iteration gives us an estimate of N. Further details on data 
+augmentation can be found in Kery AND Schaub, 2012 (REFERENCE). 
+
+When fitting a model using MCMC, using `informative'
+priors is only appropriate when one is fairly confident about the 
+likely values for a parameter, as otherwise any inference drawn using 
+the posterior distribution is likely to be misleading (REFERENCE?). 
+Such confidence is fairly uncommon, and so we have chosen to set 
+uninformative priors when fitting both the constant and inhomogeneous 
+density models. These priors reflect a considerable
+lack of knowledge regarding the likely values of the relevant parameters,
+and are shown below. Note that we are applying an uninformative prior to
+$log\left(\frac{1}{2 \sigma^2}\right)$, rather than to 
+$\sigma$ directly, following the approach from (ROYLE TEXTBOOK). 
+The prior we assign here is a log-uniform prior, which is appropriate 
+when our parameter is known to be positive, but when we are unsure of 
+its magnitude. Similarly, the prior applied to $\lambda_0$ is an 
+approximation to a log-uniform prior. 
+
+\[\lambda_0 \sim \text{Gamma}(0.001, 0.001)\]
+\[log\left(\frac{1}{2 \sigma^2}\right) \sim \text{Uniform}(-10, 10)\]
+
+For the constant density model, the activity centres were given a uniform prior
+distribution over the survey region and the data augmentation parameter
+was given a uniform prior from 0 to 1. For the inhomogeneous density
 model, density at location $\bm{x}$ is given by [log-linear equation],
-where [covariate] is a spatial covariate. We used the following
+where $\beta_1$ is a spatial covariate. We used the following
 uninformative priors for the coefficients $\beta_0$ and $\beta_1$:
-\todo[inline]{priors here}.
+
+\[\beta_0 \sim \text{Uniform}(-10, 10)\]
+\[\beta_1 \sim \text{Uniform}(-10, 10)\]
+
+When we fit each constant density model, we ran () MCMC iterations, 
+where we set M to be equal to (). We also used a thinning value of (), 
+an adapatation interval of () and () burn-in iterations.
+
+When fitting each inhomogeneous density model, we ran () MCMC iterations,
+and used a value of () for M. The thinning value was (), with an adaptation
+interval of () and () burn-in iterations.
 
 \subsection{Results}
 \label{sec:appendix-results}
