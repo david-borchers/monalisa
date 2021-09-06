@@ -187,7 +187,7 @@ ac_densities_with_movement = rbind.data.frame(ac_densities_without_movement, ac_
 detectors <- detectors_df_all %>% group_by(x,y) %>% count()
 
 # Column labels for plots
-capthist_labels = paste(c(sum(encounterdat.3occ), sum(encounterdat.10occ), sum(encounterdat.20occ)), "detections", paste("(", c(nrow(encounterdat.3occ), nrow(encounterdat.10occ), nrow(encounterdat.20occ)), sep=""),  "individuals)")
+capthist_labels = paste(c(sum(encounterdat.3occ), sum(encounterdat.10occ), sum(encounterdat.20occ)), "detections\n", paste("(", c(nrow(encounterdat.3occ), nrow(encounterdat.10occ), nrow(encounterdat.20occ)), sep=""),  "individuals)")
 
 # relabel factor levels for occasion variable
 ac_densities_with_movement$occasions <- factor(ac_densities_with_movement$occasions,
