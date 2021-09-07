@@ -57,6 +57,10 @@ simulation study, and in Section \ref{sec:appendix-discussion} we
 discuss similarities and differences between these results and those
 presented in the main manuscript based on maximum-likelihood models.
 
+<<example, echo = FALSE, include = FALSE, fig.cap = "An example figure.">>=
+plot(1:10)
+@ 
+
 \subsection{Model fitting}
 \label{sec:appendix-model-fitting}
 
