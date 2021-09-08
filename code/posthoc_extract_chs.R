@@ -1,4 +1,5 @@
 load("../output/mona_raw_outputs_100sim.RData")
+# load("mona_raw_outputs_100sim.RData") for NeSI
 
 ## Figure 6
 # uses fig34_results_100sim
