@@ -8,6 +8,7 @@
 
 ## First, sourcing in 'posthoc_extract_chs.R'
 source("../code/posthoc_extract_chs.R")
+# source("posthoc_extract_chs.R") for NeSI
 
 ## So, it appears that:
 # ch7b is the plot from traps placed at the top right
@@ -73,10 +74,11 @@ library(coda)
 library(nimbleSCR)
 
 # Sourcing in the dpoisLocal_normal_2() function that we will need to run the MCMC
-source("dpoisLocal_normal.R")
+#source("dpoisLocal_normal.R")
 
 # Sourcing in the function that we'll need to run the MCMC
 source("MCMC_Function_Inhomogeneous.R")
+library("spatstat")
 
 ## ------------------------------
 
@@ -85,7 +87,7 @@ source("MCMC_Function_Inhomogeneous.R")
 ## ------------------------------
 
 
-ch7b.sample = run.MCMC.inhom(data.ch7b, M=9000, mona.column="Dblur")
+ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dblur")
 save(ch7b.sample, file="ch7b.RData")
 ch7e.sample = run.MCMC.inhom(data.ch7e, M=9000, mona.column="Dblur")
 save(ch7e.sample, file="ch7e.RData")
@@ -93,6 +95,4 @@ ch7c.sample = run.MCMC.inhom(data.ch7c, M=9000, mona.column="Dgood")
 save(ch7c.sample, file="ch7c.RData")
 ch7f.sample = run.MCMC.inhom(data.ch7f, M=9000, mona.column="Dgood")
 save(ch7f.sample, file="ch7f.RData")
-
-
 
