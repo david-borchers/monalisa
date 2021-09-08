@@ -7,6 +7,7 @@
 ## ---------------------------------------------------------------------------------------
 
 ## First, sourcing in 'posthoc_extract_chs.R' to extract the necessary capture histories
+source("../output/mona_raw_outputs_100sim.RData")
 source("../code/posthoc_extract_chs.R")
 
 # We want to figure out how many sampling occasions/which capture histories to combine for each plot
@@ -69,10 +70,13 @@ source("MCMC_Function.R")
 
 # Running MCMC for simulated data from 3, 10 and 20 sampling occasions
 results.3occ = run.MCMC(data=data.3occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.3occ, file="Fig9_MCMC_3occ.RData")
 
 results.10occ = run.MCMC(data=data.10occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.10occ, file="Fig9_MCMC_10occ.RData")
 
 results.20occ = run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.20occ, file="Fig9_MCMC_20occ.RData")
 
 # Checking the trace plots
 # 3 sampling occasions -- all looking v good
@@ -126,8 +130,11 @@ z.values.20occ = extract.z.values(results.20occ)
 
 # Creating the density vectors
 density.3occ.all.withmov = density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
+save(density.3occ.all.withmov, file="Fig9.3occ.RData")
 density.10occ.all.withmov = density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
+save(density.10occ.all.withmov, file="Fig9.10occ.RData")
 density.20occ.all.withmov = density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
+save(density.20occ.all.withmov, file="Fig9.20occ.RData")
 
 
 ## ---------------------------------------------------------------------------------------

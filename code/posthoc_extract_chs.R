@@ -1,4 +1,4 @@
-load("../output/mona_raw_outputs_100sim.RData")
+#load("../output/mona_raw_outputs_100sim.RData")
 # load("mona_raw_outputs_100sim.RData") for NeSI
 
 ## Figure 6

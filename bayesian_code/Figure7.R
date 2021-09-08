@@ -7,8 +7,10 @@
 ## ---------------------------------------------------------------------------------------
 
 ## First, sourcing in 'posthoc_extract_chs.R'
-source("../code/posthoc_extract_chs.R")
-# source("posthoc_extract_chs.R") for NeSI
+#source("../code/posthoc_extract_chs.R")
+#load("../output/mona_raw_outputs_100sim.RData")
+load("mona_raw_outputs_100sim.RData") # for NeSI
+source("posthoc_extract_chs.R") # for NeSI
 
 ## So, it appears that:
 # ch7b is the plot from traps placed at the top right
