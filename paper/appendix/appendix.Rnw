@@ -161,9 +161,9 @@ data.20occ = list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xlim
 # Loading in the MCMC objects
 ## ---------------------------------------------------------------------------------------
 
-load("../../bayesian_code/Fig9_MCMC_3occ.RData")
-load("../../bayesian_code/Fig9_MCMC_10occ.RData")
-load("../../bayesian_code/Fig9_MCMC_20occ.RData")
+load("../../bayesian_code/Figure 9/Fig9_MCMC_3occ.RData")
+load("../../bayesian_code/Figure 9/Fig9_MCMC_10occ.RData")
+load("../../bayesian_code/Figure 9/Fig9_MCMC_20occ.RData")
 
 ## ---------------------------------------------------------------------------------------
 # Creating the objects we need
@@ -177,9 +177,9 @@ density.10occ.all = no.movement.density.vector(results=results.10occ, M=300, xli
 density.20occ.all = no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
 ## Row 2: RUD maps. We will load in the vectors that contain the density values for each pixel (otherwise, code will take a while to run)
-load("../../bayesian_code/Fig9_RUD_3occ.RData")
-load("../../bayesian_code/Fig9_RUD_10occ.RData")
-load("../../bayesian_code/Fig9_RUD_20occ.RData")
+load("../../bayesian_code/Figure 9/Fig9_RUD_3occ.RData")
+load("../../bayesian_code/Figure 9/Fig9_RUD_10occ.RData")
+load("../../bayesian_code/Figure 9/Fig9_RUD_20occ.RData")
 
 ## Matrix of pixel centres
 source("../../bayesian_code/RUDMaps_Functions.R")
