@@ -7,10 +7,10 @@
 ## ---------------------------------------------------------------------------------------
 
 ## First, sourcing in 'posthoc_extract_chs.R'
-#source("../code/posthoc_extract_chs.R")
-#load("../output/mona_raw_outputs_100sim.RData")
-load("mona_raw_outputs_100sim.RData") # for NeSI
-source("posthoc_extract_chs.R") # for NeSI
+load("../output/mona_raw_outputs_100sim.RData")
+source("../code/posthoc_extract_chs.R")
+#load("mona_raw_outputs_100sim.RData") # for NeSI
+#source("posthoc_extract_chs.R") # for NeSI
 
 ## So, it appears that:
 # ch7b is the plot from traps placed at the top right
@@ -88,13 +88,346 @@ library("spatstat")
 
 ## ------------------------------
 
+# We use the R files in the 'Figure 7' folder to run the MCMC using NeSI, not the lines below!
+#ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=11000)
+#save(ch7b.sample, file="ch7b.RData")
+#rm(ch7b.sample)
+#ch7c.sample = run.MCMC.inhom(data.ch7c, M=9000, mona.column="Dgood", n.iter=11000)
+#save(ch7c.sample, file="ch7c.RData")
+#rm(ch7c.sample)
+#ch7e.sample = run.MCMC.inhom(data.ch7e, M=9000, mona.column="Dblur", n.iter=11000)
+#save(ch7e.sample, file="ch7e.RData")
+#rm(ch7e.sample)
+#ch7f.sample = run.MCMC.inhom(data.ch7f, M=9000, mona.column="Dblur", n.iter=11000)
+#save(ch7f.sample, file="ch7f.RData")
+#rm(ch7f.sample)
 
-ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dblur")
-save(ch7b.sample, file="ch7b.RData")
-ch7e.sample = run.MCMC.inhom(data.ch7e, M=9000, mona.column="Dblur")
-save(ch7e.sample, file="ch7e.RData")
-ch7c.sample = run.MCMC.inhom(data.ch7c, M=9000, mona.column="Dgood")
-save(ch7c.sample, file="ch7c.RData")
-ch7f.sample = run.MCMC.inhom(data.ch7f, M=9000, mona.column="Dgood")
-save(ch7f.sample, file="ch7f.RData")
+## Loading in what we get from NeSI from the separate R files in the 'Figure 7' folder
+load("Figure 7/ch7b.RData")
+load("Figure 7/ch7c.RData")
+load("Figure 7/ch7e.RData")
+load("Figure 7/ch7f.RData")
 
+dim(ch7b.sample)
+dim(ch7c.sample)
+dim(ch7e.sample)
+dim(ch7f.sample)
+
+# Removing 1000 iterations as burn-in
+ch7b.sample = ch7b.sample[-c(1:1000),]
+ch7c.sample = ch7c.sample[-c(1:1000),]
+ch7e.sample = ch7e.sample[-c(1:1000),]
+ch7f.sample = ch7f.sample[-c(1:1000),]
+
+# Looking at trace plots
+# ch7b
+plot(ch7b.sample[,"lambda0"], type="l")
+plot(ch7b.sample[,"sigma"], type="l")
+plot(ch7b.sample[,"beta0"], type="l")
+plot(ch7b.sample[,"beta1"], type="l")
+plot(ch7b.sample[,"N"], type="l")
+plot(ch7b.sample[,"D"], type="l")
+# Looks pretty good?
+
+# ch7c
+plot(ch7c.sample[,"lambda0"], type="l")
+plot(ch7c.sample[,"sigma"], type="l")
+plot(ch7c.sample[,"beta0"], type="l")
+plot(ch7c.sample[,"beta1"], type="l")
+plot(ch7c.sample[,"N"], type="l")
+plot(ch7c.sample[,"D"], type="l")
+# WHY has there been no mixing for lambda0 and sigma? :( Have tried to run again with M=15000
+
+# ch7e
+plot(ch7e.sample[,"lambda0"], type="l")
+plot(ch7e.sample[,"sigma"], type="l")
+plot(ch7e.sample[,"beta0"], type="l")
+plot(ch7e.sample[,"beta1"], type="l")
+plot(ch7e.sample[,"N"], type="l")
+plot(ch7e.sample[,"D"], type="l")
+# Could run more iterations, have fuzzier caterpillars for beta0, beta1, N and D??
+
+# ch7f
+plot(ch7f.sample[,"lambda0"], type="l")
+plot(ch7f.sample[,"sigma"], type="l")
+plot(ch7f.sample[,"beta0"], type="l")
+plot(ch7f.sample[,"beta1"], type="l")
+plot(ch7f.sample[,"N"], type="l")
+plot(ch7f.sample[,"D"], type="l")
+# Could run more iterations, have fuzzier caterpillars for beta0, beta1, N and D, ESPECIALLY N and D??
+
+## ---------------------------------------------------------------------------------------
+
+# Necessary objects
+
+## ---------------------------------------------------------------------------------------
+
+## We want to create a density vector for each map, using the covariate values and posterior estimates for beta0 and beta1
+
+## Covariate values
+# Dgood
+load("../output/mona_inputs.RData")
+# Extracting x,y-coordinates and corresponding Dgood values (we use the x,y-coordinates to make sure the vector is ordered correctly, see below)
+dgood.df = mona_df[,c("x", "y", "Dgood")]
+# Removing duplicate rows
+sequence = seq(1, 7500, by=3)
+dgood.df = dgood.df[sequence,]
+# Reordering the data frame in the same way as we do in the run.MCMC.inhom() function, so the Dgood values are in the desired order (so they correspond with the order of the pixel centres that we will generate using the centres() function)
+split = split(dgood.df, dgood.df$y)
+dgood.df = do.call("rbind", split)
+# Now, extracting the 'Dgood' values
+dgood = dgood.df$Dgood
+
+# Dblur
+# Doing the same thing as above, but to extract the Dblur values
+dblur.df = mona_df[,c("x", "y", "Dblur")]
+dblur.df = dblur.df[sequence,]
+split = split(dblur.df, dblur.df$y)
+dblur.df = do.call("rbind", split)
+dblur = dblur.df$Dblur
+
+## Posterior estimates for beta0 and beta1. We will use the posterior mean.
+# ch7b
+ch7b.beta0 = mean(ch7b.sample[,"beta0"])
+ch7b.beta1 = mean(ch7b.sample[,"beta1"])
+
+# ch7c
+ch7c.beta0 = mean(ch7c.sample[,"beta0"])
+ch7c.beta1 = mean(ch7c.sample[,"beta1"])
+
+# ch7e
+ch7e.beta0 = mean(ch7e.sample[,"beta0"])
+ch7e.beta1 = mean(ch7e.sample[,"beta1"])
+
+# ch7f
+ch7f.beta0 = mean(ch7f.sample[,"beta0"])
+ch7f.beta1 = mean(ch7f.sample[,"beta1"])
+
+## Therefore, creating the density vector for each plot
+# ch7b
+ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * log(dgood)))
+
+# ch7c
+ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * log(dgood)))
+
+# ch7e
+ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * log(dblur)))
+
+# ch7f
+ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * log(dblur)))
+
+## ---------------------------------------------------------------------------------------
+
+# Using Ian's code to create plots
+
+## ---------------------------------------------------------------------------------------
+
+library(tidyverse)
+library(viridis)
+library(RColorBrewer)
+library(patchwork)
+library(purrr)
+
+mona_df <- mona_df %>% dplyr::select(-cc) %>% distinct()
+
+# process the covariates - contains duplicated pixel centres, each row of duplicate gives Dgood/Dblur value
+predicted_densities_covs <- mona_df %>% select(-D) %>%
+  gather(grid, value, -x, -y) %>% arrange(x,y) %>%
+  mutate(covtype = grid,
+         array_origin = "none") %>%
+  select(-grid) %>%
+  filter(covtype %in% c("Dgood", "Dblur"))
+
+# process the outputs
+# Appears to contain density values for 3 different covariates, 2 different trap arrays and 1 or 20 sampling occasions -- so contains 12 sets of 2500 values = 30000 rows
+predicted_densities_all <- fig5_results %>% purrr::map("predicted_densities") %>% map_df(bind_rows)
+# Contains coordinates of detectors for same 12 sets as above
+detectors_df_all <- fig5_results %>% purrr::map("detectors_df") %>% map_df(bind_rows)
+
+# change covariate variable names to be consistent with mona_inputs (removing D~ from data frames)
+predicted_densities_all <- predicted_densities_all %>% mutate(covtype = str_remove(covtype, "D~"))
+detectors_df_all <- detectors_df_all %>% mutate(covtype = str_remove(covtype, "D~"))
+
+# only want the results for 1 occasion (change if desired) -- i.e. only results for 20 sampling occasions, so now 15000 rows (dealing with 6 sets now)
+predicted_densities_all <- predicted_densities_all %>% filter(occasions == 20)
+
+# choose covariates we want - only want to work with Dgood and Dblur, so now 10000 rows (4 sets now)
+predicted_densities_all <- predicted_densities_all %>% filter(covtype %in% c("Dgood", "Dblur"))
+detectors_df_all <- detectors_df_all %>% filter(covtype %in% c("Dgood", "Dblur"))
+
+# choose variables we need
+predicted_densities_all <- predicted_densities_all %>%
+  select(x, y, value = prob_ac, covtype, occasions, array_origin) %>%
+  mutate(value = value / 10000)
+
+predicted_densities_all %>% group_by(covtype, array_origin) %>% summarize(mv = mean(value))
+
+
+
+## Seems like now is a good time to replace predicted_densities_all so that it now contains our density values!!
+# Matrix of pixel centres
+source("RUDMaps_Functions.R")
+pixel.centres = centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+
+# ch7b
+# Here, covtype=Dgood, occasions=20, array_origin=15_15
+ch7b.df = data.frame(pixel.centres, ch7b.density, rep("Dgood", 2500), rep(20, 2500), rep("15_15", 2500))
+names(ch7b.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+
+# ch7c
+# covtype=Dgood, occasions=20, array_origin=27_31
+ch7c.df = data.frame(pixel.centres, ch7c.density, rep("Dgood", 2500), rep(20, 2500), rep("27_31", 2500))
+names(ch7c.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+
+# ch7e
+# covtype=Dblur, occasions=20, array_origin=15_15
+ch7e.df = data.frame(pixel.centres, ch7e.density, rep("Dblur", 2500), rep(20, 2500), rep("15_15", 2500))
+names(ch7e.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+
+# ch7f
+# covtype=Dblur, occasions=20, array_origin=27_31
+ch7f.df = data.frame(pixel.centres, ch7f.density, rep("Dblur", 2500), rep(20, 2500), rep("27_31", 2500))
+names(ch7f.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+
+# And now, combining into one data frame
+predicted_densities_all = rbind(ch7b.df, ch7c.df, ch7e.df, ch7f.df)
+
+# scale the covariate plots to have the same mean as the density plots
+predicted_densities_covs <- predicted_densities_covs %>%
+  group_by(covtype, array_origin) %>%
+  mutate(value = value * mean(predicted_densities_all$value) / mean(predicted_densities_covs$value)) %>%
+  ungroup()
+
+# # scale the plots to all sum to one
+# predicted_densities_all <- predicted_densities_all %>%
+#   group_by(covtype, array_origin) %>%
+#   mutate(value = value / sum(value)) %>%
+#   ungroup()
+
+sigma <- detectors_df_all$sigma[1]
+buffersigmas <- 4
+orgn <- data.frame(x = c(15, 15, 27, 27), y = c(15, 31, 15, 31))
+yy <- data.frame(array_origin = paste0(orgn$x,"_",orgn$y), xmin = orgn$x - buffersigmas*sigma, xmax = orgn$x + (4+buffersigmas)*sigma, ymin = orgn$y-buffersigmas*sigma, ymax = pmin(50, orgn$y+(6+buffersigmas)*sigma))
+yy <- yy %>% filter(array_origin %in% c("15_15", "27_31"))
+all_segs <- data.frame(array_origin = as.character(), xmin = as.numeric(), xmax = as.numeric(), ymin = as.numeric(), ymax = as.numeric())
+segl = 2
+for(i in 1:nrow(yy)){
+  array_origin = yy$array_origin[i]
+  xmin = yy$xmin[i]
+  xmax = yy$xmax[i]
+  ymin = yy$ymin[i]
+  ymax = yy$ymax[i]
+  segs <- data.frame(array_origin = array_origin,
+                     xmin = c(xmin, xmax-segl, xmin, xmax-segl, xmin, xmin, xmax, xmax),
+                     xmax = c(xmin + segl, xmax, xmin + segl, xmax, xmin, xmin, xmax, xmax),
+                     ymin = c(ymin, ymin, ymax, ymax, ymin, ymax-segl, ymin, ymax-segl),
+                     ymax = c(ymin, ymin, ymax, ymax, ymin + segl, ymax, ymin + segl, ymax))
+  all_segs <- rbind(all_segs, segs)
+}
+common_area <- data.frame(xmin = max(orgn$x) - buffersigmas*sigma,
+                          xmax = min(orgn$x) + (4+buffersigmas)*sigma,
+                          ymin = max(orgn$y) - buffersigmas*sigma,
+                          ymax = min(orgn$y) + (6+buffersigmas)*sigma)
+
+brew.cols <- brewer.pal(6, "Accent")[-c(1,5)]
+#state.cols <- c(mycols, "#B8DE29FF")
+
+orgn <- c(15, 15)
+orgn_str <- paste0(orgn[1],"_",orgn[2])
+
+plot_mona <- function(orgn, densities = predicted_densities_all){
+  orgn_str <- paste0(orgn[1],"_",orgn[2])
+  p <- densities %>%
+    filter(array_origin == orgn_str, occasions == 20) %>%
+    filter(x >= orgn[1] - buffersigmas*sigma, x <= orgn[1] + (4+buffersigmas)*sigma, y >= orgn[2]-buffersigmas*sigma, y <= orgn[2]+(6+buffersigmas)*sigma) %>%
+    ggplot(aes(x, y)) +
+    geom_raster(aes(fill = value)) +
+    geom_point(data = detectors_df_all %>% filter(array_origin == orgn_str, occasions == 20),
+               inherit.aes = T, aes(colour = array_origin), pch = 4, size = 3) +
+    geom_rect(data = common_area, inherit.aes = F, colour = "white", fill = NA, size = 1, linetype = 2,
+              aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
+    geom_segment(data = all_segs %>% filter(array_origin == orgn_str), inherit.aes = F, fill = NA, size = 2,
+                 aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
+    scale_fill_viridis(direction = 1, limits = c(0,15)) +
+    scale_colour_manual(name = "",
+                        values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
+                        breaks=c("15_15", "15_31", "27_15", "27_31")) +
+    scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+    theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title=element_blank(),legend.position="none",
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank())
+  return(p)
+}
+
+p1good <- plot_mona(orgn = c(15,15), densities = predicted_densities_all %>% filter(covtype == "Dgood"))
+p2good <- plot_mona(orgn = c(27,31), densities = predicted_densities_all %>% filter(covtype == "Dgood"))
+
+p1blur <- plot_mona(orgn = c(15,15), densities = predicted_densities_all %>% filter(covtype == "Dblur"))
+p2blur <- plot_mona(orgn = c(27,31), densities = predicted_densities_all %>% filter(covtype == "Dblur"))
+
+trap_labels <- detectors_df_all %>% group_by(array_origin) %>%
+  summarize(x = mean(x), y = mean(y), array_origin = first(array_origin)) %>%
+  mutate(label = c("(c)", "(b)"))
+
+pgoodcov <- predicted_densities_covs %>%
+  filter(array_origin == "none", covtype == "Dgood") %>%
+  ggplot(aes(x, y)) +
+  geom_raster(aes(fill = value * 1.5)) +
+  # geom_point(data = detectors_df_all %>% filter(occasions == 20),
+  #            inherit.aes = T, aes(colour = array_origin, shape = array_origin), size = 2) +
+  geom_rect(data = common_area, inherit.aes = F, colour = "white", fill = NA, size = 1, linetype = 2,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
+  geom_segment(data = all_segs, inherit.aes = F, fill = NA, size = 1,
+               aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
+  geom_text(data = trap_labels,
+            inherit.aes = T, aes(colour = array_origin, label = label), size = 6) +
+  scale_fill_viridis(direction = 1, limits = c(0,15)) +
+  scale_colour_manual(name="",
+                      values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
+                      breaks=c("15_15", "15_31", "27_15", "27_31")) +
+  scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title=element_blank(),legend.position="none",
+        panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank())
+
+pgoodcov
+
+pblurcov <- predicted_densities_covs %>%
+  filter(array_origin == "none", covtype == "Dblur") %>%
+  ggplot(aes(x, y)) +
+  geom_raster(aes(fill = 1.8 * value)) +
+  # geom_point(data = detectors_df_all %>% filter(occasions == 20),
+  #            inherit.aes = T, aes(colour = array_origin, shape = array_origin), size = 2) +
+  geom_rect(data = common_area, inherit.aes = F, colour = "white", fill = NA, size = 1, linetype = 2,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
+  geom_segment(data = all_segs, inherit.aes = F, fill = NA, size = 1,
+               aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
+  geom_text(data = trap_labels %>% mutate(label = c("(f)", "(e)")),
+            inherit.aes = T, aes(colour = array_origin, label = label), size = 6) +
+  scale_fill_viridis(direction = 1, limits = c(0,15)) +
+  scale_colour_manual(name="",
+                      values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
+                      breaks=c("15_15", "15_31", "27_15", "27_31")) +
+  scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title=element_blank(),legend.position="none",
+        panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank())
+
+
+pp <- (pgoodcov | p2good | p1good) / (pblurcov | p2blur | p1blur) + plot_layout(nrow = 2) +
+  plot_annotation(tag_levels = 'a',
+                  tag_prefix = '(',
+                  tag_sep = '', tag_suffix = ')') &
+  theme(plot.tag = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5),
+        plot.tag.position = "bottom")
+
+pp
+
+ggsave("Figure7.png", pp, width=7.5, height=5.8, dpi = 600)
