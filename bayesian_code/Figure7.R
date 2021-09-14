@@ -104,9 +104,13 @@ library("spatstat")
 
 ## Loading in what we get from NeSI from the separate R files in the 'Figure 7' folder
 load("Figure 7/ch7b.RData")
+ch7b.sample = sample
 load("Figure 7/ch7c.RData")
+ch7c.sample = sample
 load("Figure 7/ch7e.RData")
+ch7e.sample = sample
 load("Figure 7/ch7f.RData")
+ch7f.sample = sample
 
 dim(ch7b.sample)
 dim(ch7c.sample)
@@ -136,7 +140,7 @@ plot(ch7c.sample[,"beta0"], type="l")
 plot(ch7c.sample[,"beta1"], type="l")
 plot(ch7c.sample[,"N"], type="l")
 plot(ch7c.sample[,"D"], type="l")
-# WHY has there been no mixing for lambda0 and sigma? :( Have tried to run again with M=15000
+# Looks pretty good?
 
 # ch7e
 plot(ch7e.sample[,"lambda0"], type="l")
@@ -145,7 +149,7 @@ plot(ch7e.sample[,"beta0"], type="l")
 plot(ch7e.sample[,"beta1"], type="l")
 plot(ch7e.sample[,"N"], type="l")
 plot(ch7e.sample[,"D"], type="l")
-# Could run more iterations, have fuzzier caterpillars for beta0, beta1, N and D??
+# WHY no mixing of lambda0 and sigma? :(
 
 # ch7f
 plot(ch7f.sample[,"lambda0"], type="l")
