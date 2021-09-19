@@ -28,41 +28,41 @@ source("../code/posthoc_extract_chs.R")
 
 ## ch7b
 # Encounter matrix
-encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
-for (i in 1:20) {
-  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
-}
-# Trap locations
-ch7b.traploc = attributes(ch7b)$traps
+#encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
+#for (i in 1:20) {
+#  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
+#}
+## Trap locations
+#ch7b.traploc = attributes(ch7b)$traps
 # xlim, ylim
-xlim = c(0.5, 50.5)
-ylim = c(0.5, 50.5)
+#xlim = c(0.5, 50.5)
+#ylim = c(0.5, 50.5)
 # Data object
-data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+#data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7c
-encounterdat.ch7c = matrix(0, nrow=nrow(ch7c[,1,]), ncol=ncol(ch7c[,1,]))
-for (i in 1:20) {
-  encounterdat.ch7c = encounterdat.ch7c + ch7c[,i,]
-}
-ch7c.traploc = attributes(ch7c)$traps
-data.ch7c = list(encounter.data = encounterdat.ch7c, trap.loc = ch7c.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+#encounterdat.ch7c = matrix(0, nrow=nrow(ch7c[,1,]), ncol=ncol(ch7c[,1,]))
+#for (i in 1:20) {
+#  encounterdat.ch7c = encounterdat.ch7c + ch7c[,i,]
+#}
+#ch7c.traploc = attributes(ch7c)$traps
+#data.ch7c = list(encounter.data = encounterdat.ch7c, trap.loc = ch7c.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7e
-encounterdat.ch7e = matrix(0, nrow=nrow(ch7e[,1,]), ncol=ncol(ch7e[,1,]))
-for (i in 1:20) {
-  encounterdat.ch7e = encounterdat.ch7e + ch7e[,i,]
-}
-ch7e.traploc = attributes(ch7e)$traps
-data.ch7e = list(encounter.data = encounterdat.ch7e, trap.loc = ch7e.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+#encounterdat.ch7e = matrix(0, nrow=nrow(ch7e[,1,]), ncol=ncol(ch7e[,1,]))
+#for (i in 1:20) {
+#  encounterdat.ch7e = encounterdat.ch7e + ch7e[,i,]
+#}
+#ch7e.traploc = attributes(ch7e)$traps
+#data.ch7e = list(encounter.data = encounterdat.ch7e, trap.loc = ch7e.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7f
-encounterdat.ch7f = matrix(0, nrow=nrow(ch7f[,1,]), ncol=ncol(ch7f[,1,]))
-for (i in 1:20) {
-  encounterdat.ch7f = encounterdat.ch7f + ch7f[,i,]
-}
-ch7f.traploc = attributes(ch7f)$traps
-data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+#encounterdat.ch7f = matrix(0, nrow=nrow(ch7f[,1,]), ncol=ncol(ch7f[,1,]))
+#for (i in 1:20) {
+#  encounterdat.ch7f = encounterdat.ch7f + ch7f[,i,]
+#}
+#ch7f.traploc = attributes(ch7f)$traps
+#data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ---------------------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ library(nimbleSCR)
 #source("dpoisLocal_normal.R")
 
 # Sourcing in the function that we'll need to run the MCMC
-source("MCMC_Function_Inhomogeneous.R")
+#source("MCMC_Function_Inhomogeneous.R")
 library("spatstat")
 
 ## ------------------------------
@@ -112,6 +112,7 @@ ch7e.sample = sample
 load("Figure 7/ch7f.RData")
 ch7f.sample = sample
 
+# All have about 120,000 iterations. Can shave down later to be the same amount
 dim(ch7b.sample)
 dim(ch7c.sample)
 dim(ch7e.sample)
@@ -140,7 +141,7 @@ plot(ch7c.sample[,"beta0"], type="l")
 plot(ch7c.sample[,"beta1"], type="l")
 plot(ch7c.sample[,"N"], type="l")
 plot(ch7c.sample[,"D"], type="l")
-# Looks pretty good?
+# Looks pretty good? Estimates for N seem slightly small, probably ok?
 
 # ch7e
 plot(ch7e.sample[,"lambda0"], type="l")
@@ -149,7 +150,7 @@ plot(ch7e.sample[,"beta0"], type="l")
 plot(ch7e.sample[,"beta1"], type="l")
 plot(ch7e.sample[,"N"], type="l")
 plot(ch7e.sample[,"D"], type="l")
-# WHY no mixing of lambda0 and sigma? :(
+# N might be a bit high but otherwise looking pretty good!
 
 # ch7f
 plot(ch7f.sample[,"lambda0"], type="l")
@@ -158,7 +159,19 @@ plot(ch7f.sample[,"beta0"], type="l")
 plot(ch7f.sample[,"beta1"], type="l")
 plot(ch7f.sample[,"N"], type="l")
 plot(ch7f.sample[,"D"], type="l")
-# Could run more iterations, have fuzzier caterpillars for beta0, beta1, N and D, ESPECIALLY N and D??
+# Looks pretty good :)
+
+# Okay, so now 'shaving' down so we are using the same number of iterations from all
+dim(ch7b.sample)
+dim(ch7c.sample)
+dim(ch7e.sample)
+dim(ch7f.sample)
+# The smallest (ch7f.sample) has 116200 iterations. So, we'll shave down all to be 116000 iterations
+ch7b.sample = ch7b.sample[c(1:116000),]
+ch7c.sample = ch7c.sample[c(1:116000),]
+ch7e.sample = ch7e.sample[c(1:116000),]
+ch7f.sample = ch7f.sample[c(1:116000),]
+# Run commands again to check trace plots once again!
 
 ## ---------------------------------------------------------------------------------------
 
@@ -194,18 +207,46 @@ dblur = dblur.df$Dblur
 # ch7b
 ch7b.beta0 = mean(ch7b.sample[,"beta0"])
 ch7b.beta1 = mean(ch7b.sample[,"beta1"])
+# Previously, the means were higher than they are -- 2.28 and 1.14 vs 1.38 and 0.20 now
 
 # ch7c
 ch7c.beta0 = mean(ch7c.sample[,"beta0"])
 ch7c.beta1 = mean(ch7c.sample[,"beta1"])
+# Kind of used to be higher before -- 1.25 and -0.017 vs 1.14 and 0.14 now
 
 # ch7e
 ch7e.beta0 = mean(ch7e.sample[,"beta0"])
 ch7e.beta1 = mean(ch7e.sample[,"beta1"])
+# Mean used to be higher -- 3.35 and 2.24 vs 1.50 and 0.32 now
 
 # ch7f
 ch7f.beta0 = mean(ch7f.sample[,"beta0"])
 ch7f.beta1 = mean(ch7f.sample[,"beta1"])
+# Mean used to be higher -- 3.22 and 1.97 vs 0.85 and -0.13 now!
+
+## Checking if the other posterior means make sense!
+# True N is 7451
+mean(ch7b.sample[,"N"]) # Now is 7722, was 7364
+mean(ch7c.sample[,"N"]) # Now is 6580, was 8992 (but with wrong covariate, I think)
+mean(ch7e.sample[,"N"]) # Now is 7801, was 7552
+mean(ch7f.sample[,"N"]) # Now is 6891, was 8431 (I think also with wrong covariate)
+# Doesn't seem so bad?
+
+# True sigma is 2
+mean(ch7b.sample[,'sigma']) # Now is 1.99, was 2.00
+mean(ch7c.sample[,'sigma']) # Now is 2.02, was 0.008 (wrong covariate)
+mean(ch7e.sample[,'sigma']) # Now is 1.99, was 1.99
+mean(ch7f.sample[,'sigma']) # Now is 2.02, was 2.02
+# Looks pretty good!
+
+# True lambda0 is 0.69*20 = 13.8
+mean(ch7b.sample[,'lambda0']) # Now is 13.2, was 13.5
+mean(ch7c.sample[,'lambda0']) # Now is 13.3, was 0.5 (wrong covariate)
+mean(ch7e.sample[,'lambda0']) # Now is 13.2, was 13.5
+mean(ch7f.sample[,'lambda0']) # Now is 13.3, was 13.4
+# Also looking really good!
+
+# Doesn't really seem like estimation isn't going wrong here, even compared to before? So v different means for beta0 and beta1 isn't too worrying? Is okay that plots are 'dim' then?
 
 ## Therefore, creating the density vector for each plot
 # ch7b
@@ -435,3 +476,5 @@ pp <- (pgoodcov | p2good | p1good) / (pblurcov | p2blur | p1blur) + plot_layout(
 pp
 
 ggsave("Figure7.png", pp, width=7.5, height=5.8, dpi = 600)
+
+## Isn't bright enough?!

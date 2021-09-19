@@ -204,7 +204,7 @@ data <- list(scaledtrapcoords = scaledtrapcoords,
 constants <- list(nPix=nPix, n.occ=n.occ, M=M, trap.no=trap.no, xlim=xlim, ylim=ylim,
                   pixel.area=pixel.area)
 ## Initial values
-inits = list (lambda0=0.4, sigma=4, z=z, beta0=0, beta1=1, s=sst, sx=sx_init, sy=sy_init)
+inits = list (lambda0=10, sigma=4, z=z, beta0=0, beta1=1, s=sst, sx=sx_init, sy=sy_init)
 # True value of p0 is given by: 1-exp(-0.69)=0.4984 (4 sf), as we know that the true value of lambda0 is 0.69 for our simulation. So, starting lambda0 at 0.5 means we are starting near the true value.
 # And the true value of sigma is 2, so once again starting at the true value just to see if things will work!
 
@@ -239,7 +239,7 @@ constants$nMaxDetectors <- ySparse$maxDetNums
 Rmodel <- nimbleModel(code, constants, data, inits, dimensions = list(pixel.centres.order = c(50,50)))
 
 # AF slice sampling for beta0 and beta1
-conf <- configureMCMC(Rmodel, monitors = c("lambda0", "sigma", "N", "D", "z", "beta0", "beta1"), print = FALSE)
+conf <- configureMCMC(Rmodel, monitors = c("lambda0", "sigma", "N", "D", "beta0", "beta1"), print = FALSE)
 conf$removeSampler(c("beta0","beta1"))
 conf$addSampler(target = c("beta0","beta1"),
                 type = 'AF_slice', ## could also try RW_block - seems to make trace plots look worse/more 'square'
