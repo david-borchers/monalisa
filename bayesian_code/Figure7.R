@@ -250,16 +250,16 @@ mean(ch7f.sample[,'lambda0']) # Now is 13.3, was 13.4
 
 ## Therefore, creating the density vector for each plot
 # ch7b
-ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * log(dgood)))
+ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * (dgood)))
 
 # ch7c
-ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * log(dgood)))
+ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * (dgood)))
 
 # ch7e
-ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * log(dblur)))
+ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * (dblur)))
 
 # ch7f
-ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * log(dblur)))
+ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * (dblur)))
 
 ## ---------------------------------------------------------------------------------------
 
