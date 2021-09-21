@@ -161,7 +161,7 @@ code <- nimbleCode({
   beta1 ~ dunif(-10, 10)
 
   ## Specifying prior probabilities for each pixel
-  mu[1:nPix] <- exp(beta0 + beta1*((mona.densities[1:nPix]))) * pixel.area
+  mu[1:nPix] <- exp(beta0 + beta1*(log(mona.densities[1:nPix]))) * pixel.area
   probs[1:nPix] <- mu[1:nPix]/EN
 
   EN <- sum(mu[1:nPix])  # Expected value of N, E(N)
@@ -253,16 +253,19 @@ Cmodel <- compileNimble(Rmodel)
 
 Cmcmc <- compileNimble(Rmcmc, project = Rmodel)
 
+sample = runMCMC(Cmcmc, niter=100000, progressBar=TRUE)
+save(sample, file="ch7f.RData")
+
 # Loop to iteratively save results
 # Initial 50 iterations
-Cmcmc$run(50)
-sample = as.matrix(Cmcmc$mvSamples)
-save(sample, file="ch7f.RData")
+#Cmcmc$run(50)
+#sample = as.matrix(Cmcmc$mvSamples)
+#save(sample, file="ch7f.RData")
 # Repeat loop to save sets of 50 iterations (they append to what we already have)
-repeat{
-  Cmcmc$run(50, reset=FALSE)
-  sample = as.matrix(Cmcmc$mvSamples)
-  save(sample, file="ch7f.RData")
-}
+#repeat{
+#  Cmcmc$run(50, reset=FALSE)
+#  sample = as.matrix(Cmcmc$mvSamples)
+#  save(sample, file="ch7f.RData")
+#}
 
 
