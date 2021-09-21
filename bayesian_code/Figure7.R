@@ -8,7 +8,7 @@
 
 ## First, sourcing in 'posthoc_extract_chs.R'
 load("../output/mona_raw_outputs_100sim.RData")
-source("../code/posthoc_extract_chs.R")
+#source("../code/posthoc_extract_chs.R")
 #load("mona_raw_outputs_100sim.RData") # for NeSI
 #source("posthoc_extract_chs.R") # for NeSI
 
@@ -28,17 +28,17 @@ source("../code/posthoc_extract_chs.R")
 
 ## ch7b
 # Encounter matrix
-#encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
-#for (i in 1:20) {
-#  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
-#}
+encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
+for (i in 1:20) {
+  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
+}
 ## Trap locations
-#ch7b.traploc = attributes(ch7b)$traps
+ch7b.traploc = attributes(ch7b)$traps
 # xlim, ylim
-#xlim = c(0.5, 50.5)
-#ylim = c(0.5, 50.5)
+xlim = c(0.5, 50.5)
+ylim = c(0.5, 50.5)
 # Data object
-#data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7c
 #encounterdat.ch7c = matrix(0, nrow=nrow(ch7c[,1,]), ncol=ncol(ch7c[,1,]))
@@ -89,7 +89,7 @@ library("spatstat")
 ## ------------------------------
 
 # We use the R files in the 'Figure 7' folder to run the MCMC using NeSI, not the lines below!
-#ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=11000)
+ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=2000)
 #save(ch7b.sample, file="ch7b.RData")
 #rm(ch7b.sample)
 #ch7c.sample = run.MCMC.inhom(data.ch7c, M=9000, mona.column="Dgood", n.iter=11000)
@@ -172,6 +172,11 @@ ch7c.sample = ch7c.sample[c(1:116000),]
 ch7e.sample = ch7e.sample[c(1:116000),]
 ch7f.sample = ch7f.sample[c(1:116000),]
 # Run commands again to check trace plots once again!
+
+ch7b.sample = ch7b.sample[c(1:129000),]
+ch7c.sample = ch7c.sample[c(1:129000),]
+ch7e.sample = ch7e.sample[c(1:129000),]
+ch7f.sample = ch7f.sample[c(1:129000),]
 
 ## ---------------------------------------------------------------------------------------
 
