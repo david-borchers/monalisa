@@ -399,17 +399,17 @@ ch7e.beta0
 ch7e.beta1
 # Posterior mean of beta0 is 3.33 and beta1 is 2.23
 # secr.fit
-ch7e.fit = secr.fit(capthist=ch7e, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+ch7e.fit = secr.fit(capthist=ch7e, model=D~log(Dblur), mask=mlmesh, detectfn="HHN")
 ch7e.fit
-# Hmm seems beta1 is 1.14 again, this seems fishy...
+# BETA1 IS 2.22!!!!!!!
 
 # ch7f
 ch7f.beta0
 ch7f.beta1
 # Posterior mean of beta0 is 3.23 and beta1 is 1.97
-ch7f.fit = secr.fit(capthist=ch7f, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+ch7f.fit = secr.fit(capthist=ch7f, model=D~log(Dblur), mask=mlmesh, detectfn="HHN")
 ch7f.fit
-# Unsure of why beta1 still looks like it's 1.14?
+# BETA1 IS 1.98 I MIGHT CRY
 
 ## -----------------------------------------------------------------------------
 
