@@ -28,17 +28,17 @@ load("../output/mona_raw_outputs_100sim.RData")
 
 ## ch7b
 # Encounter matrix
-encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
-for (i in 1:20) {
-  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
-}
+#encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
+#for (i in 1:20) {
+#  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
+#}
 ## Trap locations
-ch7b.traploc = attributes(ch7b)$traps
+#ch7b.traploc = attributes(ch7b)$traps
 # xlim, ylim
-xlim = c(0.5, 50.5)
-ylim = c(0.5, 50.5)
+#xlim = c(0.5, 50.5)
+#ylim = c(0.5, 50.5)
 # Data object
-data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+#data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7c
 #encounterdat.ch7c = matrix(0, nrow=nrow(ch7c[,1,]), ncol=ncol(ch7c[,1,]))
@@ -62,7 +62,7 @@ data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xl
 #  encounterdat.ch7f = encounterdat.ch7f + ch7f[,i,]
 #}
 #ch7f.traploc = attributes(ch7f)$traps
-#data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+#data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc, xlim = xlim, y#lim = ylim, n.occasions = 20)
 
 ## ---------------------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ library(nimbleSCR)
 #source("dpoisLocal_normal.R")
 
 # Sourcing in the function that we'll need to run the MCMC
-#source("MCMC_Function_Inhomogeneous.R")
+source("MCMC_Function_Inhomogeneous.R")
 library("spatstat")
 
 ## ------------------------------
@@ -89,7 +89,7 @@ library("spatstat")
 ## ------------------------------
 
 # We use the R files in the 'Figure 7' folder to run the MCMC using NeSI, not the lines below!
-ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=2000)
+#ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=2000)
 #save(ch7b.sample, file="ch7b.RData")
 #rm(ch7b.sample)
 #ch7c.sample = run.MCMC.inhom(data.ch7c, M=9000, mona.column="Dgood", n.iter=11000)
@@ -98,19 +98,19 @@ ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter
 #ch7e.sample = run.MCMC.inhom(data.ch7e, M=9000, mona.column="Dblur", n.iter=11000)
 #save(ch7e.sample, file="ch7e.RData")
 #rm(ch7e.sample)
-#ch7f.sample = run.MCMC.inhom(data.ch7f, M=9000, mona.column="Dblur", n.iter=11000)
+#ch7f.sample = run.MCMC.inhom(data.ch7f, M=9000, mona.column="Dblur", n.iter=1000)
 #save(ch7f.sample, file="ch7f.RData")
 #rm(ch7f.sample)
 
 ## Loading in what we get from NeSI from the separate R files in the 'Figure 7' folder
 load("Figure 7/ch7b.RData")
-ch7b.sample = sample
+#ch7b.sample = sample
 load("Figure 7/ch7c.RData")
-ch7c.sample = sample
+#ch7c.sample = sample
 load("Figure 7/ch7e.RData")
-ch7e.sample = sample
+#ch7e.sample = sample
 load("Figure 7/ch7f.RData")
-ch7f.sample = sample
+#ch7f.sample = sample
 
 # All have about 120,000 iterations. Can shave down later to be the same amount
 dim(ch7b.sample)
@@ -132,7 +132,7 @@ plot(ch7b.sample[,"beta0"], type="l")
 plot(ch7b.sample[,"beta1"], type="l")
 plot(ch7b.sample[,"N"], type="l")
 plot(ch7b.sample[,"D"], type="l")
-# Looks pretty good?
+# Looking very good!
 
 # ch7c
 plot(ch7c.sample[,"lambda0"], type="l")
@@ -141,7 +141,7 @@ plot(ch7c.sample[,"beta0"], type="l")
 plot(ch7c.sample[,"beta1"], type="l")
 plot(ch7c.sample[,"N"], type="l")
 plot(ch7c.sample[,"D"], type="l")
-# Looks pretty good? Estimates for N seem slightly small, probably ok?
+# Why no mixing of lambda0 and sigma? Starting value for sigma seems bad?
 
 # ch7e
 plot(ch7e.sample[,"lambda0"], type="l")
@@ -150,7 +150,7 @@ plot(ch7e.sample[,"beta0"], type="l")
 plot(ch7e.sample[,"beta1"], type="l")
 plot(ch7e.sample[,"N"], type="l")
 plot(ch7e.sample[,"D"], type="l")
-# N might be a bit high but otherwise looking pretty good!
+# Why no mixing of lambda0 and sigma? Starting value for sigma seems bad?
 
 # ch7f
 plot(ch7f.sample[,"lambda0"], type="l")
@@ -159,24 +159,7 @@ plot(ch7f.sample[,"beta0"], type="l")
 plot(ch7f.sample[,"beta1"], type="l")
 plot(ch7f.sample[,"N"], type="l")
 plot(ch7f.sample[,"D"], type="l")
-# Looks pretty good :)
-
-# Okay, so now 'shaving' down so we are using the same number of iterations from all
-dim(ch7b.sample)
-dim(ch7c.sample)
-dim(ch7e.sample)
-dim(ch7f.sample)
-# The smallest (ch7f.sample) has 116200 iterations. So, we'll shave down all to be 116000 iterations
-ch7b.sample = ch7b.sample[c(1:116000),]
-ch7c.sample = ch7c.sample[c(1:116000),]
-ch7e.sample = ch7e.sample[c(1:116000),]
-ch7f.sample = ch7f.sample[c(1:116000),]
-# Run commands again to check trace plots once again!
-
-ch7b.sample = ch7b.sample[c(1:129000),]
-ch7c.sample = ch7c.sample[c(1:129000),]
-ch7e.sample = ch7e.sample[c(1:129000),]
-ch7f.sample = ch7f.sample[c(1:129000),]
+#  Why no mixing of lambda0 and sigma? Starting value for sigma seems bad?
 
 ## ---------------------------------------------------------------------------------------
 
@@ -255,16 +238,16 @@ mean(ch7f.sample[,'lambda0']) # Now is 13.3, was 13.4
 
 ## Therefore, creating the density vector for each plot
 # ch7b
-ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * (dgood)))
+ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * log(dgood)))
 
 # ch7c
-ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * (dgood)))
+ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * log(dgood)))
 
 # ch7e
-ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * (dblur)))
+ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * log(dblur)))
 
 # ch7f
-ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * (dblur)))
+ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * log(dblur)))
 
 ## ---------------------------------------------------------------------------------------
 
@@ -313,6 +296,84 @@ predicted_densities_all <- predicted_densities_all %>%
 predicted_densities_all %>% group_by(covtype, array_origin) %>% summarize(mv = mean(value))
 
 
+## -----------------------------------------------------------------------------
+
+# So now, we want to compare the density values. First, from the preceding line, we can see that the mean density values are:
+# 3.62 for Dblur, 15_15 (ch7e)
+# 3.30 for Dblur, 27_31 (ch7f)
+# 3.04 for Dgood, 15_15 (ch7b)
+# 2.98 for Dgood, 27_31 (ch7c)
+# For us, the mean density values are:
+mean(ch7e.density) # 3.013 vs 3.62
+mean(ch7f.density) # 3.386 vs 3.30
+mean(ch7b.density) # 2.943 vs 3.04
+mean(ch7c.density) # 3.074 vs 2.98
+# Mmm, okay?
+
+# Now, creating scatterplots of my density values vs Ian's
+# First, we want to extract the values from Ian's data frame and put them in the same order as ours
+head(dgood.df)
+head(predicted_densities_all)
+# Ian's density values for ch7b (Dgood, 15_15), and just extracting pixel centres and density values
+ian.ch7b = predicted_densities_all[1:2500,]
+ian.ch7b = ian.ch7b[,c("x", "y", "value")]
+# Ian's density values for ch7e (Dblur, 15_15)
+ian.ch7e = predicted_densities_all[2501:5000,]
+ian.ch7e = ian.ch7e[,c("x", "y", "value")]
+# Ian's density values for ch7c (Dgood, 27_31)
+ian.ch7c = predicted_densities_all[5001:7500,]
+ian.ch7c = ian.ch7c[,c("x", "y", "value")]
+# Ian's density values for ch7f (Dblur, 27_31)
+ian.ch7f = predicted_densities_all[7501:10000,]
+ian.ch7f = ian.ch7f[,c("x", "y", "value")]
+# Reordering these in the same way we did the mona_df object when finding our density values
+# ch7b
+split.ch7b = split(ian.ch7b, ian.ch7b$y)
+ian.ch7b = do.call("rbind", split.ch7b)
+# ch7e
+split.ch7e = split(ian.ch7e, ian.ch7e$y)
+ian.ch7e = do.call("rbind", split.ch7e)
+# ch7c
+split.ch7c = split(ian.ch7c, ian.ch7c$y)
+ian.ch7c = do.call("rbind", split.ch7c)
+# ch7f
+split.ch7f = split(ian.ch7f, ian.ch7f$y)
+ian.ch7f = do.call("rbind", split.ch7f)
+# Checking the pixel ordering matches what we used for our density values
+head(dgood.df)
+head(ian.ch7b)
+head(ian.ch7e)
+head(ian.ch7c)
+head(ian.ch7f)
+all.equal(dgood.df[,"x"], ian.ch7b[,"x"], ian.ch7e[,"x"], ian.ch7c[,"x"], ian.ch7f[,"x"])
+all.equal(dgood.df[,"y"], ian.ch7b[,"y"], ian.ch7e[,"y"], ian.ch7c[,"y"], ian.ch7f[,"y"])
+# Looks like all density vectors are in the same order!
+
+# So now, adding our densities to these data frames
+ian.ch7b[,'rishika'] = ch7b.density
+ian.ch7e[,'rishika'] = ch7e.density
+ian.ch7c[,'rishika'] = ch7c.density
+ian.ch7f[,'rishika'] = ch7f.density
+
+# And now creating a scatterplot of my estimates against Ian's, so that each point's x-value should be my density value and its y-value should be Ian's density value. Saving these in a pdf to send to Ben.
+pdf("Density scatterplots.pdf", height=20, width=20)
+# ch7b
+plot(ian.ch7b[,'rishika'], ian.ch7b[,'value'], main="ch7b", xlab="Rishika", ylab="Ian")
+# Adding a line through intercept with gradient 1
+abline(a=0, b=1)
+# ch7c
+plot(ian.ch7c[,'rishika'], ian.ch7c[,'value'], main="ch7c", xlab="Rishika", ylab="Ian")
+abline(a=0, b=1)
+# ch7e
+plot(ian.ch7e[,'rishika'], ian.ch7e[,'value'], main="ch7e", xlab="Rishika", ylab="Ian")
+abline(a=0, b=1)
+# ch7f
+plot(ian.ch7f[,'rishika'], ian.ch7f[,'value'], main="ch7f", xlab="Rishika", ylab="Ian")
+abline(a=0, b=1)
+dev.off()
+
+
+## -----------------------------------------------------------------------------
 
 ## Seems like now is a good time to replace predicted_densities_all so that it now contains our density values!!
 # Matrix of pixel centres
