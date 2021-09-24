@@ -140,6 +140,11 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
   # are now left with a density vector only, which we will then use with NIMBLE!
   mona.densities = mona.densities[,mona.column]
 
+  ## As we want to use dpoisLocal_normal() below, we apparently need to scale the trap coordinates to the 'habitat gird' using the scaleCoordsToHabitatGrid() function
+  # Before this, need to label columns in pixel.centres as 'x' and 'y'
+  colnames(pixel.centres) = c("x", "y")
+  scaledtrapcoords = scaleCoordsToHabitatGrid(coordsData = traplocs, coordsHabitatGridCenter = pixel.centres)
+  scaledtrapcoords = scaledtrapcoords$coordsDataScaled
 
   ## Now, we want to use NIMBLE to run MCMC - we are expecting to see correlation between beta0 and beta1 here
   code <- nimbleCode({
@@ -174,7 +179,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
                                                   lambda = lambda0,
                                                   s = pixel.centres[s[k],1:2], # s[k] is number of pixel centre that the activity centre falls into -- so should index the row in 'pixel.centres' that contains the chosen activity centre for the sampled animal
                                                   sigma = sigma,
-                                                  trapCoords = traplocs[1:trap.no, 1:2],
+                                                  trapCoords = scaledtrapcoords[1:trap.no, 1:2],
                                                   localTrapsIndices = detectorIndex[1:n.cells,1:maxNBDets],
                                                   localTrapsNum = nDetectors[1:n.cells],
                                                   resizeFactor = ResizeFactor,
@@ -188,7 +193,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
 
   ### Values that we want to provide to our NIMBLE model
   ## Data
-  data <- list(traplocs = traplocs,
+  data <- list(scaledtrapcoords = scaledtrapcoords,
                pixel.centres = pixel.centres,
                mona.densities = mona.densities,
                ones = rep(1, M),
@@ -209,7 +214,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
   # Here, we choose dmax of 56 as means that for all animals, will be considering all detectors (so aren't really speeding up computation here) -- e.g. if activity centre at (0,0), we are saying could still be detected at the furthest away detector!
   # We are using simulated animals here, there isn't a real sense of what detectors would be 'realistic' for animals to be caught at, so seems sensible to set dmax like this
   # And since we have no unsuitable habitat, we are defining the 'habitatMask' argument as a matrix full of 1's.
-  DetectorIndex <- getLocalObjects(habitatMask = matrix(1, ncol=50, nrow=50), coords = traplocs, dmax = 56,resizeFactor = 1)
+  DetectorIndex <- getLocalObjects(habitatMask = matrix(1, ncol=50, nrow=50), coords = scaledtrapcoords, dmax = 56,resizeFactor = 1)
   # Generating the values of more constants that we want to provide to our NIMBLE model
   constants$y.maxDet <- dim(DetectorIndex$habitatGrid)[1]
   constants$x.maxDet <- dim(DetectorIndex$habitatGrid)[2]
@@ -242,6 +247,11 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
   Rmcmc <- buildMCMC(conf)
 
   Cmodel <- compileNimble(Rmodel)
+  # Reinitialising constants
+  Cmodel$sigma = sigma.start
+  Cmodel$beta1 = 1
+  Cmodel$beta0 = 0
+  Cmodel$lambda0 = lambda0.start
 
   Cmcmc <- compileNimble(Rmcmc, project = Rmodel)
   samples <- runMCMC(Cmcmc, niter = n.iter+n.burn, progressBar=TRUE)#, nburnin = n.burn)#, samplesAsCodaMCMC=FALSE, nburnin = n.burn))
