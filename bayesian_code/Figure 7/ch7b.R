@@ -253,10 +253,14 @@ conf$addSampler(target = c("beta0","beta1"),
 Rmcmc <- buildMCMC(conf)
 
 Cmodel <- compileNimble(Rmodel)
+# Reinitialising constants as this seems to be a bugaboo
+Cmodel$sigma = 4
+Cmodel$beta1 = 1
+Cmodel$beta0 = 0
+Cmodel$lambda0 = 10
 
 Cmcmc <- compileNimble(Rmcmc, project = Rmodel)
 
-# Seeing if this is why beta0 and beta1 are funky!!!!!!!! GOODNESS ME IT SEEMS TO BE.
 sample = runMCMC(Cmcmc, niter=100000, progressBar=TRUE)
 save(sample, file="ch7b.RData")
 

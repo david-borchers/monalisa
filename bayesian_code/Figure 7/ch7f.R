@@ -250,6 +250,11 @@ conf$addSampler(target = c("beta0","beta1"),
 Rmcmc <- buildMCMC(conf)
 
 Cmodel <- compileNimble(Rmodel)
+# Reinitialising constants as this seems to be a bugaboo
+Cmodel$sigma = 4
+Cmodel$beta1 = 1
+Cmodel$beta0 = 0
+Cmodel$lambda0 = 10
 
 Cmcmc <- compileNimble(Rmcmc, project = Rmodel)
 

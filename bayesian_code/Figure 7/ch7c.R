@@ -205,8 +205,8 @@ constants <- list(nPix=nPix, n.occ=n.occ, M=M, trap.no=trap.no, xlim=xlim, ylim=
                   pixel.area=pixel.area)
 ## Initial values
 inits = list (lambda0=10, sigma=4, z=z, beta0=0, beta1=1, s=sst, sx=sx_init, sy=sy_init)
-# True value of p0 is given by: 1-exp(-0.69)=0.4984 (4 sf), as we know that the true value of lambda0 is 0.69 for our simulation. So, starting lambda0 at 0.5 means we are starting near the true value.
-# And the true value of sigma is 2, so once again starting at the true value just to see if things will work!
+# True value of lambda0 is given by 0.69*20=13.8, so are starting near true value.
+# And the true value of sigma is 2, sostarting near the true value just to see if things will work!
 
 ## More constants that we want to provide to the NIMBLE model
 # Based on the Wolverine example, we are setting the dmax value below to 56, which seems to be okay.
@@ -249,6 +249,11 @@ conf$addSampler(target = c("beta0","beta1"),
 Rmcmc <- buildMCMC(conf)
 
 Cmodel <- compileNimble(Rmodel)
+# Reinitialising constants as this seems to be a bugaboo
+Cmodel$sigma = 4
+Cmodel$beta1 = 1
+Cmodel$beta0 = 0
+Cmodel$lambda0 = 10
 
 Cmcmc <- compileNimble(Rmcmc, project = Rmodel)
 
