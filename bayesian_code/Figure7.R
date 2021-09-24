@@ -504,7 +504,7 @@ plot_mona <- function(orgn, densities = predicted_densities_all){
     scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
     theme(axis.line=element_blank(),axis.text.x=element_blank(),
           axis.text.y=element_blank(),axis.ticks=element_blank(),
-          axis.title=element_blank(),legend.position="none",
+          axis.title=element_blank(),legend.position="right", legend.key.height=unit(0.7,"cm"), legend.title=element_blank(),
           panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
           panel.grid.minor=element_blank(),plot.background=element_blank())
   return(p)
@@ -539,7 +539,7 @@ pgoodcov <- predicted_densities_covs %>%
   scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
-        axis.title=element_blank(),legend.position="none",
+        axis.title=element_blank(),legend.position="right", legend.key.height=unit(0.7,"cm"), legend.title=element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
@@ -564,7 +564,7 @@ pblurcov <- predicted_densities_covs %>%
   scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
-        axis.title=element_blank(),legend.position="none",
+        axis.title=element_blank(),legend.position="right", legend.key.height=unit(0.7,"cm"), legend.title=element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
