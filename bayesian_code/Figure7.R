@@ -8,7 +8,7 @@
 
 ## First, sourcing in 'posthoc_extract_chs.R'
 load("../output/mona_raw_outputs_100sim.RData")
-#source("../code/posthoc_extract_chs.R")
+source("../code/posthoc_extract_chs.R")
 #load("mona_raw_outputs_100sim.RData") # for NeSI
 #source("posthoc_extract_chs.R") # for NeSI
 
@@ -28,41 +28,41 @@ load("../output/mona_raw_outputs_100sim.RData")
 
 ## ch7b
 # Encounter matrix
-#encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
-#for (i in 1:20) {
-#  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
-#}
+encounterdat.ch7b = matrix(0, nrow=nrow(ch7b[,1,]), ncol=ncol(ch7b[,1,]))
+for (i in 1:20) {
+  encounterdat.ch7b = encounterdat.ch7b + ch7b[,i,]
+}
 ## Trap locations
-#ch7b.traploc = attributes(ch7b)$traps
+ch7b.traploc = attributes(ch7b)$traps
 # xlim, ylim
-#xlim = c(0.5, 50.5)
-#ylim = c(0.5, 50.5)
+xlim = c(0.5, 50.5)
+ylim = c(0.5, 50.5)
 # Data object
-#data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7c
-#encounterdat.ch7c = matrix(0, nrow=nrow(ch7c[,1,]), ncol=ncol(ch7c[,1,]))
-#for (i in 1:20) {
-#  encounterdat.ch7c = encounterdat.ch7c + ch7c[,i,]
-#}
-#ch7c.traploc = attributes(ch7c)$traps
-#data.ch7c = list(encounter.data = encounterdat.ch7c, trap.loc = ch7c.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+encounterdat.ch7c = matrix(0, nrow=nrow(ch7c[,1,]), ncol=ncol(ch7c[,1,]))
+for (i in 1:20) {
+  encounterdat.ch7c = encounterdat.ch7c + ch7c[,i,]
+}
+ch7c.traploc = attributes(ch7c)$traps
+data.ch7c = list(encounter.data = encounterdat.ch7c, trap.loc = ch7c.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7e
-#encounterdat.ch7e = matrix(0, nrow=nrow(ch7e[,1,]), ncol=ncol(ch7e[,1,]))
-#for (i in 1:20) {
-#  encounterdat.ch7e = encounterdat.ch7e + ch7e[,i,]
-#}
-#ch7e.traploc = attributes(ch7e)$traps
-#data.ch7e = list(encounter.data = encounterdat.ch7e, trap.loc = ch7e.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+encounterdat.ch7e = matrix(0, nrow=nrow(ch7e[,1,]), ncol=ncol(ch7e[,1,]))
+for (i in 1:20) {
+  encounterdat.ch7e = encounterdat.ch7e + ch7e[,i,]
+}
+ch7e.traploc = attributes(ch7e)$traps
+data.ch7e = list(encounter.data = encounterdat.ch7e, trap.loc = ch7e.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ch7f
-#encounterdat.ch7f = matrix(0, nrow=nrow(ch7f[,1,]), ncol=ncol(ch7f[,1,]))
-#for (i in 1:20) {
-#  encounterdat.ch7f = encounterdat.ch7f + ch7f[,i,]
-#}
-#ch7f.traploc = attributes(ch7f)$traps
-#data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc, xlim = xlim, y#lim = ylim, n.occasions = 20)
+encounterdat.ch7f = matrix(0, nrow=nrow(ch7f[,1,]), ncol=ncol(ch7f[,1,]))
+for (i in 1:20) {
+  encounterdat.ch7f = encounterdat.ch7f + ch7f[,i,]
+}
+ch7f.traploc = attributes(ch7f)$traps
+data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ---------------------------------------------------------------------------------------
 
@@ -372,6 +372,44 @@ plot(ian.ch7f[,'rishika'], ian.ch7f[,'value'], main="ch7f", xlab="Rishika", ylab
 abline(a=0, b=1)
 dev.off()
 
+## And now, fitting a model using secr.fit() to our data objects, comparing the estimates to the posterior means we are using to estimate beta0 and beta1
+library("secr")
+# ch7b
+ch7b.beta0
+ch7b.beta1
+# Posterior mean of beta0 is 2.28 and beta1 is 1.14
+# Mask, I think
+mlmesh = read.mask(data=mona_df)
+# Using secr.fit
+ch7b.fit = secr.fit(capthist=ch7b, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+ch7b.fit
+# I think that beta1 is 1.14! :) However, I'm not too sure what beta0 is here
+
+# ch7c
+ch7c.beta0
+ch7c.beta1
+# Posterior mean of beta0 is 2.33 and beta1 is 1.14
+# secr.fit
+ch7c.fit = secr.fit(capthist=ch7c, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+ch7c.fit
+# Looks like beta1 is 1.14 again!!! Unsure of beta0, unfortunately
+
+# ch7e
+ch7e.beta0
+ch7e.beta1
+# Posterior mean of beta0 is 3.33 and beta1 is 2.23
+# secr.fit
+ch7e.fit = secr.fit(capthist=ch7e, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+ch7e.fit
+# Hmm seems beta1 is 1.14 again, this seems fishy...
+
+# ch7f
+ch7f.beta0
+ch7f.beta1
+# Posterior mean of beta0 is 3.23 and beta1 is 1.97
+ch7f.fit = secr.fit(capthist=ch7f, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+ch7f.fit
+# Unsure of why beta1 still looks like it's 1.14?
 
 ## -----------------------------------------------------------------------------
 
