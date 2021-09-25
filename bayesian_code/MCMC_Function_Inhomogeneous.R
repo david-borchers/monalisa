@@ -118,7 +118,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
   ### Generating the value of our chosen covariate for each pixel (as we are assuming an inhomgeneous Poisson process)
   ## First, need to load 'mona_df' -- this contains the covariate values that we want to use
   # load("../output/mona_inputs.RData")
-  load("../output/mona_inputs.RData") # For NeSI
+  load("mona_inputs.RData") # For NeSI
   # We want to subset the 'Dgood' column from the resulting data frame, as this contains the values for our chosen covariate here. We also are subsetting
   # the x- and y-coordinate columns (these give the pixel centres that correspond to each covariate value)
   mona.densities = mona_df[,c("x", "y", mona.column)]

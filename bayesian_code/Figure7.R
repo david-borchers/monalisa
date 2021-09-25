@@ -88,7 +88,7 @@ library("spatstat")
 
 ## ------------------------------
 
-# We use the R files in the 'Figure 7' folder to run the MCMC using NeSI, not the lines below!
+# We use the lines below to generate the MCMC samples!
 #ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=2000)
 #save(ch7b.sample, file="ch7b.RData")
 #rm(ch7b.sample)
@@ -104,13 +104,15 @@ library("spatstat")
 
 ## Loading in what we get from NeSI from the separate R files in the 'Figure 7' folder
 load("Figure 7/ch7b.RData")
-#ch7b.sample = sample
 load("Figure 7/ch7c.RData")
-#ch7c.sample = sample
 load("Figure 7/ch7e.RData")
-#ch7e.sample = sample
 load("Figure 7/ch7f.RData")
-#ch7f.sample = sample
+
+# Checking density when unlog covariate, to check everything okay. Just loading in these RData files and then running the lines below until the scatterplots comparing mine and Ian's densities.
+#load("Figure 7/Unlogged covariate data/ch7b.RData")
+#load("Figure 7/Unlogged covariate data/ch7c.RData")
+#load("Figure 7/Unlogged covariate data/ch7e.RData")
+#load("Figure 7/Unlogged covariate data/ch7f.RData")
 
 # All have about 120,000 iterations. Can shave down later to be the same amount
 dim(ch7b.sample)
@@ -236,7 +238,7 @@ mean(ch7f.sample[,'lambda0']) # Now is 13.3, was 13.4
 
 # Doesn't really seem like estimation isn't going wrong here, even compared to before? So v different means for beta0 and beta1 isn't too worrying? Is okay that plots are 'dim' then?
 
-## Therefore, creating the density vector for each plot
+## Therefore, creating the density vector for each plot.
 # ch7b
 ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * log(dgood)))
 
@@ -356,7 +358,7 @@ ian.ch7c[,'rishika'] = ch7c.density
 ian.ch7f[,'rishika'] = ch7f.density
 
 # And now creating a scatterplot of my estimates against Ian's, so that each point's x-value should be my density value and its y-value should be Ian's density value. Saving these in a pdf to send to Ben.
-pdf("Density scatterplots.pdf", height=20, width=20)
+pdf("Density scatterplots (unlogged covariate).pdf", height=20, width=20)
 # ch7b
 plot(ian.ch7b[,'rishika'], ian.ch7b[,'value'], main="ch7b", xlab="Rishika", ylab="Ian")
 # Adding a line through intercept with gradient 1
