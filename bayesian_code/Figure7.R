@@ -103,16 +103,16 @@ library("spatstat")
 #rm(ch7f.sample)
 
 ## Loading in what we get from NeSI from the separate R files in the 'Figure 7' folder
-load("Figure 7/ch7b.RData")
-load("Figure 7/ch7c.RData")
-load("Figure 7/ch7e.RData")
-load("Figure 7/ch7f.RData")
+load("Figure 7/ch7b.RData") # logged covariate
+load("Figure 7/ch7c.RData") # logged covariate
+load("Figure 7/ch7e.RData") # logged covariate
+load("Figure 7/ch7f.RData") # logged covariate
 
 # Checking density when unlog covariate, to check everything okay. Just loading in these RData files and then running the lines below until the scatterplots comparing mine and Ian's densities.
-#load("Figure 7/Unlogged covariate data/ch7b.RData")
-#load("Figure 7/Unlogged covariate data/ch7c.RData")
-#load("Figure 7/Unlogged covariate data/ch7e.RData")
-#load("Figure 7/Unlogged covariate data/ch7f.RData")
+load("Figure 7/Unlogged covariate data/ch7b.RData") # unlogged covariate
+load("Figure 7/Unlogged covariate data/ch7c.RData") # unlogged covariate
+load("Figure 7/Unlogged covariate data/ch7e.RData") # unlogged covariate
+load("Figure 7/Unlogged covariate data/ch7f.RData") # unlogged covariate
 
 # All have about 120,000 iterations. Can shave down later to be the same amount
 dim(ch7b.sample)
@@ -240,20 +240,20 @@ mean(ch7f.sample[,'lambda0']) # Now is 13.3, was 13.4
 
 ## Therefore, creating the density vector for each plot.
 # ch7b
-ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * log(dgood)))
-#ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * (dgood)))
+#ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * log(dgood))) # logged covariate
+ch7b.density = exp(ch7b.beta0 + (ch7b.beta1 * (dgood))) # unlogged covariate
 
 # ch7c
-ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * log(dgood)))
-#ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * (dgood)))
+#ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * log(dgood))) # logged cov
+ch7c.density = exp(ch7c.beta0 + (ch7c.beta1 * (dgood))) # unlogged cov
 
 # ch7e
-ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * log(dblur)))
-#ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * (dblur)))
+#ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * log(dblur))) # logged cov
+ch7e.density = exp(ch7e.beta0 + (ch7e.beta1 * (dblur))) # unlogged cov
 
 # ch7f
-ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * log(dblur)))
-#ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * (dblur)))
+#ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * log(dblur))) # logged cov
+ch7f.density = exp(ch7f.beta0 + (ch7f.beta1 * (dblur))) # unlogged cov
 
 ## ---------------------------------------------------------------------------------------
 
@@ -387,35 +387,43 @@ ch7b.beta1
 # Mask, I think
 mlmesh = read.mask(data=mona_df)
 # Using secr.fit
-ch7b.fit = secr.fit(capthist=ch7b, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+#ch7b.fit = secr.fit(capthist=ch7b, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # logged cov
+ch7b.fit = secr.fit(capthist=ch7b, model=D~(Dgood), mask=mlmesh, detectfn="HHN") # unlogged cov
 ch7b.fit
-# I think that beta1 is 1.14! :) However, I'm not too sure what beta0 is here
+# Logged: I think that beta1 is 1.14! :) However, I'm not too sure what beta0 is here
+# Unlogged: beta1 is 3.53, seems ours is really low at 0.36?
 
 # ch7c
 ch7c.beta0
 ch7c.beta1
 # Posterior mean of beta0 is 2.33 and beta1 is 1.14
 # secr.fit
-ch7c.fit = secr.fit(capthist=ch7c, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+#ch7c.fit = secr.fit(capthist=ch7c, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # logged cov
+ch7c.fit = secr.fit(capthist=ch7c, model=D~(Dgood), mask=mlmesh, detectfn="HHN") # unlogged cov
 ch7c.fit
-# Looks like beta1 is 1.14 again!!! Unsure of beta0, unfortunately
+# Logged: Looks like beta1 is 1.14 again!!! Unsure of beta0, unfortunately
+# Unlogged: Beta1 is 3.33, ours is really low at 0.53
 
 # ch7e
 ch7e.beta0
 ch7e.beta1
 # Posterior mean of beta0 is 3.33 and beta1 is 2.23
 # secr.fit
-ch7e.fit = secr.fit(capthist=ch7e, model=D~log(Dblur), mask=mlmesh, detectfn="HHN")
+#ch7e.fit = secr.fit(capthist=ch7e, model=D~log(Dblur), mask=mlmesh, detectfn="HHN") # logged cov
+ch7e.fit = secr.fit(capthist=ch7e, model=D~(Dblur), mask=mlmesh, detectfn="HHN") # unlogged cov
 ch7e.fit
-# BETA1 IS 2.22!!!!!!!
+# Logged: BETA1 IS 2.22!!!!!!!
+# Unlogged: so now it seems that beta1 is -0.069, ours is 0.73?
 
 # ch7f
 ch7f.beta0
 ch7f.beta1
 # Posterior mean of beta0 is 3.23 and beta1 is 1.97
-ch7f.fit = secr.fit(capthist=ch7f, model=D~log(Dblur), mask=mlmesh, detectfn="HHN")
+#ch7f.fit = secr.fit(capthist=ch7f, model=D~log(Dblur), mask=mlmesh, detectfn="HHN") # logged cov
+ch7f.fit = secr.fit(capthist=ch7f, model=D~(Dblur), mask=mlmesh, detectfn="HHN") # unlogged cov
 ch7f.fit
-# BETA1 IS 1.98 I MIGHT CRY
+# Logged: BETA1 IS 1.98 I MIGHT CRY
+# Unlogged: beta1 is 5.85, ours is -0.61, she is confused
 
 ## -----------------------------------------------------------------------------
 
