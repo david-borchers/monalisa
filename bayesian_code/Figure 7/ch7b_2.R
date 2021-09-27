@@ -38,5 +38,5 @@ library(nimbleSCR)
 source("MCMC_Function_Inhomogeneous.R")
 library("spatstat")
 
-ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=100000)
+ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, mona.column="Dgood", n.iter=10000)
 save(ch7b.sample, file="ch7b.RData")

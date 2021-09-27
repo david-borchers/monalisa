@@ -198,6 +198,7 @@ dblur = dblur.df$Dblur
 ch7b.beta0 = mean(ch7b.sample[,"beta0"])
 ch7b.beta1 = mean(ch7b.sample[,"beta1"])
 # Previously, the means were higher than they are -- 2.28 and 1.14 vs 1.38 and 0.20 now
+ch7b.cred = quantile(ch7b.sample[,'beta1'], probs = c(0.025, 0.975))
 
 # ch7c
 ch7c.beta0 = mean(ch7c.sample[,"beta0"])
@@ -316,6 +317,20 @@ mean(ch7b.density) # 2.943 vs 3.04
 mean(ch7c.density) # 3.074 vs 2.98
 # Mmm, okay?
 
+## Comparing densities when logging and unlogging covariate (first two lines after loading appropriate samples)
+#ch7b.sample.log = ch7b.sample
+#ch7b.sample.unlog = ch7b.sample
+#ch7b.beta0.log = mean(ch7b.sample.log[,'beta0'])
+#ch7b.beta1.log = mean(ch7b.sample.log[,'beta1'])
+#ch7b.beta0.unlog = mean(ch7b.sample.unlog[,'beta0'])
+#ch7b.beta1.unlog = mean(ch7b.sample.unlog[,'beta1'])
+#ch7b.density.log =  exp(ch7b.beta0.log + (ch7b.beta1.log * log(dgood))) # logged covariate
+#ch7b.density.unlog = exp(ch7b.beta0.unlog + (ch7b.beta1.unlog * (dgood))) # unlogged covariate
+#plot(ch7b.density.log, ch7b.density.unlog)
+#abline(0, 1, col="#d70040")
+#fit.test = lm(ch7b.density.log~ch7b.density.unlog)
+
+
 # Now, creating scatterplots of my density values vs Ian's
 # First, we want to extract the values from Ian's data frame and put them in the same order as ours
 head(dgood.df)
@@ -424,6 +439,17 @@ ch7f.fit = secr.fit(capthist=ch7f, model=D~(Dblur), mask=mlmesh, detectfn="HHN")
 ch7f.fit
 # Logged: BETA1 IS 1.98 I MIGHT CRY
 # Unlogged: beta1 is 5.85, ours is -0.61, she is confused
+
+## Loading in a 'test' of unlogged RData for which we used ch7b, and made the starting values equal to the MLEs found from using secr.fit(). We 'want' beta0 around -0.35, beta1 around 3.5
+load("Figure 7/Unlogged covariate test/ch7b.RData")
+dim(ch7b.sample)
+pdf("UnloggedCovariate_27Sept2021.pdf")
+plot(ch7b.sample[,'lambda0'], type="l", main="lambda0")
+plot(ch7b.sample[,'sigma'][-c(1:1000)], type="l", main="sigma")
+plot(ch7b.sample[,'beta0'], type="l", main="beta0")
+plot(ch7b.sample[,'beta1'], type="l", main="beta1")
+plot(ch7b.sample[,'N'], type="l", main="N")
+dev.off()
 
 ## -----------------------------------------------------------------------------
 

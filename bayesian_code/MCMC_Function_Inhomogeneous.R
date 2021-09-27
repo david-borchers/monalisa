@@ -7,7 +7,7 @@
 # * The size of the super-population, M
 # * The column from 'mona_df' that contains the covariate values we want to use
 # * Starting values for lambda0 and sigma
-# * The dmax value to use for the getLocalObjects() function
+e# * The dmax value to use for the getLocalObjects() function
 # * The number of iterations to run the MCMC for
 # * The number of burn-in iterations we want to use
 # * The length of the adaptation interval that we want to use
@@ -19,9 +19,6 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
   y = data$encounter.data
   # Removing rows of 0's in encounter data
   y = y[apply(y, 1, sum)>0, ]
-
-  # # Removing these temporarily, so don't get issues with -Inf probabilities -- delete later! (Once use dposlocal_normal())
-  # y = y[-c(280, 379, 991),]
 
   ## Trap locations matrix
   traplocs = data$trap.loc
@@ -202,7 +199,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, mona.column, lam
   constants <- list(nPix=nPix, n.occ=n.occ, M=M, trap.no=trap.no, xlim=xlim, ylim=ylim,
                     pixel.area=pixel.area)
   ## Initial values
-  inits = list (lambda0=lambda0.start, sigma=sigma.start, z=z, beta0=0, beta1=1, s=sst, sx=sx_init, sy=sy_init)
+  inits = list (lambda0=lambda0.start, sigma=sigma.start, z=z, beta0=-0.35, beta1=3.5, s=sst, sx=sx_init, sy=sy_init)
   # True value of p0 is given by: 1-exp(-0.69)=0.4984 (4 sf), as we know that the true value of lambda0 is 0.69 for our simulation. So, starting lambda0 at 0.5 means we are starting near the true value.
   # And the true value of sigma is 2, so once again starting at the true value just to see if things will work!
 
