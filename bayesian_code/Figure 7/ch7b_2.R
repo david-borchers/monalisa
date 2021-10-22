@@ -54,7 +54,7 @@ mona.densities = mona.densities[sequence,]
 split = split(mona.densities, mona.densities$y)
 mona.densities = do.call("rbind", split)
 # And now that we are sure of the way in which the pixels are numbered, can remove the x and y-coordinate columns, so that we are now left with a density vector only, which we will then use with NIMBLE!
-dgood = 2 * log(mona.densities[,"Dgood"]) # Using 2*log(dgood) so that we can see whether the posterior means match what we get from secr.fit(). This will confirm the code is working correctly!
+dgood = log(mona.densities[,"Dgood"]^2) # Using log(dgood^2) so that we can see whether the posterior means match what we get from secr.fit(). This will confirm the code is working correctly!
 
 ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, covariate=dgood, n.iter=100000)
 save(ch7b.sample, file="ch7b.RData")

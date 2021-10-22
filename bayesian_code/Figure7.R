@@ -103,10 +103,10 @@ library("spatstat")
 #rm(ch7f.sample)
 
 ## Loading in what we get from NeSI from the separate R files in the 'Figure 7' folder
-load("Figure 7/ch7b.RData") # logged covariate
-load("Figure 7/ch7c.RData") # logged covariate
-load("Figure 7/ch7e.RData") # logged covariate
-load("Figure 7/ch7f.RData") # logged covariate
+#load("Figure 7/ch7b.RData") # logged covariate
+#load("Figure 7/ch7c.RData") # logged covariate
+#load("Figure 7/ch7e.RData") # logged covariate
+#load("Figure 7/ch7f.RData") # logged covariate
 
 # Checking density when unlog covariate, to check everything okay. Just loading in these RData files and then running the lines below until the scatterplots comparing mine and Ian's densities.
 load("Figure 7/Unlogged covariate data/ch7b.RData") # unlogged covariate
@@ -407,6 +407,27 @@ ch7b.fit = secr.fit(capthist=ch7b, model=D~(Dgood), mask=mlmesh, detectfn="HHN")
 ch7b.fit
 # Logged: I think that beta1 is 1.14! :) However, I'm not too sure what beta0 is here
 # Unlogged: beta1 is 3.53, seems ours is really low at 0.36?
+
+## Have submitted job with covariate = log(Dgood^2) for ch7b
+# Loading in data
+load("ch7b.RData")
+dim(ch7b.sample)
+ch7b.sample=ch7b.sample[-c(1:2000),]
+plot(ch7b.sample[,'lambda0'], type="l")
+plot(ch7b.sample[,'sigma'], type="l")
+plot(ch7b.sample[,'beta0'], type="l")
+plot(ch7b.sample[,'beta1'], type="l")
+plot(ch7b.sample[,'N'], type="l")
+# Burn-in seems enough now, looking at posterior mean for beta0 and beta1:
+mean(ch7b.sample[,'beta0'])
+mean(ch7b.sample[,'beta1'])
+# Comparing to results from secr.fit. log(Dgood^2)=2log(Dgood), right?
+ch7b.test = secr.fit(capthist=ch7b, model=D~log(Dgood^2), mask=mlmesh, detectfn="HHN")
+ch7b.test
+log(exp(11.4901429)/10000)
+# So it seems posterior beta1 is 0.101, whereas with secr is 0.00195?
+# And posterior beta0 is 1.38, but with secr is 2.2798 :(
+# So there is something in my code that means it specifically works for a logged covariate but not otherwise!
 
 # ch7c
 ch7c.beta0
