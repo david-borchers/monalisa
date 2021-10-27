@@ -132,7 +132,8 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
     beta1 ~ dunif(-10, 10)
 
     ## Specifying prior probabilities for each pixel
-    mu[1:nPix] <- exp(beta0 + beta1*(mona.densities[1:nPix])) * pixel.area
+    DPix[1:nPix] <- exp(beta0 + beta1*(mona.densities[1:nPix]))
+    mu[1:nPix] <- DPix * pixel.area
     probs[1:nPix] <- mu[1:nPix]/EN
 
     EN <- sum(mu[1:nPix])  # Expected value of N, E(N)
@@ -211,7 +212,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
   Rmodel <- nimbleModel(code, constants, data, inits, dimensions = list(pixel.centres.order = c(50,50)))
 
   # AF slice sampling for beta0 and beta1
-  conf <- configureMCMC(Rmodel, monitors = c("lambda0", "sigma", "N", "D", "beta0", "beta1", "mu"), print = FALSE)
+  conf <- configureMCMC(Rmodel, monitors = c("lambda0", "sigma", "N", "D", "beta0", "beta1", "DPix"), print = FALSE)
   conf$removeSampler(c("beta0","beta1"))
   conf$addSampler(target = c("beta0","beta1"),
                   type = 'AF_slice',
