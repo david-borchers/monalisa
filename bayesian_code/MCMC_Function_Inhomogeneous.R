@@ -128,7 +128,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
     coeff  <- exp(log_coeff)
     sigma <- sqrt(1/(2*coeff))
     # (The parameters below are unique to the inhomogeneous PP model)
-    beta0 ~ dunif(-10, 10)
+    beta0 ~ dunif(-25, 25)
     beta1 ~ dunif(-10, 10)
 
     ## Specifying prior probabilities for each pixel
@@ -175,8 +175,8 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
   ## Constants
   constants <- list(nPix=nPix, n.occ=n.occ, M=M, trap.no=trap.no, xlim=xlim, ylim=ylim,
                     pixel.area=pixel.area)
-  ## Initial values
-  inits = list (lambda0=lambda0.start, sigma=sigma.start, z=z, beta0=-0.35, beta1=3.5, s=sst, sx=sx_init, sy=sy_init)
+  ## Initial values.
+  inits = list (lambda0=lambda0.start, log_coeff=log(1/(2*sigma.start^2)), z=z, beta0=log(pop.size/(nPix*pixel.area*10000)), beta1=0, s=sst, sx=sx_init, sy=sy_init)
   # True value of p0 is given by: 1-exp(-0.69)=0.4984 (4 sf), as we know that the true value of lambda0 is 0.69 for our simulation. So, starting lambda0 at 0.5 means we are starting near the true value.
   # And the true value of sigma is 2, so once again starting at the true value just to see if things will work!
 
