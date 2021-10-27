@@ -211,7 +211,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
   Rmodel <- nimbleModel(code, constants, data, inits, dimensions = list(pixel.centres.order = c(50,50)))
 
   # AF slice sampling for beta0 and beta1
-  conf <- configureMCMC(Rmodel, monitors = c("lambda0", "sigma", "N", "D", "beta0", "beta1"), print = FALSE)
+  conf <- configureMCMC(Rmodel, monitors = c("lambda0", "sigma", "N", "D", "beta0", "beta1", "mu"), print = FALSE)
   conf$removeSampler(c("beta0","beta1"))
   conf$addSampler(target = c("beta0","beta1"),
                   type = 'AF_slice',
