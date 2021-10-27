@@ -133,7 +133,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
 
     ## Specifying prior probabilities for each pixel
     DPix[1:nPix] <- exp(beta0 + beta1*(mona.densities[1:nPix]))
-    mu[1:nPix] <- DPix * pixel.area
+    mu[1:nPix] <- DPix[1:nPix] * pixel.area
     probs[1:nPix] <- mu[1:nPix]/EN
 
     EN <- sum(mu[1:nPix])  # Expected value of N, E(N)
