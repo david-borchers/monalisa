@@ -120,8 +120,10 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
   scaledtrapcoords = scaleCoordsToHabitatGrid(coordsData = traplocs, coordsHabitatGridCenter = pixel.centres)
   scaledtrapcoords = scaledtrapcoords$coordsDataScaled
 
+  scaledpixelcentres = scaleCoordsToHabitatGrid(coordsData = pixel.centres, coordsHabitatGridCenter = pixel.centres)
+  scaledpixelcentres = scaledpixelcentres$coordsDataScaled
   ## Now, we want to use NIMBLE to run MCMC - we are expecting to see correlation between beta0 and beta1 here
-  code <- nimbleCode({
+    code <- nimbleCode({
     ## Priors -- same as for the homogeneous PP model (for the parameters that are common to both models)
     lambda0 ~ dgamma(0.001, 0.001)
     log_coeff ~ dunif(-10, 10)
@@ -152,7 +154,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
       y[k, 1:nMaxDetectors] ~ dpoisLocal_normal(detNums = nbDetections[k],
                                                   detIndices = yDets[k, 1:nMaxDetectors],
                                                   lambda = lambda0,
-                                                  s = pixel.centres[s[k],1:2], # s[k] is number of pixel centre that the activity centre falls into -- so should index the row in 'pixel.centres' that contains the chosen activity centre for the sampled animal
+                                                  s = scaledpixelcentres[s[k],1:2], # s[k] is number of pixel centre that the activity centre falls into -- so should index the row in 'pixel.centres' that contains the chosen activity centre for the sampled animal
                                                   sigma = sigma,
                                                   trapCoords = scaledtrapcoords[1:trap.no, 1:2],
                                                   localTrapsIndices = detectorIndex[1:n.cells,1:maxNBDets],
@@ -169,6 +171,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
   ### Values that we want to provide to our NIMBLE model
   ## Data
   data <- list(scaledtrapcoords = scaledtrapcoords,
+               scaledpixelcentres = scaledpixelcentres,
                pixel.centres = pixel.centres,
                mona.densities = mona.densities,
                ones = rep(1, M),
@@ -220,7 +223,6 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
                   silent = TRUE)
 
   Rmcmc <- buildMCMC(conf)
-
   Cmodel <- compileNimble(Rmodel)
   # Reinitialising constants
   #Cmodel$sigma = sigma.start
