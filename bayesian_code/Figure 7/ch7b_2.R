@@ -1,10 +1,10 @@
 ## Creating RData object for ch7b. For some reason, using the written function seems to give 'better' results, so using this instead?
-setwd("..")
+#setwd("..")
 ## First, sourcing in 'posthoc_extract_chs.R'
-load("../output/mona_raw_outputs_100sim.RData")
-source("../code/posthoc_extract_chs.R")
-#load("mona_raw_outputs_100sim.RData") # for NeSI
-#source("posthoc_extract_chs.R") # for NeSI
+#load("../output/mona_raw_outputs_100sim.RData")
+#source("../code/posthoc_extract_chs.R")
+load("mona_raw_outputs_100sim.RData") # for NeSI
+source("posthoc_extract_chs.R") # for NeSI
 
 ## ch7b
 # Encounter matrix
@@ -41,8 +41,8 @@ library("magrittr")
 
 ### Generating the value of our chosen covariate for each pixel (as we are assuming an inhomgeneous Poisson process)
 ## First, need to load 'mona_df' -- this contains the covariate values that we want to use
-load("../output/mona_inputs.RData")
-#load("mona_inputs.RData") # For NeSI
+#load("../output/mona_inputs.RData")
+load("mona_inputs.RData") # For NeSI
 # We want to subset the 'Dgood' column from the resulting data frame, as this contains the values for our chosen covariate here. We also are subsetting
 # the x- and y-coordinate columns (these give the pixel centres that correspond to each covariate value)
 mona.densities = mona_df[,c("x", "y", "Dgood")]
@@ -57,88 +57,91 @@ mona.densities = do.call("rbind", split)
 Dgood = mona.densities[,"Dgood"] # Grabbing the Dgood covariate.
 
 ## Taking a subsample of the data for testing.
-set.seed(1234)
-sampled <- sample(nrow(data.ch7b$encounter.data), size = 50)
-data.ch7b$encounter.data <- data.ch7b$encounter.data[sampled, ]
-n.iter <- 10000
+#et.seed(1234)
+#sampled <- sample(nrow(data.ch7b$encounter.data), size = 50)
+#data.ch7b$encounter.data <- data.ch7b$encounter.data[sampled, ]
+#n.iter <- 10000
 
-covariate <- Dgood
+#covariate <- Dgood
+
 ## Fitting a model.
-ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=2000, covariate=log(covariate), n.iter=n.iter)
+ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, covariate=Dgood, n.iter=100000)
+save(ch7b.sample, file="ch7b_unlogged.RData")
+
 ## Some trace plots.
-par(mfrow = c(3, 2))
-plot(ch7b.sample[1000:n.iter, "beta0"], type = "l")
-plot(ch7b.sample[1000:n.iter, "beta1"], type = "l")
-plot(ch7b.sample[1000:n.iter, "lambda0"], type = "l")
-plot(ch7b.sample[1000:n.iter, "sigma"], type = "l")
-plot(ch7b.sample[1000:n.iter, "N"], type = "l")
-plot(ch7b.sample[1000:n.iter, "D"], type = "l")
+#par(mfrow = c(3, 2))
+#plot(ch7b.sample[1000:n.iter, "beta0"], type = "l")
+#plot(ch7b.sample[1000:n.iter, "beta1"], type = "l")
+#plot(ch7b.sample[1000:n.iter, "lambda0"], type = "l")
+#plot(ch7b.sample[1000:n.iter, "sigma"], type = "l")
+#plot(ch7b.sample[1000:n.iter, "N"], type = "l")
+#plot(ch7b.sample[1000:n.iter, "D"], type = "l")
 ## Posterior means.
-b0.est <- mean(ch7b.sample[1000:n.iter, "beta0"]) 
-b1.est <- mean(ch7b.sample[1000:n.iter, "beta1"]) 
-lambda0.est <- mean(ch7b.sample[1000:n.iter, "lambda0"])/20
-sigma.est <- mean(ch7b.sample[1000:n.iter, "sigma"])
-N.est <- mean(ch7b.sample[1000:n.iter, "N"])
-D.est <- apply(ch7b.sample[, substr(colnames(ch7b.sample), 1, 4) == "DPix"], 2, mean)*10000
+#b0.est <- mean(ch7b.sample[1000:n.iter, "beta0"])
+#b1.est <- mean(ch7b.sample[1000:n.iter, "beta1"])
+#lambda0.est <- mean(ch7b.sample[1000:n.iter, "lambda0"])/20
+#sigma.est <- mean(ch7b.sample[1000:n.iter, "sigma"])
+#N.est <- mean(ch7b.sample[1000:n.iter, "N"])
+#D.est <- apply(ch7b.sample[, substr(colnames(ch7b.sample), 1, 4) == "DPix"], 2, mean)*10000
 
 
 
 ## Credible intervals.
-quantile(ch7b.sample[1000:n.iter, "lambda0"]/20, probs = c(0.025, 0.5, 0.975))
-quantile(ch7b.sample[1000:n.iter, "sigma"], probs = c(0.025, 0.5, 0.975))
-quantile(ch7b.sample[1000:n.iter, "beta1"], probs = c(0.025, 0.5, 0.975))
+#quantile(ch7b.sample[1000:n.iter, "lambda0"]/20, probs = c(0.025, 0.5, 0.975))
+#quantile(ch7b.sample[1000:n.iter, "sigma"], probs = c(0.025, 0.5, 0.975))
+#quantile(ch7b.sample[1000:n.iter, "beta1"], probs = c(0.025, 0.5, 0.975))
 ## Density estimates.
 
 
-source("RUDMaps_Functions.R")
+#source("RUDMaps_Functions.R")
 ## Fitting the same model in secr.
-library(dplyr)
-library(secr)
+#library(dplyr)
+#library(secr)
 
-mona_df <- mona_df %>% dplyr::select(-cc) %>% distinct()
-mlmesh = read.mask(data=mona_df)
+#mona_df <- mona_df %>% dplyr::select(-cc) %>% distinct()
+#mlmesh = read.mask(data=mona_df)
 
-data.ch7b.secr <- subset(ch7b, subset = sampled)
+#data.ch7b.secr <- subset(ch7b, subset = sampled)
 
 # Using secr.fit
 #ch7b.fit = secr.fit(capthist=data.ch7b.secr, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # logged cov
-ch7b.fit = secr.fit(capthist=data.ch7b.secr, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # unlogged cov
+#ch7b.fit = secr.fit(capthist=data.ch7b.secr, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # unlogged cov
 
 ## Comparing with Bayesian model.
-coef(ch7b.fit)
-quantile(ch7b.sample[1000:n.iter, "beta1"], probs = c(0.025, 0.5, 0.975))
+#coef(ch7b.fit)
+#quantile(ch7b.sample[1000:n.iter, "beta1"], probs = c(0.025, 0.5, 0.975))
 
 ## Estimated densities.
-Dgood.secr <- attr(mlmesh, "covariates")$Dgood
-D.est.secr <- attr(predictDsurface(ch7b.fit), "covariates")$D.0
+#Dgood.secr <- attr(mlmesh, "covariates")$Dgood
+#D.est.secr <- attr(predictDsurface(ch7b.fit), "covariates")$D.0
 
 
 ## Plots of pixel-by-pixel covariate against estimated densities.
-par(mfrow = c(1, 1))
-plot(Dgood, D.est)
-plot(Dgood.secr, D.est.secr)
+#par(mfrow = c(1, 1))
+#plot(Dgood, D.est)
+#plot(Dgood.secr, D.est.secr)
 
 
 
 ## Apparently this is the order of pixel.centres.
-pixel.centres = centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+#pixel.centres = centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 ## Reordering the two data frames so they are the same.
-order <- order(pixel.centres[, 1], pixel.centres[, 2])
-order.secr <- order(as.matrix(mlmesh)[, 1], as.matrix(mlmesh)[, 2])
-mask.ordered <- pixel.centres[order, ]
-mask.ordered.secr <- as.matrix(mlmesh)[order.secr, ]
-Dgood.ordered <- Dgood[order]
-Dgood.ordered.secr  <- Dgood.secr[order.secr]
+#order <- order(pixel.centres[, 1], pixel.centres[, 2])
+#order.secr <- order(as.matrix(mlmesh)[, 1], as.matrix(mlmesh)[, 2])
+#mask.ordered <- pixel.centres[order, ]
+#mask.ordered.secr <- as.matrix(mlmesh)[order.secr, ]
+#Dgood.ordered <- Dgood[order]
+#Dgood.ordered.secr  <- Dgood.secr[order.secr]
 ## Reordering density estimates in the same way.
-D.est.ordered <- D.est[order]
-D.est.secr.ordered <- D.est.secr[order.secr]
+#D.est.ordered <- D.est[order]
+#D.est.secr.ordered <- D.est.secr[order.secr]
 ## Checking.
-head(cbind(mask.ordered, Dgood.ordered))
-head(cbind(mask.ordered.secr, Dgood.ordered.secr))
+#head(cbind(mask.ordered, Dgood.ordered))
+#head(cbind(mask.ordered.secr, Dgood.ordered.secr))
 ## Plotting pixel-by-pixel densities from both models.
-plot(D.est.secr.ordered, D.est.ordered)
-abline(0, 1, col = "red")
+#plot(D.est.secr.ordered, D.est.ordered)
+#abline(0, 1, col = "red")
 ## OMG I did it!!!
 
 

@@ -154,7 +154,7 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
       y[k, 1:nMaxDetectors] ~ dpoisLocal_normal(detNums = nbDetections[k],
                                                   detIndices = yDets[k, 1:nMaxDetectors],
                                                   lambda = lambda0,
-                                                  s = scaledpixelcentres[s[k],1:2], # s[k] is number of pixel centre that the activity centre falls into -- so should index the row in 'pixel.centres' that contains the chosen activity centre for the sampled animal
+                                                  s = scaledpixelcentres[s[k],1:2], # s[k] is number of pixel centre that the activity centre falls into -- so should index the row in 'scaledpixelcentres' that contains the chosen activity centre for the sampled animal
                                                   sigma = sigma,
                                                   trapCoords = scaledtrapcoords[1:trap.no, 1:2],
                                                   localTrapsIndices = detectorIndex[1:n.cells,1:maxNBDets],
@@ -180,8 +180,8 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
                     pixel.area=pixel.area)
   ## Initial values.
   inits = list (lambda0=lambda0.start, log_coeff=log(1/(2*sigma.start^2)), z=z, beta0=log(pop.size/(nPix*pixel.area*10000)), beta1=0, s=sst, sx=sx_init, sy=sy_init)
-  # True value of p0 is given by: 1-exp(-0.69)=0.4984 (4 sf), as we know that the true value of lambda0 is 0.69 for our simulation. So, starting lambda0 at 0.5 means we are starting near the true value.
-  # And the true value of sigma is 2, so once again starting at the true value just to see if things will work!
+  # True value of p0 is given by: 1-exp(-0.69)=0.4984 (4 sf), as we know that the true value of lambda0 is 0.69 for our simulation.
+  # And the true value of sigma is 2.
 
   ## More constants that we want to provide to the NIMBLE model
   # Based on the Wolverine example, we are setting the dmax value below to 56, which seems to be okay.
