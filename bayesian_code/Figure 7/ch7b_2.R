@@ -64,7 +64,7 @@ n.iter <- 10000
 
 covariate <- Dgood
 ## Fitting a model.
-ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=2000, covariate=covariate, n.iter=n.iter)
+ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=2000, covariate=log(covariate), n.iter=n.iter)
 ## Some trace plots.
 par(mfrow = c(3, 2))
 plot(ch7b.sample[1000:n.iter, "beta0"], type = "l")
@@ -86,6 +86,7 @@ D.est <- apply(ch7b.sample[, substr(colnames(ch7b.sample), 1, 4) == "DPix"], 2, 
 ## Credible intervals.
 quantile(ch7b.sample[1000:n.iter, "lambda0"]/20, probs = c(0.025, 0.5, 0.975))
 quantile(ch7b.sample[1000:n.iter, "sigma"], probs = c(0.025, 0.5, 0.975))
+quantile(ch7b.sample[1000:n.iter, "beta1"], probs = c(0.025, 0.5, 0.975))
 ## Density estimates.
 
 
@@ -101,7 +102,11 @@ data.ch7b.secr <- subset(ch7b, subset = sampled)
 
 # Using secr.fit
 #ch7b.fit = secr.fit(capthist=data.ch7b.secr, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # logged cov
-ch7b.fit = secr.fit(capthist=data.ch7b.secr, model=D~Dgood, mask=mlmesh, detectfn="HHN") # unlogged cov
+ch7b.fit = secr.fit(capthist=data.ch7b.secr, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # unlogged cov
+
+## Comparing with Bayesian model.
+coef(ch7b.fit)
+quantile(ch7b.sample[1000:n.iter, "beta1"], probs = c(0.025, 0.5, 0.975))
 
 ## Estimated densities.
 Dgood.secr <- attr(mlmesh, "covariates")$Dgood
