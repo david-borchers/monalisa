@@ -74,8 +74,8 @@ plot(ch7b.sample[1000:n.iter, "sigma"], type = "l")
 plot(ch7b.sample[1000:n.iter, "N"], type = "l")
 plot(ch7b.sample[1000:n.iter, "D"], type = "l")
 ## Posterior means.
-b0.est <- mean(ch7b.sample[1000:n.iter, "beta0"]) # -2.52654
-b1.est <- mean(ch7b.sample[1000:n.iter, "beta1"]) # 1.142786
+b0.est <- mean(ch7b.sample[1000:n.iter, "beta0"]) 
+b1.est <- mean(ch7b.sample[1000:n.iter, "beta1"]) 
 lambda0.est <- mean(ch7b.sample[1000:n.iter, "lambda0"])/20
 sigma.est <- mean(ch7b.sample[1000:n.iter, "sigma"])
 N.est <- mean(ch7b.sample[1000:n.iter, "N"])
