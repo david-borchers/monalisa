@@ -172,7 +172,6 @@ run.MCMC.inhom = function(data, nPix = 2500, pixel.area = 1, M, covariate, lambd
   ## Data
   data <- list(scaledtrapcoords = scaledtrapcoords,
                scaledpixelcentres = scaledpixelcentres,
-               pixel.centres = pixel.centres,
                mona.densities = mona.densities,
                ones = rep(1, M),
                pixel.centres.order = pixel.centres.order)
