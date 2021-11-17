@@ -2,9 +2,10 @@
 # - original_densities: a data frame containing "densities: from the hi-res image of ML
 # - mona_df: a data frame containing x and y co-ords for a low-res version of ML
 # --- D: the "true" densities
-# --- Dgood, Dblur, Dshift, Drept: covariates in decreasing order of quality
+# --- Dgood, Dblur: covariates in decreasing order of quality
 
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(imager)
 
 # load hi-res image of part of mona lisa created by make_hires_mona_jpg.R
@@ -18,6 +19,8 @@ original_densities <- as.data.frame(mona) %>% mutate(y = (max(y) + 1 - y) / 24,
 resized_x <- 50
 small_mona <- resize(mona, resized_x, resized_x)
 plot(small_mona)
+table(small_mona) # 2 cells are zero, this will cause problems with logs later on; next smallest is 0.003
+small_mona[small_mona == 0] <- 0.001
 
 # make covariate surfaces
 
@@ -29,58 +32,50 @@ plot(good_small_mona)
 blurry_small_mona <- isoblur(small_mona,4) 
 plot(blurry_small_mona)
 
-# weak covariate shifts the moderate covariate around, with wrapping
-blurry_shifted_small_mona <- imshift(blurry_small_mona,10,10,boundary=2) 
-plot(blurry_shifted_small_mona)
-
-# locally strong covariate is a mix of good covariate in top-right of image
-# and weak covariate elsewehere
-half_mona <- imappend(list(imsub(good_small_mona, y <= 2*height/3), 
-                                           imsub(blurry_shifted_small_mona, y > 2*height/3)), 'y') 
-plot(half_mona)
-
-local_small_mona <- imappend(list(imsub(blurry_shifted_small_mona, x <= width/2), 
-                                      imsub(half_mona, x > width/2)), 'x')  
-plot(local_small_mona)
-
-# Leonardo da Vinci as a covariate
-
-# load hi-res image of part of mona lisa created by make_hires_mona_jpg.R
-ldv <- load.image("output/hires_ldv.jpg")
-plot(ldv)
-
-# make a low res version, this is the true density surface
-small_ldv <- resize(ldv, resized_x, resized_x, size_c = 1)
-plot(small_ldv)
-
-# turn into data frames
+# turn into data frame, D is not yet true density just pixel intensity
 
 good_small_mona <- as.data.frame(good_small_mona) %>% 
-  mutate(y = max(y) - y + 1, Dgood = value) %>% select(-value)
+  mutate(y = max(y) - y + 1, Dgood_unstd = value) %>% dplyr::select(-value)
 
 blurry_small_mona <- as.data.frame(blurry_small_mona) %>% 
-  mutate(y = max(y) - y + 1, Dblur = value) %>% select(-value)
-
-blurry_shifted_small_mona <- as.data.frame(blurry_shifted_small_mona) %>% 
-  mutate(y = max(y) - y + 1, Dshift = value) %>% select(-value)
-
-local_small_mona <- as.data.frame(local_small_mona) %>% 
-  mutate(y = max(y) - y + 1, Drept = value) %>% select(-value)
-
-small_ldv <- as.data.frame(small_ldv) %>% 
-  mutate(y = max(y) - y + 1, Dldv = value) %>% select(-value)
+  mutate(y = max(y) - y + 1, Dblur_unstd = value) %>% dplyr::select(-value)
 
 mona_df <- as.data.frame(small_mona) %>% 
   mutate(y = max(y) - y + 1, 
-         D = value) %>% select(-value) %>%
+         D_unstd = value) %>% dplyr::select(-value) %>%
   left_join(good_small_mona) %>%
-  left_join(blurry_small_mona) %>%
-  left_join(blurry_shifted_small_mona) %>%
-  left_join(local_small_mona) %>%
-  left_join(small_ldv)
+  left_join(blurry_small_mona) 
 
 # check correlations
 cor(mona_df)
+
+# scale D and covariates so that these can be interpreted as densities
+# 1) units are animals / ha
+# 2) covariates scaled the same number of expected activity centres as the true density surface
+
+# each cell is 1m2 and D in secr is animals / 10000m2
+# so expected number of points in each cell is D / 10000 and 
+# expected total points generated is sum(D) / 10000. 
+# If we want n_pts points then we need to multiply D by 10000 * (n_pts / sum(D))
+# Works same way for covariate surfaces, except sum(D) becomes sum(Dgood) or sum(Dblur)
+# We want 7500 in the many animals scenario, 80 in the few
+
+mona_df <- mona_df %>%
+  mutate(D_bigD = D_unstd * 7500 / sum(D_unstd) * 10000,
+         Dgood_bigD = Dgood_unstd * 7500 / sum(Dgood_unstd) * 10000,
+         Dblur_bigD = Dblur_unstd * 7500 / sum(Dblur_unstd) * 10000,
+         D_smallD = D_unstd * 80 / sum(D_unstd) * 10000,
+         Dgood_smallD = Dgood_unstd * 80 / sum(Dgood_unstd) * 10000,
+         Dblur_smallD = Dblur_unstd * 80 / sum(Dblur_unstd) * 10000)
+
+mona_df %>% summarize_all(mean)
+mona_df %>% summarize_all(sum)
+mona_df %>% summarize_all(min)
+mona_df %>% summarize_all(max)
+
+ggplot(mona_df, aes(x = x, y = y, fill = D_bigD)) + geom_tile() + scale_fill_viridis_c()
+ggplot(mona_df, aes(x = x, y = y, fill = Dgood_bigD)) + geom_tile() + scale_fill_viridis_c()
+ggplot(mona_df, aes(x = x, y = y, fill = Dblur_bigD)) + geom_tile() + scale_fill_viridis_c()
 
 save(original_densities, mona_df, file = "output/mona_inputs.RData")
 
