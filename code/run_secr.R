@@ -12,6 +12,7 @@ run_secr <- function(simulated_points,
                      xorig, yorig, # origin of trap array
                      sigma, lambda0, # detection function
                      noccasions, # a VECTOR of occasions to simulate
+                     capthist,
                      my.seed = sample(1:100000, 1), # in case you want to set own seed
                      captures.only = FALSE){ # set to T if you only want results for captures (D~1 model only)
   
@@ -67,12 +68,16 @@ run_secr <- function(simulated_points,
   sigma <- sigma
   D <- n_pts * 4 #(as 50x50 area is 1/4 of a hectare)
   
-  capture_history_max_occasions <- sim.capthist(detectors, popn = simulated_points, detectfn = "HHN", 
-                                                detectpar = list(lambda0 = lambda0, sigma = sigma), 
-                                                noccasions = max(noccasions), 
-                                                nsessions = 1,
-                                                seed = my.seed)
-  
+  if(!is.null(capthist)){
+    capture_history_max_occasions <- capthist
+  } else { 
+    capture_history_max_occasions <- sim.capthist(detectors, popn = simulated_points, detectfn = "HHN",
+                                                  detectpar = list(lambda0 = lambda0, sigma = sigma),
+                                                  noccasions = max(noccasions),
+                                                  nsessions = 1,
+                                                  seed = my.seed)
+  }
+
   for(i in noccasions){
     
     filename <- paste(i, ifelse(i == 1, "occasion", "occasions"))
