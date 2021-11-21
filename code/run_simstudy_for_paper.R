@@ -13,6 +13,7 @@ source("code/predicted_densities_for_D0.R")
 source("code/run_secr.R")
 
 load("output/mona_inputs.RData")
+load("output/capthists.RData")
 
 #mona_df <- mona_df %>% select(-cc) %>% distinct()
 mlmesh <- read.mask(data = mona_df)
@@ -131,7 +132,7 @@ save(res_expected_acd_many, file = "output/res_expected_acd_many.RData")
 ### runs for S4.2.3: Realised and expected activity center densities with few activity centers
 
 parlist3 <- expand.grid(i=1:100,
-                        secr.fitformula = c("D~1", "log(Dgood_bigD)", "D~log(Dblur_bigD)"),
+                        secr.fitformula = c("D~1", "D~log(Dgood_smallD)", "D~log(Dblur_smallD)"),
                         dx = 8, dy = 8, nx = 3, ny = 3, 
                         xorig = 10, yorig = 26, 
                         sigma = 4, lambda0 = 0.69, 
@@ -142,11 +143,12 @@ parlist3 <- expand.grid(i=1:100,
 parlist3 <- left_join(parlist3, capthists_realised_and_expected_acd_few,
                       by = c("i", "secr.fitformula", "noccasions", "xorig", "yorig"))
 
+sum(unlist(lapply(parlist3$capthist, is.null)))
 
 set.seed(123)
 res_realised_and_expected_acd_few <- foreach(i = 1:900, .packages = c("secr", "stringr")) %dopar% {
   print(i)
-  x <- run_secr(simulated_points = simulated_points_lots,
+  x <- run_secr(simulated_points = simulated_points_few,
                 secr.fitformula = parlist3$secr.fitformula[i], 
                 dx = parlist3$dx[i], dy = parlist3$dy[i], 
                 nx = parlist3$nx[i], ny = parlist3$ny[i], 

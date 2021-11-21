@@ -1,3 +1,6 @@
+library(dplyr)
+library(stringr)
+
 load("output/mona_raw_outputs_100sim.RData")
 
 ## Figure 6
@@ -13,6 +16,16 @@ for(i in 1:100){ch6b[[i]] <- fig34_results_100sim[[i]][[6]]$capture_history} # 6
 for(i in 1:100){ch6c[[i]] <- fig34_results_100sim[[i]][[7]]$capture_history} # 6d
 for(i in 1:100){ch6d[[i]] <- fig34_results_100sim[[i]][[8]]$capture_history} # 6e
 
+capthists_realised_acd_many <- tibble(i = rep(1:100, 4), 
+                                      xorig = rep(c(15,27,15,27), each = 100),
+                                      yorig = rep(c(15,15,31,27), each = 100),
+                                      secr.fitformula = rep(c("D~1"), 400),
+                                      noccasions = 20,
+                                      capthist = c(ch6a, ch6b, ch6c, ch6d))
+
+save(capthists_realised_acd_many, file = "output/capthists_realised_acd_many.RData")
+
+
 ## Figure 7
 # uses fig5_results_100sim
 # results are for a single survey (didn't average over 100 sims cos takes long and estimated surfaces are based on covariate 
@@ -26,6 +39,25 @@ ch7b <- fig5_results[[10]]$capture_history
 ch7c <- fig5_results[[4]]$capture_history 
 ch7e <- fig5_results[[11]]$capture_history 
 ch7f <- fig5_results[[5]]$capture_history 
+
+fig5_results[[10]]$predicted_densities$array_origin[1]
+fig5_results[[4]]$predicted_densities$array_origin[1]
+fig5_results[[11]]$predicted_densities$array_origin[1]
+fig5_results[[5]]$predicted_densities$array_origin[1]
+
+fig5_results[[10]]$predicted_densities$covtype[1]
+fig5_results[[4]]$predicted_densities$covtype[1]
+fig5_results[[11]]$predicted_densities$covtype[1]
+fig5_results[[5]]$predicted_densities$covtype[1]
+
+capthists_expected_acd_many <- tibble(i = rep(1, 4), 
+                                      xorig = rep(c(27,15,27,15), each = 1),
+                                      yorig = rep(c(31,15,31,15), each = 1),
+                                      secr.fitformula = rep(c("D~log(Dgood_bigD)", "D~log(Dgood_bigD)", "D~log(Dgblur_bigD)", "D~log(Dblur_bigD)"), each = 1),
+                                      noccasions = 20,
+                                      capthist = list(ch7b, ch7c, ch7e, ch7f))
+
+save(capthists_expected_acd_many, file = "output/capthists_expected_acd_many.RData")
 
 # Figure 8 
 # uses fig67_results_100sim
@@ -51,6 +83,19 @@ ch8g <- list(); ch8h <- list(); ch8i <- list()
 for(i in 1:100){ch8g[[i]] <- fig67_results_100sim[[i]][[6]]$capture_history} 
 for(i in 1:100){ch8h[[i]] <- fig67_results_100sim[[i]][[9]]$capture_history} 
 for(i in 1:100){ch8i[[i]] <- fig67_results_100sim[[i]][[12]]$capture_history} 
+
+capthists_realised_and_expected_acd_few <- tibble(i = rep(1:100, 9), 
+                                      xorig = 10,
+                                      yorig = 26,
+                                      secr.fitformula = rep(c("D~1", "D~log(Dgood_smallD)", "D~log(Dblur_smallD)"), each = 300),
+                                      noccasions = rep(rep(c(3,10,20), each = 100), 3),
+                                      capthist = c(ch8a, ch8b, ch8c, ch8d, ch8e, ch8f, ch8g, ch8h, ch8i))
+
+save(capthists_realised_and_expected_acd_few, file = "output/capthists_realised_and_expected_acd_few.RData")
+
+save(capthists_realised_acd_many,
+     capthists_expected_acd_many,
+     capthists_realised_and_expected_acd_few, file = "output/capthists.RData")
 
 # Figure 9
 # uses fig67_results_100sim
