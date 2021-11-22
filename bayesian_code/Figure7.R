@@ -402,16 +402,51 @@ ch7b.beta1
 # Mask, I think
 mlmesh = read.mask(data=mona_df)
 # Using secr.fit
-#ch7b.fit = secr.fit(capthist=ch7b, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # logged cov
-ch7b.fit = secr.fit(capthist=ch7b, model=D~(Dgood), mask=mlmesh, detectfn="HHN") # unlogged cov
-ch7b.fit
+ch7b.fit = secr.fit(capthist=ch7b, model=D~log(Dgood), mask=mlmesh, detectfn="HHN") # logged cov
+#ch7b.fit = secr.fit(capthist=ch7b, model=D~(Dgood), mask=mlmesh, detectfn="HHN") # unlogged cov
 # Logged: I think that beta1 is 1.14! :) However, I'm not too sure what beta0 is here
-# Unlogged: beta1 is 3.53, seems ours is really low at 0.36?
+# Unlogged: beta1 is 3.53
 
-## Have submitted job with covariate = log(Dgood^2) for ch7b
-# Loading in data
-load("ch7b.RData")
+## Have submitted job with covariate = log(Dgood) for ch7b
+# Loading in MCMC data
+load("ch7b_logged.RData")
 dim(ch7b.sample)
+par(mfrow=c(3,2))
+ch7b.sample=ch7b.sample[-c(1:2000),]
+plot(ch7b.sample[,'lambda0'], type="l")
+plot(ch7b.sample[,'sigma'], type="l")
+plot(ch7b.sample[,'beta0'], type="l")
+plot(ch7b.sample[,'beta1'], type="l")
+plot(ch7b.sample[,'N'], type="l")
+# Posterior plots look pretty good
+# Burn-in seems enough now, looking at posterior mean for beta0 and beta1:
+mean(ch7b.sample[,'beta0'])
+mean(ch7b.sample[,'beta1'])
+# Comparing to results from secr.fit
+ch7b.fit = secr.fit(capthist=ch7b, model=D~log(Dgood), mask=mlmesh, detectfn="HHN")
+ch7b.fit
+log(exp(11.4901732)/10000) # So seems beta0 is about 2.279833
+## SO: MCMC gives beta1=1.139888, beta0=2.282553
+## secr.fit gives beta1=1.1365439, beta0=2.279833
+mean(ch7b.sample[,'lambda0']/20)
+# lambda0 --> secr: 0.675, MCMC: 0.675
+mean(ch7b.sample[,'sigma'])
+# sigma --> secr: 1.995, MCMC: 1.995
+## Confidence intervals
+quantile(ch7b.sample[,'beta1'], probs=c(0.025, 0.5, 0.975))
+# secr: (1.002, 1.271) and now is (1.009, 1.275)!!!
+quantile(ch7b.sample[,'lambda0']/20, probs=c(0.025, 0.5, 0.975))
+# secr: is (0.653, 0.697), and now is (0.653, 0.697)!!!
+quantile(ch7b.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
+# secr: is (1.967, 2.024) and now is (1.967, 2.024)!!!
+## Looking veeeeeeeeeeeeeeeeery good
+
+
+## Have submitted job with covariate = Dgood for ch7b
+# Loading in data
+load("ch7b_unlogged.RData")
+dim(ch7b.sample)
+par(mfrow=c(3,2))
 ch7b.sample=ch7b.sample[-c(1:2000),]
 plot(ch7b.sample[,'lambda0'], type="l")
 plot(ch7b.sample[,'sigma'], type="l")
@@ -421,13 +456,23 @@ plot(ch7b.sample[,'N'], type="l")
 # Burn-in seems enough now, looking at posterior mean for beta0 and beta1:
 mean(ch7b.sample[,'beta0'])
 mean(ch7b.sample[,'beta1'])
-# Comparing to results from secr.fit. log(Dgood^2)=2log(Dgood), right?
-ch7b.test = secr.fit(capthist=ch7b, model=D~log(Dgood^2), mask=mlmesh, detectfn="HHN")
+# Comparing to results from secr.fit.
+ch7b.test = secr.fit(capthist=ch7b, model=D~Dgood, mask=mlmesh, detectfn="HHN")
 ch7b.test
-log(exp(11.4901429)/10000)
-# So it seems posterior beta1 is 0.101, whereas with secr is 0.00195?
-# And posterior beta0 is 1.38, but with secr is 2.2798 :(
-# So there is something in my code that means it specifically works for a logged covariate but not otherwise!
+log(exp(8.8576124)/10000)
+# So it seems posterior beta0 is -0.349, and secr.fit beta0 is about -0.353
+# And posterior beta1 is 3.52, and with secr is 3.53!
+## Comparing confidence intervals:
+quantile(ch7b.sample[,'beta1'], probs=c(0.025, 0.5, 0.975))
+# secr: (3.15, 3.91) and now is (3.15, 3.92)!!!
+mean(ch7b.sample[,'lambda0']/20)
+quantile(ch7b.sample[,'lambda0']/20, probs=c(0.025, 0.5, 0.975))
+# secr: is (0.654, 0.698), and now is (0.654, 0.698)!!!
+mean(ch7b.sample[,'sigma'])
+quantile(ch7b.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
+# secr: is (1.97, 2.03) and now is (1.97, 2.03)!!!
+## So things look pretty much perfect with an unlogged covariate :)
+
 
 # ch7c
 ch7c.beta0
