@@ -1,4 +1,4 @@
-\begin{thebibliography}{13}
+\begin{thebibliography}{19}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Alexander \emph{et~al.}(2015)Alexander, Gopalaswamy, Shi \&
@@ -7,25 +7,31 @@ Alexander, J.S., Gopalaswamy, A.M., Shi, K. \& Riordan, P. (2015) Face value:
   towards robust estimates of snow leopard densities.
 \newblock \emph{PlosOne}.
 
+\bibitem[{Blanc \emph{et~al.}(2013)Blanc, Marboutin, Gatti \&
+  Gimenez}]{Blanc2013}
+Blanc, L., Marboutin, E., Gatti, S. \& Gimenez, O. (2013) Abundance of rare and
+  elusive species: empirical investigation of closed versus spatially explicit
+  capture--recapture models with lynx as a case study.
+\newblock \emph{The Journal of Wildlife Management}, \textbf{77}, 372--378.
+
 \bibitem[{Borchers \& Efford(2008)}]{Borchers+Efford:08}
 Borchers, D.L. \& Efford, M.G. (2008) Spatially explicit maximum likelihood
   methods for capture-recapture studies.
 \newblock \emph{Biometrics}, \textbf{64}, 377--385.
 
-\bibitem[{Borchers \emph{et~al.}(2015)Borchers, Stevenson, Kidney, Thomas \&
-  Marques}]{Borchers+al:15}
-Borchers, D.L., Stevenson, B.C., Kidney, D., Thomas, L. \& Marques, T.A. (2015)
-  A unifying model for capture–recapture and distance sampling surveys of
-  wildlife populations.
-\newblock \emph{Journal of the American Statistical Association}, \textbf{110},
-  195--204.
+\bibitem[{Chandler \& Royle(2013)}]{Chandler+Royle:13}
+Chandler, R.B. \& Royle, J.A. (2013) Spatially explicit models for inference
+  about density in unmarked or partially marked populations.
+\newblock \emph{Annals of Applied Statistics}, \textbf{7}, 936--954.
 
-\bibitem[{Dawson \& Efford(2009)}]{Dawson+Efford:09}
-Dawson, D. \& Efford, M.G. (2009) Bird population density estimated from
-  acoustic signals.
-\newblock \emph{Ecology}, \textbf{46}, 1201--1209.
+\bibitem[{Devens \emph{et~al.}(2021)Devens, Hayward, Tshabalala, Dickman,
+  McManus, Smuts \& Somers}]{Devens2021}
+Devens, C.H., Hayward, M.W., Tshabalala, T., Dickman, A., McManus, J.S., Smuts,
+  B. \& Somers, M.J. (2021) Estimating leopard density across the highly
+  modified human-dominated landscape of the western cape, south africa.
+\newblock \emph{Oryx}, \textbf{55}, 34--45.
 
-\bibitem[{Dorazio \& Karanth(2017)}]{Dorzaio+Karanth:17}
+\bibitem[{Dorazio \& Karanth(2017)}]{Dorazio+Karanth:17}
 Dorazio, R.M. \& Karanth, K.U. (2017) A hierarchical model for estimating the
   spatial distribution and abundance of animals detected by continuous-time
   recorders.
@@ -40,20 +46,47 @@ Elliot, N.B. \& Gopalaswamy, A.M. (2016) Toward accurate and precise estimates
   of lion density.
 \newblock \emph{Conservation Biology}, \textbf{31}, 934–943.
 
-\bibitem[{Kidney \emph{et~al.}(2013)Kidney, Rawson, Borchers, Thomas, Marques
-  \& Stevenson}]{Kidney+al:13}
-Kidney, D., Rawson, B., Borchers, D., Thomas, L., Marques, T. \& Stevenson, B.
-  (2013) An efficient acoustic density estimation method with human detectors,
-  applied to gibbons in cambodia.
-\newblock \emph{Ecology}, p. submitted.
+\bibitem[{Fouch{\'e} \emph{et~al.}(2020)Fouch{\'e}, Reilly, de~Crom, Baeumchen
+  \& Forberger}]{Fouche2020}
+Fouch{\'e}, J., Reilly, B.K., de~Crom, E.P., Baeumchen, Y.K. \& Forberger, S.
+  (2020) Density estimates of spotted hyaenas (crocuta crocuta) on arid
+  farmlands of namibia.
+\newblock \emph{African Journal of Ecology}, \textbf{58}, 563--567.
 
-\bibitem[{Loveridge \emph{et~al.}(2017)Loveridge, Kidney, S., S., Eames \&
-  Borchers}]{Loveridge+al:17}
-Loveridge, R., Kidney, D., S., T., S., E., Eames, J.C. \& Borchers, D.L. (2017)
-  First systematic survey of green peafowl pavo muticus in northeastern
-  cambodia reveals a population stronghold and preference for disappearing
-  riverine habitat.
-\newblock \emph{CambodianJournal of Natural History}, p. 157–167.
+\bibitem[{Goldberg \emph{et~al.}(2015)Goldberg, Tempa, Norbu, Hebblewhite,
+  Mills, Wangchuk \& Lukacs}]{Goldberg2015}
+Goldberg, J.F., Tempa, T., Norbu, N., Hebblewhite, M., Mills, L.S., Wangchuk,
+  T.R. \& Lukacs, P. (2015) Examining temporal sample scale and model choice
+  with spatial capture-recapture models in the common leopard panthera pardus.
+\newblock \emph{PloS one}, \textbf{10}, e0140757.
+
+\bibitem[{Goswami \emph{et~al.}(2019)Goswami, Yadava, Vasudev, Prasad, Sharma
+  \& Jathanna}]{Goswami2019}
+Goswami, V.R., Yadava, M.K., Vasudev, D., Prasad, P.K., Sharma, P. \& Jathanna,
+  D. (2019) Towards a reliable assessment of asian elephant population
+  parameters: the application of photographic spatial capture--recapture
+  sampling in a priority floodplain ecosystem.
+\newblock \emph{Scientific reports}, \textbf{9}, 1--10.
+
+\bibitem[{Kandel \emph{et~al.}(2020)Kandel, Lamichhane \& Subedi}]{Kandel2020}
+Kandel, S.R., Lamichhane, B.R. \& Subedi, N. (2020) Leopard (panthera pardus)
+  density and diet in a forest corridor of terai: implications for conservation
+  and conflict management.
+\newblock \emph{Wildlife Research}, \textbf{47}, 460--467.
+
+\bibitem[{Lavariega \emph{et~al.}(2020)Lavariega, R{\'\i}os-Sol{\'\i}s,
+  Flores-Mart{\'\i}nez, Galindo-Aguilar, S{\'a}nchez-Cordero, Juan-Albino \&
+  Soriano-Mart{\'\i}nez}]{Lavariega2020}
+Lavariega, M.C., R{\'\i}os-Sol{\'\i}s, J.A., Flores-Mart{\'\i}nez, J.J.,
+  Galindo-Aguilar, R.E., S{\'a}nchez-Cordero, V., Juan-Albino, S. \&
+  Soriano-Mart{\'\i}nez, I. (2020) Community-based monitoring of jaguar
+  (panthera onca) in the chinantla region, mexico.
+\newblock \emph{Tropical Conservation Science}, \textbf{13}, 1940082920917825.
+
+\bibitem[{Qi \emph{et~al.}(2015)Qi, Shi, Wang, Li, Sun, Hua \& Jiang}]{Qi2015}
+Qi, J., Shi, Q., Wang, G., Li, Z., Sun, Q., Hua, Y. \& Jiang, G. (2015) Spatial
+  distribution drivers of amur leopard density in northeast china.
+\newblock \emph{Biological Conservation}, \textbf{191}, 258--265.
 
 \bibitem[{Royle \emph{et~al.}(2013)Royle, Chandler, Sollman \&
   Gardner}]{Royle+al:13a}
@@ -72,11 +105,19 @@ Royle, J. \& Young, K. (2008) A hierarchical model for spatial
   capture-recapture data.
 \newblock \emph{Ecology}, \textbf{89}, 2281--2289.
 
-\bibitem[{Stevenson \emph{et~al.}(2015)Stevenson, Borchers, Altwegg, Swift,
-  Gillespie \& Measey}]{Stevenson+al:15}
-Stevenson, B.C., Borchers, D.L., Altwegg, R., Swift, R.J., Gillespie, D.M. \&
-  Measey, G.J. (2015) A general framework for animal density estimation from
-  acoustic detections across a fixed microphone array.
-\newblock \emph{Methods in Ecology and Evolution}, \textbf{6}, 38--48.
+\bibitem[{Srivathsa \emph{et~al.}(2021)Srivathsa, Rodrigues, Toh, Zachariah,
+  Taylor, Oli \& Ramakrishnan}]{Srivathsa2021}
+Srivathsa, A., Rodrigues, R.G., Toh, K.B., Zachariah, A., Taylor, R.W., Oli,
+  M.K. \& Ramakrishnan, U. (2021) The truth about scats and dogs:
+  Next-generation sequencing and spatial capture--recapture models offer
+  opportunities for conservation monitoring of an endangered social canid.
+\newblock \emph{Biological Conservation}, \textbf{256}, 109028.
+
+\bibitem[{Xiao \emph{et~al.}(2016)Xiao, Feng, Mou, Miquelle, Hebblewhite,
+  Goldberg, Robinson, Zhao, Zhou, Wang \emph{et~al.}}]{Xiao2016}
+Xiao, W., Feng, L., Mou, P., Miquelle, D.G., Hebblewhite, M., Goldberg, J.F.,
+  Robinson, H.S., Zhao, X., Zhou, B., Wang, T. \emph{et~al.} (2016) Estimating
+  abundance and density of amur tigers along the sino--russian border.
+\newblock \emph{Integrative Zoology}, \textbf{11}, 322--332.
 
 \end{thebibliography}
