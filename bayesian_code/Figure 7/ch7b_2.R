@@ -50,7 +50,27 @@ mona.densities = mona_df[,c("x", "y", "Dgood_bigD")]
 split = split(mona.densities, mona.densities$y)
 mona.densities = do.call("rbind", split)
 # And now that we are sure of the way in which the pixels are numbered, can remove the x and y-coordinate columns, so that we are now left with a density vector only, which we will then use with NIMBLE!
-Dgood = mona.densities[,"Dgood_bigD"] # Grabbing the Dgood covariate.
+dgood = mona.densities[,"Dgood_bigD"] # Grabbing the Dgood covariate.
+
+## Generating 'pixel.info' object we need
+# Pixel centres in the map region
+library("spatstat")
+# Function
+centres = function(xrange, yrange, x.pixels, y.pixels) {
+  window.2 = owin(xrange=xrange, yrange=yrange)
+  points = gridcentres(window.2, x.pixels, y.pixels)
+  centres = as.matrix(cbind(points$x, points$y))
+  centres
+}
+pixel.centres = centres(xrange=c(0.5, 50.5), yrange=c(0.5, 50.5), x.pixels=50, y.pixels=50)
+pixel.info = cbind(pixel.centres, dgood)
+
+## Fitting the model
+ch7b.sample = run.MCMC.inhom(data=data.ch7b, pixel.info=pixel.info, pixel.area=1, M=9000, inits.vec=c(10, 4, 0), n.iter=100000)
+save(ch7b.sample, file="ch7b_unlogged.RData")
+
+
+## TO MAYBE DELETE LATER:
 
 ## Taking a subsample of the data for testing.
 #et.seed(1234)
@@ -59,10 +79,6 @@ Dgood = mona.densities[,"Dgood_bigD"] # Grabbing the Dgood covariate.
 #n.iter <- 10000
 
 #covariate <- Dgood
-
-## Fitting a model.
-ch7b.sample = run.MCMC.inhom(data=data.ch7b, M=9000, covariate=Dgood, n.iter=100000)
-save(ch7b.sample, file="ch7b_unlogged.RData")
 
 ## Some trace plots.
 #par(mfrow = c(3, 2))

@@ -5,7 +5,7 @@
 # * A data frame ('pixel.info')  with three columns: the first two give the coordinates for all pixel centres in the region of interest, while the third gives the associated covariate value for each pixel centre. NOTE we assume that: (1) these pixel centres are evenly-spaced, (2) the region of interest is a square, so the number of pixels in the x- and y-directions is the square root of the number of rows in this data frame and (3) there are no regions in the region where animals cannot go (so the mask would just be a matrix of 1's)
 # * The pixel area
 # * The size of the super-population, M
-# * A vector containing the starting values for lambda0 and beta1 ('inits.vec'), where the order is: c(lambda0, beta1). Later, we calculate the starting values for 'log_coeff' and 'beta0' so that they 'make sense', so we won't provide them here.
+# * A vector containing the starting values for lambda0, sigma and beta1 ('inits.vec'), where the order is: c(lambda0, sigma, beta1). Later, we calculate the starting values for 'log_coeff' and 'beta0' so that they 'make sense', so we won't provide them here.
 # * The dmax value to use for the getLocalObjects() function
 # * The number of iterations to run the MCMC for
 # * The number of burn-in iterations we want to use
@@ -15,7 +15,7 @@ run.MCMC.inhom = function(data, pixel.info, pixel.area = 1, M, inits.vec, dmax =
   # Encounter data
   y = data$encounter.data
   # Checking if there are any rows of 0's -- if there are, returning an error because these capture histories are unobserveable
-  if (any(apply(y,1,sum)) == 0) stop("The data shouldn't include any all-0 capture histories")
+  if (any(apply(y,1,sum)==0)) stop("The data shouldn't include any all-0 capture histories")
 
   # Trap locations matrix
   traplocs = data$trap.loc
@@ -57,10 +57,10 @@ run.MCMC.inhom = function(data, pixel.info, pixel.area = 1, M, inits.vec, dmax =
   # Now, for observed animals, making their initial activity centre the 'mean' of all of the traps at which they were detected
   for (j in 1:n.observed) {
     if (sum(y[j,])==0) {next}
-    sst[j,1] = mean(traplocs[y[j,]>0,1]) # Setting the x-coord of the initial activity centre to be the mean of the x-coord of all traps at which the animal was detected
-    sst[j,2] = mean(traplocs[y[j,]>0,2]) # Doing the same thing for the y-coord of the initial activity centre (and leaving the initial activity centre to be the randomised point above if the animal was not detected at all)
+    sst[j,1] = mean(traplocs[y[j,]>0,1])
+    sst[j,2] = mean(traplocs[y[j,]>0,2])
   }
-  # And now, rounding these starting values for the activity centres so that they correspond to pixel centres
+  # And now, rounding these starting values so that they correspond to pixel centres
   sst = round(sst)
   # Finding the corresponding pixel index for each row of 'sst' - i.e. for each activity centre we have generated, we are finding the index of the corresponding pixel (where pixel '1' will be in the first row of the 'pixel.centres' object, and so on)
   starting.pixel.indices = vector("numeric", M)
@@ -70,7 +70,7 @@ run.MCMC.inhom = function(data, pixel.info, pixel.area = 1, M, inits.vec, dmax =
   }
   # And now, making sst equal to the 'starting.pixel.indices' object we have just created - so what we end up providing to our NIMBLE model in the way of initial activity centres is the index of the pixel that each animals' initial activity centre falls into.
   sst = starting.pixel.indices
-  # Finding sx and sy -- these are the row/column indices for each entry indices for the entry in 'pixel.centres.order' that represents the corresponding pixel from 'sst'
+  # Finding sx and sy -- these are the row/column indices for each entry in 'pixel.centres.order' that is stored in 'sst'
   sx_sy_init = matrix(0, ncol=2, nrow=length(sst))
   for (i in (1:length(sst))) {
     sx_sy_init[i,] = which(pixel.centres.order==sst[i], arr.ind=T)
@@ -114,11 +114,11 @@ run.MCMC.inhom = function(data, pixel.info, pixel.area = 1, M, inits.vec, dmax =
 
     for (k in 1:M) {
       z[k] ~ dbern(psi) # Whether or not the ith animal exists
-      sx[k] ~ dunif(1, 51) # Prior for column of matrix that represents pixel centre in which activity centre lies
-      sy[k] ~ dunif(1, 51) # Prior for row of matrix that represents pixel centre in which activity centre lies
-      ind_x[k] <- trunc(sx[k]) # Finding value of the row in which the x-coordinate of pixel centre for sampled activity centre lies
-      ind_y[k] <- trunc(sy[k]) # Finding value of the column in which the y-coordinate of pixel centre for sampled activity centre lies
-      s[k] <- pixel.centres.order[ind_x[k], ind_y[k]] # The index of the pixel centre in which given activity centre falls into
+      sx[k] ~ dunif(1, 51) # Prior for column of matrix that represents where in 'pixel.centres.order' the activity centre lies
+      sy[k] ~ dunif(1, 51) # Prior for row of matrix that represents where in 'pixel.centres.order' the activity centre lies
+      ind_x[k] <- trunc(sx[k]) # Finding the row of 'pixel.centres.order' that contains the sampled activity centre
+      ind_y[k] <- trunc(sy[k]) # Finding the column of 'pixel.centres.order' that contains the sampled activity centre
+      s[k] <- pixel.centres.order[ind_x[k], ind_y[k]] # Finding the corresponding entry in 'pixel.centres.order', which represents the index on the pixel that contains the sampled activity centre
       ones[k] ~ dbern(probs[s[k]]) # Adds to the likelihood the probability of our activity centre falling into the given pixel centre
 
       # Likelihood, following Wolverine NIMBLE example found at: https://nimble-dev.github.io/nimbleSCR/wolverine_example.html
@@ -149,8 +149,8 @@ run.MCMC.inhom = function(data, pixel.info, pixel.area = 1, M, inits.vec, dmax =
   # Constants
   constants <- list(nPix=nPix, M=M, n.trap=n.trap, xlim=xlim, ylim=ylim,
                     pixel.area=pixel.area)
-  # Initial values.
-  inits = list (lambda0=inits.vec[1], log_coeff=log(1/(2*sigma.start^2)), z=z, beta0=log(n.observed/(nPix*pixel.area*10000)), beta1=inits.vec[2], s=sst, sx=sx_init, sy=sy_init)
+  # Initial values
+  inits = list (lambda0=inits.vec[1], log_coeff=log(1/(2*(inits.vec[2])^2)), z=z, beta0=log(n.observed/(nPix*pixel.area*10000)), beta1=inits.vec[3], s=sst, sx=sx_init, sy=sy_init)
 
   ## More constants that we want to provide to the NIMBLE model
   # And since we assume we have no unsuitable habitat, we are defining the 'habitatMask' argument as a matrix full of 1's.
