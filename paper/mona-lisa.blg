@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2017)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: mona-lisa.aux
+The style file: mee.bst
+Database file #1: monalisa.bib
+You've used 19 entries,
+            2811 wiz_defined-function locations,
+            726 strings with 9086 characters,
+and the built_in function-call counts, 15691 in all, are:
+= -- 1284
+> -- 734
+< -- 6
++ -- 286
+- -- 261
+* -- 1424
+:= -- 2405
+add.period$ -- 38
+call.type$ -- 19
+change.case$ -- 180
+chr.to.int$ -- 19
+cite$ -- 19
+duplicate$ -- 1148
+empty$ -- 1176
+format.name$ -- 326
+if$ -- 3070
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 197
+newline$ -- 80
+num.names$ -- 76
+pop$ -- 364
+preamble$ -- 1
+purify$ -- 162
+quote$ -- 0
+skip$ -- 233
+stack$ -- 0
+substring$ -- 1196
+swap$ -- 490
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 168
+warning$ -- 0
+while$ -- 98
+width$ -- 0
+write$ -- 229
