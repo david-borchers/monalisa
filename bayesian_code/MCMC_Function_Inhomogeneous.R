@@ -22,8 +22,8 @@ run.MCMC.inhom = function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dm
   # Number of traps
   n.trap = nrow(traplocs)
   # xlim, ylim (based on centres in 'pixel.info' being evenly-spaced)
-  xlim = c(min(pixel.info[,1])-(0.5*(pixel.info[1,1] - pixel.info[2,1])), max(pixel.info[,1]+(0.5*(pixel.info[1,1] - pixel.info[2,1])))
-  ylim = c(min(pixel.info[,2])-(0.5*(pixel.info[1,2] - pixel.info[2,2])), max(pixel.info[,2]+(0.5*(pixel.info[1,2] - pixel.info[2,2])))
+  xlim = c(min(pixel.info[,1])-(0.5*abs(pixel.info[1,1] - pixel.info[2,1])), max(pixel.info[,1])+(0.5*abs(pixel.info[1,1] - pixel.info[2,1])))
+  ylim = c(min(pixel.info[,2])-(0.5*abs(pixel.info[1,1] - pixel.info[2,1])), max(pixel.info[,2])+(0.5*abs(pixel.info[1,1] - pixel.info[2,1])))
   # Number of animals detected
   n.observed = nrow(y)
 
@@ -37,7 +37,7 @@ run.MCMC.inhom = function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dm
   pixel.centres.order = pixel.centres.order[nrow(pixel.centres.order):1,]
 
   # Area of each pixel we are considering, calculated based on centres in 'pixel.info' being evenly spaced
-  pixel.area = (pixel.info[1,1] - pixel.info[2,1])^2
+  pixel.area = abs(pixel.info[1,1] - pixel.info[2,1])^2
 
 
   ## Data augmentation
