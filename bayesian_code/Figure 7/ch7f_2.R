@@ -1,20 +1,17 @@
 ## Creating ch7f RData object using function
 
-## First, sourcing in 'posthoc_extract_chs.R'
-#load("../output/mona_raw_outputs_100sim.RData")
-#source("../code/posthoc_extract_chs.R")
-load("mona_raw_outputs_100sim.RData") # for NeSI
-source("posthoc_extract_chs.R") # for NeSI
+## First, sourcing in capture history matrix we need
+#load("../output/capthists.RData")
+load("../output/capthists.RData")) # for NeSI
 
 ## ch7f
+ch7f = capthists_expected_acd_many$capthist[2][[1]]
 encounterdat.ch7f = matrix(0, nrow=nrow(ch7f[,1,]), ncol=ncol(ch7f[,1,]))
 for (i in 1:20) {
   encounterdat.ch7f = encounterdat.ch7f + ch7f[,i,]
 }
 ch7f.traploc = attributes(ch7f)$traps
-xlim = c(0.5, 50.5)
-ylim = c(0.5, 50.5)
-data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
+data.ch7f = list(encounter.data = encounterdat.ch7f, trap.loc = ch7f.traploc)
 
 ## ---------------------------------------------------------------------------------------
 
@@ -27,15 +24,12 @@ library(nimble)
 library(coda)
 library(nimbleSCR)
 
-# Sourcing in the dpoisLocal_normal_2() function that we will need to run the MCMC
-#source("dpoisLocal_normal.R")
-
 # Sourcing in the function that we'll need to run the MCMC
 source("MCMC_Function_Inhomogeneous.R")
 library("spatstat")
 
-### Generating the value of our chosen covariate for each pixel (as we are assuming an inhomgeneous Poisson process)
-## First, need to load 'mona_df' -- this contains the covariate values that we want to use
+## Generating the value of our chosen covariate for each pixel (as we are assuming an inhomgeneous Poisson process)
+# First, need to load 'mona_df' -- this contains the covariate values that we want to use
 #load("../output/mona_inputs.RData")
 load("mona_inputs.RData") # For NeSI
 # We want to subset the 'Dgood' column from the resulting data frame, as this contains the values for our chosen covariate here. We also are subsetting
@@ -49,7 +43,6 @@ dblur = mona.densities[,"Dblur_bigD"]
 
 ## Generating 'pixel.info' object we need
 # Pixel centres in the map region
-library("spatstat")
 # Function
 centres = function(xrange, yrange, x.pixels, y.pixels) {
   window.2 = owin(xrange=xrange, yrange=yrange)
@@ -60,5 +53,5 @@ centres = function(xrange, yrange, x.pixels, y.pixels) {
 pixel.centres = centres(xrange=c(0.5, 50.5), yrange=c(0.5, 50.5), x.pixels=50, y.pixels=50)
 pixel.info = cbind(pixel.centres, dblur)
 
-ch7f.sample = run.MCMC.inhom(data.ch7f, pixel.info=pixel.info, pixel.area=1, M=9000, inits.vec=c(10, 4, 0),  n.iter=100000)
+ch7f.sample = run.MCMC.inhom(data.ch7f, pixel.info=pixel.info, x.pixels=50, y.pixels=50, M=9000, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
 save(ch7f.sample, file="ch7f.RData")
