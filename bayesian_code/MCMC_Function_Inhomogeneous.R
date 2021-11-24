@@ -9,8 +9,9 @@
 # * The dmax value to use for the getLocalObjects() function
 # * The number of iterations to run the MCMC for
 # * The number of burn-in iterations we want to use
+# * A vector containing the labels of the parameters we want to monitor
 
-run.MCMC.inhom = function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dmax = 56, n.iter = 10000, n.burn = 1000) {
+run.MCMC.inhom = function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dmax = 56, n.iter, n.burn, parameters=c("lambda0", "sigma", "N", "D", "beta0", "beta1", "DPix")) {
   ## Therefore, subsetting the data we'll use in our NIMBLE model:
   # Encounter data
   y = data$encounter.data
@@ -175,7 +176,7 @@ run.MCMC.inhom = function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dm
   ## Doing the clever NIMBLE stuff
   Rmodel <- nimbleModel(code, constants, data, inits, dimensions = list(pixel.centres.order = c(50,50)))
   # AF slice sampling for beta0 and beta1
-  conf <- configureMCMC(Rmodel, monitors = c("lambda0", "sigma", "N", "D", "beta0", "beta1", "DPix"), print = FALSE)
+  conf <- configureMCMC(Rmodel, monitors = parameters, print = FALSE)
   conf$removeSampler(c("beta0","beta1"))
   conf$addSampler(target = c("beta0","beta1"),
                   type = 'AF_slice',
