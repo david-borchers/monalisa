@@ -14,9 +14,7 @@ for (i in 1:20) {
 }
 ## Trap locations
 ch7b.traploc = attributes(ch7b)$traps
-# xlim, ylim
-xlim = c(0.5, 50.5)
-ylim = c(0.5, 50.5)
+
 # Data object
 data.ch7b = list(encounter.data = encounterdat.ch7b, trap.loc = ch7b.traploc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
