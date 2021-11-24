@@ -2,7 +2,7 @@
 
 ## First, sourcing in capture history matrix we need
 #load("../output/capthists.RData")
-load("../output/capthists.RData") # for NeSI
+load("capthists.RData") # for NeSI
 
 ## ch7c
 ch7c = capthists_expected_acd_many$capthist[2][[1]]
