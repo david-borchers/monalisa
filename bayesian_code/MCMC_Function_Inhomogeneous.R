@@ -11,7 +11,7 @@
 # * The number of burn-in iterations we want to use
 # * A vector containing the labels of the parameters we want to monitor
 
-run.MCMC.inhom = function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dmax = 56, n.iter, n.burn, parameters=c("lambda0", "sigma", "N", "D", "beta0", "beta1", "DPix")) {
+run.MCMC.inhom = function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dmax = 56, n.iter, n.burn, parameters=c("lambda0", "sigma", "N", "D", "beta0", "beta1")) {
   ## Therefore, subsetting the data we'll use in our NIMBLE model:
   # Encounter data
   y = data$encounter.data

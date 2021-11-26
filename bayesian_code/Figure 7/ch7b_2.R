@@ -58,7 +58,7 @@ pixel.info = cbind(pixel.centres, dgood)
 
 ## Fitting the model
 ch7b.sample = run.MCMC.inhom(data=data.ch7b, pixel.info=pixel.info, x.pixels=50, y.pixels=50, M=9000, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
-save(ch7b.sample, file="ch7b_unlogged.RData")
+save(ch7b.sample, file="ch7b.RData")
 
 
 ## TO MAYBE DELETE LATER:
