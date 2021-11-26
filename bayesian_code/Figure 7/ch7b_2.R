@@ -42,7 +42,9 @@ mona.densities = mona_df[,c("x", "y", "Dgood_bigD")]
 split = split(mona.densities, mona.densities$y)
 mona.densities = do.call("rbind", split)
 # And now that we are sure of the way in which the pixels are numbered, can remove the x and y-coordinate columns, so that we are now left with a density vector only, which we will then use with NIMBLE!
-dgood = mona.densities[,"Dgood_bigD"] # Grabbing the Dgood covariate.
+dgood = mona.densities[,"Dgood_bigD"] # Grabbing the Dgood covariate
+# Logging the covariate
+dgood = log(dgood)
 
 ## Generating 'pixel.info' object we need
 # Pixel centres in the map region
