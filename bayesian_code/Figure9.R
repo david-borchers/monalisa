@@ -7,7 +7,7 @@
 ## ---------------------------------------------------------------------------------------
 
 ## First, sourcing in 'posthoc_extract_chs.R' to extract the necessary capture histories
-source("../output/mona_raw_outputs_100sim.RData")
+load("../output/mona_raw_outputs_100sim.RData")
 source("../code/posthoc_extract_chs.R")
 
 # We want to figure out how many sampling occasions/which capture histories to combine for each plot
@@ -55,6 +55,11 @@ for (i in 1:20) {
 sum(encounterdat.20occ)
 # Creating the data object
 data.20occ = list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 20)
+
+
+load("../output/capthists.RData")
+str(capthists_realised_acd_many$capthist[[1]])
+## HAVE ASKED IAN, NEED TO FIGURE OUT HOW TO EXTRACT CAPTURE HISTORIES FOR THE FIGURE!
 
 ## ---------------------------------------------------------------------------------------
 
