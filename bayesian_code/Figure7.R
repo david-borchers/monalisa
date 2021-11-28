@@ -188,7 +188,7 @@ dblur = dblur.df[,"Dblur_bigD"]
 ch7b.density = numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = ch7b.sample[,'beta0'] + ch7b.sample[,'beta1']*(log(dgood)[i])
+  density.vec = exp(ch7b.sample[,'beta0'] + ch7b.sample[,'beta1']*(log(dgood)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7b.density[i] = mean(density.vec)
 }
@@ -197,7 +197,7 @@ for (i in 1:2500) {
 ch7c.density = numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = ch7c.sample[,'beta0'] + ch7c.sample[,'beta1']*(log(dgood)[i])
+  density.vec = exp(ch7c.sample[,'beta0'] + ch7c.sample[,'beta1']*(log(dgood)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7c.density[i] = mean(density.vec)
 }
@@ -206,7 +206,7 @@ for (i in 1:2500) {
 ch7e.density = numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = ch7e.sample[,'beta0'] + ch7e.sample[,'beta1']*(log(dblur)[i])
+  density.vec = exp(ch7e.sample[,'beta0'] + ch7e.sample[,'beta1']*(log(dblur)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7e.density[i] = mean(density.vec)
 }
@@ -215,7 +215,7 @@ for (i in 1:2500) {
 ch7f.density = numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = ch7f.sample[,'beta0'] + ch7f.sample[,'beta1']*(log(dblur)[i])
+  density.vec = exp(ch7f.sample[,'beta0'] + ch7f.sample[,'beta1']*(log(dblur)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7f.density[i] = mean(density.vec)
 }
@@ -226,40 +226,36 @@ for (i in 1:2500) {
 
 ## ---------------------------------------------------------------------------------------
 
-
-
-
-
-library(tidyverse)
+# Libraries
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(tidyr)
 library(viridis)
 library(RColorBrewer)
 library(patchwork)
 library(purrr)
 
-mona_df <- mona_df %>% dplyr::select(-cc) %>% distinct()
+# Seems like we load in these files
+load("../output/mona_raw_outputs.RData")
+load("../output/mona_inputs.RData")
 
-# process the covariates - contains duplicated pixel centres, each row of duplicate gives Dgood/Dblur value
-predicted_densities_covs <- mona_df %>% select(-D) %>%
-  gather(grid, value, -x, -y) %>% arrange(x,y) %>%
-  mutate(covtype = grid,
+# process the covariates -- it looks like this object contains the covariate values used to create the first plots in both rows
+predicted_densities_covs <- mona_df %>% dplyr::select(x,y,Dgood_bigD,Dblur_bigD) %>%
+  pivot_longer(cols=c(Dgood_bigD,Dblur_bigD), names_to = "covtype") %>% arrange(x,y) %>%
+  mutate(value = value/10000,
          array_origin = "none") %>%
-  select(-grid) %>%
-  filter(covtype %in% c("Dgood", "Dblur"))
+  mutate(covtype = str_remove(covtype, "_bigD"))
 
-# process the outputs
-# Appears to contain density values for 3 different covariates, 2 different trap arrays and 1 or 20 sampling occasions -- so contains 12 sets of 2500 values = 30000 rows
-predicted_densities_all <- fig5_results %>% purrr::map("predicted_densities") %>% map_df(bind_rows)
-# Contains coordinates of detectors for same 12 sets as above
-detectors_df_all <- fig5_results %>% purrr::map("detectors_df") %>% map_df(bind_rows)
+# process the outputs -- I think predicted_densities_all is what we want to replace, seems to contain density values for each pixel
+predicted_densities_all <- res_expected_acd_many %>% purrr::map("predicted_densities") %>% map_df(bind_rows)
+detectors_df_all <- res_expected_acd_many %>% purrr::map("detectors_df") %>% map_df(bind_rows)
 
-# change covariate variable names to be consistent with mona_inputs (removing D~ from data frames)
-predicted_densities_all <- predicted_densities_all %>% mutate(covtype = str_remove(covtype, "D~"))
-detectors_df_all <- detectors_df_all %>% mutate(covtype = str_remove(covtype, "D~"))
+# change covariate variable names to be consistent with mona_inputs
+predicted_densities_all <- predicted_densities_all %>% mutate(covtype = str_remove(covtype, "D~log\\(")) %>% mutate(covtype = str_remove(covtype, "_bigD\\)"))
+detectors_df_all <- detectors_df_all %>% mutate(covtype = str_remove(covtype, "D~log\\(")) %>% mutate(covtype = str_remove(covtype, "_bigD\\)"))
 
-# only want the results for 1 occasion (change if desired) -- i.e. only results for 20 sampling occasions, so now 15000 rows (dealing with 6 sets now)
-predicted_densities_all <- predicted_densities_all %>% filter(occasions == 20)
-
-# choose covariates we want - only want to work with Dgood and Dblur, so now 10000 rows (4 sets now)
+# choose covariates we want
 predicted_densities_all <- predicted_densities_all %>% filter(covtype %in% c("Dgood", "Dblur"))
 detectors_df_all <- detectors_df_all %>% filter(covtype %in% c("Dgood", "Dblur"))
 
@@ -269,25 +265,11 @@ predicted_densities_all <- predicted_densities_all %>%
   mutate(value = value / 10000)
 
 predicted_densities_all %>% group_by(covtype, array_origin) %>% summarize(mv = mean(value))
+# Mean density values seem to match nicely with ch7b, ch7c, ch7e, ch7f. Can compare to:
+c(mean(ch7f.density), mean(ch7e.density), mean(ch7c.density), mean(ch7b.density))
 
-
-## -----------------------------------------------------------------------------
-
-# So now, we want to compare the density values. First, from the preceding line, we can see that the mean density values are:
-# 3.62 for Dblur, 15_15 (ch7e)
-# 3.30 for Dblur, 27_31 (ch7f)
-# 3.04 for Dgood, 15_15 (ch7b)
-# 2.98 for Dgood, 27_31 (ch7c)
-# For us, the mean density values are:
-mean(ch7e.density) # 3.013 vs 3.62
-mean(ch7f.density) # 3.386 vs 3.30
-mean(ch7b.density) # 2.943 vs 3.04
-mean(ch7c.density) # 3.074 vs 2.98
-# Mmm, okay?
-
-## -----------------------------------------------------------------------------
-
-## Seems like now is a good time to replace predicted_densities_all so that it now contains our density values!!
+# ---------------
+# Seems like now is a good time to replace predicted_densities_all so that it now contains our density values.
 # Matrix of pixel centres
 source("RUDMaps_Functions.R")
 pixel.centres = centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
@@ -314,6 +296,7 @@ names(ch7f.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
 
 # And now, combining into one data frame
 predicted_densities_all = rbind(ch7b.df, ch7c.df, ch7e.df, ch7f.df)
+# ---------------
 
 # scale the covariate plots to have the same mean as the density plots
 predicted_densities_covs <- predicted_densities_covs %>%
@@ -358,6 +341,8 @@ brew.cols <- brewer.pal(6, "Accent")[-c(1,5)]
 orgn <- c(15, 15)
 orgn_str <- paste0(orgn[1],"_",orgn[2])
 
+fill_max <- 15 # 9.1 is max in exp data, or 15 to make fill colour scale same as realised_ac_many plot
+
 plot_mona <- function(orgn, densities = predicted_densities_all){
   orgn_str <- paste0(orgn[1],"_",orgn[2])
   p <- densities %>%
@@ -371,7 +356,7 @@ plot_mona <- function(orgn, densities = predicted_densities_all){
               aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
     geom_segment(data = all_segs %>% filter(array_origin == orgn_str), inherit.aes = F, fill = NA, size = 2,
                  aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
-    scale_fill_viridis(direction = 1, limits = c(0,15)) +
+    scale_fill_viridis(direction = 1, limits = c(0,fill_max)) +
     scale_colour_manual(name = "",
                         values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                         breaks=c("15_15", "15_31", "27_15", "27_31")) +
@@ -397,7 +382,7 @@ trap_labels <- detectors_df_all %>% group_by(array_origin) %>%
 pgoodcov <- predicted_densities_covs %>%
   filter(array_origin == "none", covtype == "Dgood") %>%
   ggplot(aes(x, y)) +
-  geom_raster(aes(fill = value * 1.5)) +
+  geom_raster(aes(fill = value)) +
   # geom_point(data = detectors_df_all %>% filter(occasions == 20),
   #            inherit.aes = T, aes(colour = array_origin, shape = array_origin), size = 2) +
   geom_rect(data = common_area, inherit.aes = F, colour = "white", fill = NA, size = 1, linetype = 2,
@@ -406,7 +391,7 @@ pgoodcov <- predicted_densities_covs %>%
                aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
   geom_text(data = trap_labels,
             inherit.aes = T, aes(colour = array_origin, label = label), size = 6) +
-  scale_fill_viridis(direction = 1, limits = c(0,15)) +
+  scale_fill_viridis(direction = 1, limits = c(0,fill_max)) +
   scale_colour_manual(name="",
                       values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                       breaks=c("15_15", "15_31", "27_15", "27_31")) +
@@ -422,7 +407,7 @@ pgoodcov
 pblurcov <- predicted_densities_covs %>%
   filter(array_origin == "none", covtype == "Dblur") %>%
   ggplot(aes(x, y)) +
-  geom_raster(aes(fill = 1.8 * value)) +
+  geom_raster(aes(fill = value)) +
   # geom_point(data = detectors_df_all %>% filter(occasions == 20),
   #            inherit.aes = T, aes(colour = array_origin, shape = array_origin), size = 2) +
   geom_rect(data = common_area, inherit.aes = F, colour = "white", fill = NA, size = 1, linetype = 2,
@@ -431,7 +416,7 @@ pblurcov <- predicted_densities_covs %>%
                aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
   geom_text(data = trap_labels %>% mutate(label = c("(f)", "(e)")),
             inherit.aes = T, aes(colour = array_origin, label = label), size = 6) +
-  scale_fill_viridis(direction = 1, limits = c(0,15)) +
+  scale_fill_viridis(direction = 1, limits = c(0,fill_max)) +
   scale_colour_manual(name="",
                       values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                       breaks=c("15_15", "15_31", "27_15", "27_31")) +
@@ -454,5 +439,3 @@ pp <- (pgoodcov | p2good | p1good) / (pblurcov | p2blur | p1blur) + plot_layout(
 pp
 
 ggsave("Figure7.png", pp, width=7.5, height=5.8, dpi = 600)
-
-## Isn't bright enough?!
