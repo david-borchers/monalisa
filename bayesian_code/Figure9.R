@@ -6,60 +6,55 @@
 
 ## ---------------------------------------------------------------------------------------
 
-## First, sourcing in 'posthoc_extract_chs.R' to extract the necessary capture histories
-load("../output/mona_raw_outputs_100sim.RData")
-source("../code/posthoc_extract_chs.R")
+## First, sourcing in capture histories to use
+load("../output/capthists.RData")
 
-# We want to figure out how many sampling occasions/which capture histories to combine for each plot
-# We have columns with: 79 detections (31 inividuals), 263 detections (40 individuals) and 526 detections (44 individuals).
-# Seems we will be working with either 1 occasion/3 occasions/10 occasions/20 occasions
-# Reading Ian's code, we will be using ch8a[[1]], ch8b[[1]] and ch8c[[1]] --> are working with 3/10/20 occasions, but only one set of simulated data for each number of occasions.
-# ch8a[[1]] : simulated data for 3 sampling occasions (31 individuals)
-# ch8b[[1]]: simulated data for 10 sampling occasions (40 individuals)
-# ch8c[[1]]: simulated data for 20 sampling occasions (44 individuals)
+# In Figure 9, we have columns with: 31 inividuals, 40 individuals and 44 individuals. We are working with 3/10/20 occasions, one set of simulated data for each number of occasions.
 
-# So, we need to take each of these objects and turn them into something that we can feed into the functions that have already been written:
-ch8a[[1]][,1,] # This is the capture history for all observed animals at all 9 traps, over the first of the three sampling occasions
+capthists_realised_and_expected_acd_few$noccasions[c(1,101,201)]
+capthists_realised_and_expected_acd_few$secr.fitformula[c(1,101,201)]
+# So, we want to use the 1st list element for the 1st column, 101th list element for 2nd column and 201st list element for 3rd column
 
-## 3 sampling occasions (first column)
-# Summing the capture histories over all 3 sampling occasions (for all animals at all 9 traps):
-encounterdat.3occ = matrix(0, nrow=nrow(ch8a[[1]][,1,]), ncol=ncol(ch8a[[1]][,1,]))
+# Column 1, 3 sampling occasions
+first.col = capthists_realised_and_expected_acd_few$capthist[[1]]
+# Summing capture histories over all of the 3 sampling occasions
+encounterdat.3occ = matrix(0, nrow=nrow(first.col[,1,]), ncol=ncol(first.col[,1,]))
 for (i in 1:3) {
-  encounterdat.3occ = encounterdat.3occ + ch8a[[1]][,i,]
+  encounterdat.3occ = encounterdat.3occ + first.col[,i,]
 }
 # Trap locations
-trap.loc = attributes(ch8a[[1]])$traps
+trap.loc = attributes(first.col)$traps
 # xlim, ylim (we know these)
 xlim = c(0.5, 50.5)
 ylim = c(0.5, 50.5)
 # Creating the data object for Figure 9, 3 sampling occasions
 data.3occ = list(encounter.data = encounterdat.3occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 3)
-sum(encounterdat.3occ)
+sum(encounterdat.3occ) # 85 detections
 
 ## 10 sampling occasions (second column)
+second.col = capthists_realised_and_expected_acd_few$capthist[[101]]
 # Summing the capture histories over all 10 sampling occasions
-encounterdat.10occ = matrix(0, nrow=nrow(ch8b[[1]][,1,]), ncol=ncol(ch8b[[1]][,1,]))
+encounterdat.10occ = matrix(0, nrow=nrow(second.col[,1,]), ncol=ncol(second.col[,1,]))
 for (i in 1:10) {
-  encounterdat.10occ = encounterdat.10occ + ch8b[[1]][,i,]
+  encounterdat.10occ = encounterdat.10occ + second.col[,i,]
 }
 # Creating the data object (uses same trap locs, xlim, ylim as above)
 data.10occ = list(encounter.data = encounterdat.10occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 10)
-sum(encounterdat.10occ)
+sum(encounterdat.10occ) # 293 detections
 
 ## 20 sampling occasions (third column)
+third.col = capthists_realised_and_expected_acd_few$capthist[[201]]
 # Summing the capture histories over all 20 sampling occasions
-encounterdat.20occ = matrix(0, nrow=nrow(ch8c[[1]][,1,]), ncol=ncol(ch8c[[1]][,1,]))
+encounterdat.20occ = matrix(0, nrow=nrow(third.col[,1,]), ncol=ncol(third.col[,1,]))
 for (i in 1:20) {
-  encounterdat.20occ = encounterdat.20occ + ch8c[[1]][,i,]
+  encounterdat.20occ = encounterdat.20occ + third.col[,i,]
 }
 sum(encounterdat.20occ)
 # Creating the data object
 data.20occ = list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 20)
+sum(encounterdat.20occ) # 536 detections
 
-
-load("../output/capthists.RData")
-str(capthists_realised_acd_many$capthist[[1]])
-## HAVE ASKED IAN, NEED TO FIGURE OUT HOW TO EXTRACT CAPTURE HISTORIES FOR THE FIGURE!
+## NEED to confirm with Ian that use 'capthists.RData' here? First few lines of plot_realised_usage_few.R don't seem to use this RData file!
 
 ## ---------------------------------------------------------------------------------------
 
@@ -82,6 +77,11 @@ save(results.10occ, file="Fig9_MCMC_10occ.RData")
 
 results.20occ = run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 save(results.20occ, file="Fig9_MCMC_20occ.RData")
+
+# Uncomment if want to load in the RData files instead:
+# load("Figure 9/Fig9_MCMC_3occ.RData")
+# load("Figure 9/Fig9_MCMC_10occ.RData")
+# load("Figure 9/Fig9_MCMC_20occ.RData")
 
 # Checking the trace plots
 # 3 sampling occasions -- all looking v good
