@@ -76,6 +76,7 @@ p1 <- predicted_densities_all %>%
   facet_grid(covtype ~ occasions) +
   geom_point(data = detectors_df_all %>% filter(occasions != capthist_labels[1]), inherit.aes = T, 
              colour = "red", pch = 4, alpha = 0.5, size = 1) + 
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -93,6 +94,7 @@ p2a <- predicted_densities_all %>%
   facet_grid(covtype ~ occasions) +
   geom_point(data = detectors_df_all %>% filter(occasions != capthist_labels[1], covtype == "None"), inherit.aes = T, 
              colour = "black", pch = 4, size = 2) + 
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -109,6 +111,7 @@ p2b <- predicted_densities_all %>%
   facet_grid(covtype ~ occasions) +
   geom_point(data = detectors_df_all %>% filter(occasions != capthist_labels[1], covtype == "Strong"), inherit.aes = T, 
              colour = "black", pch = 4, size = 2) + 
+  coord_equal() +
   theme(strip.text.x = element_blank(), 
         axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
@@ -126,6 +129,7 @@ p2c <- predicted_densities_all %>%
   facet_grid(covtype ~ occasions) +
   geom_point(data = detectors_df_all %>% filter(occasions != capthist_labels[1], covtype == "Moderate"), inherit.aes = T, 
              colour = "black", pch = 4, size = 2) + 
+  coord_equal() +
   theme(strip.text.x = element_blank(), 
         axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),

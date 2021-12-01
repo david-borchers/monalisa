@@ -100,6 +100,7 @@ pbig <- predicted_densities_all %>%
                       values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                       breaks=c("15_15", "15_31", "27_15", "27_31")) + 
   scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title=element_blank(),legend.position="none",
@@ -127,6 +128,7 @@ predicted_densities_all %>%
                       values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                       breaks=c("15_15", "15_31", "27_15", "27_31")) + 
   scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title=element_blank(),legend.position="none",
@@ -152,6 +154,7 @@ plot_mona_orig <- function(orgn){
                         values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                         breaks=c("15_15", "15_31", "27_15", "27_31")) + 
     scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+    coord_equal() +
     theme(axis.line=element_blank(),axis.text.x=element_blank(),
           axis.text.y=element_blank(),axis.ticks=element_blank(),
           axis.title=element_blank(),legend.position="none",
@@ -180,6 +183,7 @@ plot_mona <- function(orgn, densities = predicted_densities_all){
                         values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                         breaks=c("15_15", "15_31", "27_15", "27_31")) + 
     scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+    coord_equal() +
     theme(axis.line=element_blank(),axis.text.x=element_blank(),
           axis.text.y=element_blank(),axis.ticks=element_blank(),
           axis.title=element_blank(),legend.position="none",
