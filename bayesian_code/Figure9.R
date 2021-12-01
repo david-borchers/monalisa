@@ -16,42 +16,42 @@ load("../output/capthists.RData")
 # So, we want to use the 1st list element for the 1st column, 101th list element for 2nd column and 201st list element for 3rd column
 
 # Column 1, 3 sampling occasions
-first.col = capthists_realised_and_expected_acd_few$capthist[[1]]
+first.col <- capthists_realised_and_expected_acd_few$capthist[[1]]
 # Summing capture histories over all of the 3 sampling occasions
-encounterdat.3occ = matrix(0, nrow=nrow(first.col[,1,]), ncol=ncol(first.col[,1,]))
+encounterdat.3occ <- matrix(0, nrow=nrow(first.col[,1,]), ncol=ncol(first.col[,1,]))
 for (i in 1:3) {
-  encounterdat.3occ = encounterdat.3occ + first.col[,i,]
+  encounterdat.3occ <- encounterdat.3occ + first.col[,i,]
 }
 # Trap locations
-trap.loc = attributes(first.col)$traps
+trap.loc <- attributes(first.col)$traps
 # xlim, ylim (we know these)
-xlim = c(0.5, 50.5)
-ylim = c(0.5, 50.5)
+xlim <- c(0.5, 50.5)
+ylim <- c(0.5, 50.5)
 # Creating the data object for Figure 9, 3 sampling occasions
-data.3occ = list(encounter.data = encounterdat.3occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 3)
-sum(encounterdat.3occ) # 85 detections
+data.3occ <- list(encounter.data = encounterdat.3occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 3)
+#sum(encounterdat.3occ) # 85 detections
 
 ## 10 sampling occasions (second column)
-second.col = capthists_realised_and_expected_acd_few$capthist[[101]]
+second.col <- capthists_realised_and_expected_acd_few$capthist[[101]]
 # Summing the capture histories over all 10 sampling occasions
-encounterdat.10occ = matrix(0, nrow=nrow(second.col[,1,]), ncol=ncol(second.col[,1,]))
+encounterdat.10occ <- matrix(0, nrow=nrow(second.col[,1,]), ncol=ncol(second.col[,1,]))
 for (i in 1:10) {
-  encounterdat.10occ = encounterdat.10occ + second.col[,i,]
+  encounterdat.10occ <- encounterdat.10occ + second.col[,i,]
 }
 # Creating the data object (uses same trap locs, xlim, ylim as above)
-data.10occ = list(encounter.data = encounterdat.10occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 10)
-sum(encounterdat.10occ) # 293 detections
+data.10occ <- list(encounter.data = encounterdat.10occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 10)
+#sum(encounterdat.10occ) # 293 detections
 
 ## 20 sampling occasions (third column)
-third.col = capthists_realised_and_expected_acd_few$capthist[[201]]
+third.col <- capthists_realised_and_expected_acd_few$capthist[[201]]
 # Summing the capture histories over all 20 sampling occasions
-encounterdat.20occ = matrix(0, nrow=nrow(third.col[,1,]), ncol=ncol(third.col[,1,]))
+encounterdat.20occ <- matrix(0, nrow=nrow(third.col[,1,]), ncol=ncol(third.col[,1,]))
 for (i in 1:20) {
-  encounterdat.20occ = encounterdat.20occ + third.col[,i,]
+  encounterdat.20occ <- encounterdat.20occ + third.col[,i,]
 }
 # Creating the data object
-data.20occ = list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 20)
-sum(encounterdat.20occ) # 536 detections
+data.20occ <- list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 20)
+#sum(encounterdat.20occ) # 536 detections
 
 ## NEED to confirm with Ian that use 'capthists.RData' here? First few lines of plot_realised_usage_few.R don't seem to use this RData file!
 
@@ -68,13 +68,13 @@ library("nimble")
 source("MCMC_Function.R")
 
 # Running MCMC for simulated data from 3, 10 and 20 sampling occasions. Uncomment to run the MCMC:
-#results.3occ = run.MCMC(data=data.3occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#results.3occ <- run.MCMC(data=data.3occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 #save(results.3occ, file="Fig9_MCMC_3occ.RData")
 
-#results.10occ = run.MCMC(data=data.10occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#results.10occ <- run.MCMC(data=data.10occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 #save(results.10occ, file="Fig9_MCMC_10occ.RData")
 
-#results.20occ = run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#results.20occ <- run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 #save(results.20occ, file="Fig9_MCMC_20occ.RData")
 
 # Loading in the RData files
@@ -110,33 +110,33 @@ plot(results.20occ[,"D"], type='l')
 ## Row 1: RACD maps. Are creating vectors that contain the density values for each pixel. Need to run this section to create first row of plots:
 source("DensityVectorFunction_RACDMaps.R")
 
-density.3occ.all = no.movement.density.vector(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-density.10occ.all = no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-density.20occ.all = no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+density.3occ.all <- no.movement.density.vector(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+density.10occ.all <-  no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+density.20occ.all <- no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
 ## Row 2: RUD maps. Once again, creating vectors that contain the density values for each pixel (we use more steps/create more objects in the process to do so than above). Can uncomment lines below to run the code! Other than 'pixel.centres' object which we need to create, just use the load statements at the bottom
 
 source("RUDMaps_Functions.R")
 
 # Coordinates for all pixel centres
-pixel.centres = centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 # Creating activity centre matrices (for explanation, see 'RUDMaps_Functions.R')
-#activity.centres.3occ = activity.matrices(results=results.3occ, M=300)
-#ctivity.centres.10occ = activity.matrices(results=results.10occ, M=300)
-#activity.centres.20occ = activity.matrices(results=results.20occ, M=300)
+#activity.centres.3occ <- activity.matrices(results=results.3occ, M=300)
+#ctivity.centres.10occ <- activity.matrices(results=results.10occ, M=300)
+#activity.centres.20occ <- activity.matrices(results=results.20occ, M=300)
 
 # Matrix containing z-values for each MCMC iteration (for each number of samp occ)
-#z.values.3occ = extract.z.values(results.3occ)
-#z.values.10occ =  extract.z.values(results.10occ)
-#z.values.20occ = extract.z.values(results.20occ)
+#z.values.3occ <- extract.z.values(results.3occ)
+#z.values.10occ <- extract.z.values(results.10occ)
+#z.values.20occ <- extract.z.values(results.20occ)
 
 # Creating the density vectors
-#density.3occ.all.withmov = density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
+#density.3occ.all.withmov <- density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
 #save(density.3occ.all.withmov, file="Fig9_3occ.RData")
-#density.10occ.all.withmov = density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
+#density.10occ.all.withmov <- density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
 #save(density.10occ.all.withmov, file="Fig9_10occ.RData")
-#density.20occ.all.withmov = density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
+#density.20occ.all.withmov <- density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
 #save(density.20occ.all.withmov, file="Fig9_20occ.RData")
 
 # Loading in density values for each pixel
@@ -198,7 +198,7 @@ detectors <- detectors_df_all %>% group_by(x,y) %>% count()
 
 # Column labels for plots
 capthist_labels <-  paste(c(sum(encounterdat.3occ), sum(encounterdat.10occ), sum(encounterdat.20occ)), "detections\n", paste("(", c(nrow(encounterdat.3occ), nrow(encounterdat.10occ), nrow(encounterdat.20occ)), sep=""),  "individuals)")
-capthist_labels = c("null", capthist_labels) # Adding this 'extra' level for Ian's code below to work
+capthist_labels <-  c("null", capthist_labels) # Adding this 'extra' level for Ian's code below to work
 
 # relabel factor levels for occasion variable
 ac_densities_with_movement$occasions <- factor(ac_densities_with_movement$occasions,

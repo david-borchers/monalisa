@@ -20,10 +20,10 @@ load("Figure 7/ch7f.RData")
 
 # Removing burn-in -- so ran 101,000 iterations, discaring 2500 iterations as burn-in
 
-ch7b.sample = ch7b.sample[-c(1:2500),]
-ch7c.sample = ch7c.sample[-c(1:2500),]
-ch7e.sample = ch7e.sample[-c(1:2500),]
-ch7f.sample = ch7f.sample[-c(1:2500),]
+ch7b.sample <-  ch7b.sample[-c(1:2500),]
+ch7c.sample <-  ch7c.sample[-c(1:2500),]
+ch7e.sample <- ch7e.sample[-c(1:2500),]
+ch7f.sample <- ch7f.sample[-c(1:2500),]
 
 
 # Checking and saving trace plots
@@ -68,17 +68,17 @@ dev.off()
 
 # Checking posterior means for beta0 and beta1
 # ch7b
-ch7b.beta0 = mean(ch7b.sample[,"beta0"])
-ch7b.beta1 = mean(ch7b.sample[,"beta1"])
+ch7b.beta0 <- mean(ch7b.sample[,"beta0"])
+ch7b.beta1 <- mean(ch7b.sample[,"beta1"])
 # ch7c
-ch7c.beta0 = mean(ch7c.sample[,"beta0"])
-ch7c.beta1 = mean(ch7c.sample[,"beta1"])
+ch7c.beta0 <- mean(ch7c.sample[,"beta0"])
+ch7c.beta1 <- mean(ch7c.sample[,"beta1"])
 # ch7e
-ch7e.beta0 = mean(ch7e.sample[,"beta0"])
-ch7e.beta1 = mean(ch7e.sample[,"beta1"])
+ch7e.beta0 <- mean(ch7e.sample[,"beta0"])
+ch7e.beta1 <- mean(ch7e.sample[,"beta1"])
 # ch7f
-ch7f.beta0 = mean(ch7f.sample[,"beta0"])
-ch7f.beta1 = mean(ch7f.sample[,"beta1"])
+ch7f.beta0 <- mean(ch7f.sample[,"beta0"])
+ch7f.beta1 <- mean(ch7f.sample[,"beta1"])
 
 # Checking posterior means for N. True N is 7451 - posterior means seem fine, ch7f being about 1000 above likely due to 'bad' covariate
 mean(ch7b.sample[,"N"])
@@ -103,14 +103,14 @@ mean(ch7f.sample[,'lambda0'])
 # Comparing MCMC results to secr.fit -- overall, looking really good! So looks like the MCMC ran 'correctly'
 library("secr")
 # Mask
-mlmesh = read.mask(data=mona_df)
+mlmesh <- read.mask(data=mona_df)
 # Loading in capture histories
 load("../output/capthists.RData")
-ch7b.ch7e.capthist = capthists_expected_acd_many$capthist[1][[1]]
-ch7c.ch7f.capthist = capthists_expected_acd_many$capthist[2][[1]]
+ch7b.ch7e.capthist <- capthists_expected_acd_many$capthist[1][[1]]
+ch7c.ch7f.capthist <- capthists_expected_acd_many$capthist[2][[1]]
 
 # ch7b - looking good!
-ch7b.fit = secr.fit(capthist=ch7b.ch7e.capthist, model=D~log(Dgood_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
+ch7b.fit <- secr.fit(capthist=ch7b.ch7e.capthist, model=D~log(Dgood_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
 # Looking at estimates of beta0 -- looking pretty similar
 ch7b.beta0 # -10.6741
 log(exp(-1.4489734)/10000) # -10.65931
@@ -123,7 +123,7 @@ quantile(ch7b.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
 # secr: is (1.967, 2.024) and now is (1.967, 2.024)!!!
 
 # ch7c - looking good!
-ch7c.fit = secr.fit(capthist=ch7c.ch7f.capthist, model=D~log(Dgood_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
+ch7c.fit <- secr.fit(capthist=ch7c.ch7f.capthist, model=D~log(Dgood_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
 # Looking at estimates of beta0 -- looking pretty similar
 ch7c.beta0 # -10.6641
 log(exp(-1.4462406)/10000) # -10.65658
@@ -136,7 +136,7 @@ quantile(ch7c.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
 # secr: is (1.992, 2.051) and now is (1.992, 2.052)
 
 # ch7e - looking good! :)
-ch7e.fit = secr.fit(capthist=ch7b.ch7e.capthist, model=D~log(Dblur_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
+ch7e.fit <- secr.fit(capthist=ch7b.ch7e.capthist, model=D~log(Dblur_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
 # Looking at estimates of beta0 -- looking pretty similar
 ch7e.beta0 # -21.8867
 log(exp(-12.8007829)/10000) # -22.01112 :)
@@ -149,7 +149,7 @@ quantile(ch7e.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
 # secr: is (1.962, 2.019) and now is (1.961, 2.019)
 
 # ch7e - looking good!!!
-ch7f.fit = secr.fit(capthist=ch7c.ch7f.capthist, model=D~log(Dblur_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
+ch7f.fit <- secr.fit(capthist=ch7c.ch7f.capthist, model=D~log(Dblur_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
 # Looking at estimates of beta0 -- looking pretty similar
 ch7f.beta0 # -19.25819
 log(exp(-10.1519810)/10000) # -19.362 :)
@@ -174,50 +174,50 @@ load("../output/mona_inputs.RData")
 
 # Subsetting the dgood and dblur values we will use
 # dgood
-dgood.df = mona_df[,c("x", "y", "Dgood_bigD")]
-split = split(dgood.df, dgood.df$y)
-dgood.df = do.call("rbind", split)
-dgood = dgood.df[,"Dgood_bigD"]
+dgood.df <- mona_df[,c("x", "y", "Dgood_bigD")]
+split <- split(dgood.df, dgood.df$y)
+dgood.df <- do.call("rbind", split)
+dgood <- dgood.df[,"Dgood_bigD"]
 # dblur
-dblur.df = mona_df[,c("x", "y", "Dblur_bigD")]
-split = split(dblur.df, dblur.df$y)
-dblur.df = do.call("rbind", split)
-dblur = dblur.df[,"Dblur_bigD"]
+dblur.df <- mona_df[,c("x", "y", "Dblur_bigD")]
+split <- split(dblur.df, dblur.df$y)
+dblur.df <- do.call("rbind", split)
+dblur <- dblur.df[,"Dblur_bigD"]
 
 # ch7b
-ch7b.density = numeric()
+ch7b.density <- numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = exp(ch7b.sample[,'beta0'] + ch7b.sample[,'beta1']*(log(dgood)[i]))
+  density.vec <- exp(ch7b.sample[,'beta0'] + ch7b.sample[,'beta1']*(log(dgood)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
-  ch7b.density[i] = mean(density.vec)
+  ch7b.density[i] <- mean(density.vec)
 }
 
 # ch7c
-ch7c.density = numeric()
+ch7c.density <- numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = exp(ch7c.sample[,'beta0'] + ch7c.sample[,'beta1']*(log(dgood)[i]))
+  density.vec <- exp(ch7c.sample[,'beta0'] + ch7c.sample[,'beta1']*(log(dgood)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
-  ch7c.density[i] = mean(density.vec)
+  ch7c.density[i] <- mean(density.vec)
 }
 
 # ch7e
-ch7e.density = numeric()
+ch7e.density <- numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = exp(ch7e.sample[,'beta0'] + ch7e.sample[,'beta1']*(log(dblur)[i]))
+  density.vec <- exp(ch7e.sample[,'beta0'] + ch7e.sample[,'beta1']*(log(dblur)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
-  ch7e.density[i] = mean(density.vec)
+  ch7e.density[i] <- mean(density.vec)
 }
 
 # ch7f
-ch7f.density = numeric()
+ch7f.density <- numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
-  density.vec = exp(ch7f.sample[,'beta0'] + ch7f.sample[,'beta1']*(log(dblur)[i]))
+  density.vec <- exp(ch7f.sample[,'beta0'] + ch7f.sample[,'beta1']*(log(dblur)[i]))
   # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
-  ch7f.density[i] = mean(density.vec)
+  ch7f.density[i] <- mean(density.vec)
 }
 
 ## ---------------------------------------------------------------------------------------
@@ -272,30 +272,30 @@ c(mean(ch7f.density), mean(ch7e.density), mean(ch7c.density), mean(ch7b.density)
 # Seems like now is a good time to replace predicted_densities_all so that it now contains our density values.
 # Matrix of pixel centres
 source("RUDMaps_Functions.R")
-pixel.centres = centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 # ch7b
 # Here, covtype=Dgood, occasions=20, array_origin=15_15
-ch7b.df = data.frame(pixel.centres, ch7b.density, rep("Dgood", 2500), rep(20, 2500), rep("15_15", 2500))
-names(ch7b.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+ch7b.df <- data.frame(pixel.centres, ch7b.density, rep("Dgood", 2500), rep(20, 2500), rep("15_15", 2500))
+names(ch7b.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
 
 # ch7c
 # covtype=Dgood, occasions=20, array_origin=27_31
-ch7c.df = data.frame(pixel.centres, ch7c.density, rep("Dgood", 2500), rep(20, 2500), rep("27_31", 2500))
-names(ch7c.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+ch7c.df <- data.frame(pixel.centres, ch7c.density, rep("Dgood", 2500), rep(20, 2500), rep("27_31", 2500))
+names(ch7c.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
 
 # ch7e
 # covtype=Dblur, occasions=20, array_origin=15_15
-ch7e.df = data.frame(pixel.centres, ch7e.density, rep("Dblur", 2500), rep(20, 2500), rep("15_15", 2500))
-names(ch7e.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+ch7e.df <- data.frame(pixel.centres, ch7e.density, rep("Dblur", 2500), rep(20, 2500), rep("15_15", 2500))
+names(ch7e.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
 
 # ch7f
 # covtype=Dblur, occasions=20, array_origin=27_31
-ch7f.df = data.frame(pixel.centres, ch7f.density, rep("Dblur", 2500), rep(20, 2500), rep("27_31", 2500))
-names(ch7f.df) = c("x", "y", "value", "covtype", "occasions", "array_origin")
+ch7f.df <- data.frame(pixel.centres, ch7f.density, rep("Dblur", 2500), rep(20, 2500), rep("27_31", 2500))
+names(ch7f.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
 
 # And now, combining into one data frame
-predicted_densities_all = rbind(ch7b.df, ch7c.df, ch7e.df, ch7f.df)
+predicted_densities_all <- rbind(ch7b.df, ch7c.df, ch7e.df, ch7f.df)
 # ---------------
 
 # scale the covariate plots to have the same mean as the density plots
