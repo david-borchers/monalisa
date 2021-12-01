@@ -15,7 +15,7 @@ load("../output/capthists.RData")
 #capthists_realised_and_expected_acd_few$secr.fitformula[c(1,101,201)]
 # So, we want to use the 1st list element for the 1st column, 101th list element for 2nd column and 201st list element for 3rd column
 
-# Column 1, 3 sampling occasions
+# 3 sampling occasions (first column)
 first.col <- capthists_realised_and_expected_acd_few$capthist[[1]]
 # Summing capture histories over all of the 3 sampling occasions
 encounterdat.3occ <- matrix(0, nrow=nrow(first.col[,1,]), ncol=ncol(first.col[,1,]))
@@ -52,8 +52,6 @@ for (i in 1:20) {
 # Creating the data object
 data.20occ <- list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 20)
 #sum(encounterdat.20occ) # 536 detections
-
-## NEED to confirm with Ian that use 'capthists.RData' here? First few lines of plot_realised_usage_few.R don't seem to use this RData file!
 
 ## ---------------------------------------------------------------------------------------
 
@@ -165,6 +163,7 @@ load("../output/mona_raw_outputs.RData")
 detectors_df_all <- res_realised_and_expected_acd_few %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)
 detectors_df_all <- detectors_df_all %>% distinct()
 
+# ---------------
 ## Creating objects that contain the density values for each map, along with other required information
 # 3 sampling occasions
 df.3occ.all <- data.frame(pixel.centres, density.3occ.all, as.factor(rep("D~1", 2500)), as.factor(rep("None", 2500)), as.factor(rep(3,2500)))
@@ -189,9 +188,9 @@ df.20occ.all.withmov <- data.frame(pixel.centres, density.20occ.all.withmov, as.
 names(df.20occ.all.withmov) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 ## Combining these objects into one data frame
 ac_densities_with_movement <- rbind.data.frame(df.3occ.all.withmov, df.10occ.all.withmov, df.20occ.all.withmov)
-
 ## Combining both data frames now
 ac_densities_with_movement  <- rbind.data.frame(ac_densities_without_movement, ac_densities_with_movement)
+# ---------------
 
 # detectors are the same for all plots so just extract unique combos of (x,y)
 detectors <- detectors_df_all %>% group_by(x,y) %>% count()
