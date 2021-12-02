@@ -50,7 +50,8 @@ fity.g.s = secr.fit(tigerch,mask=tigermask,model=list(D~x+y, g0~y, sigma~y))
 
 aics = AIC(fit0,fitx,fity,fitxy,fitx2,fity2,fitx2y2,fitxy22,fity3,fity.g.s)
 
-save(fit0,fitx,fity,fitxy,fitx2,fity2,fitx2y2,fitxy22,fity3,fity.g.s,file="NagaraholeFits.RData")
+#save(fit0,fitx,fity,fitxy,fitx2,fity2,fitx2y2,fitxy22,fity3,fity.g.s,file="./Dorazio+Karanth tigers/Code+Data/NagaraholeFits.RData")
+load("./Dorazio+Karanth tigers/Code+Data/NagaraholeFits.RData")
      
 model.average(fit0,fitx,fity,fitxy,fitx2,fity2,fitx2y2,fitxy22,fity3, realnames="D",criterion="AIC")
 collate(fit0,fitx,fity,fitxy,fitx2,fity2,fitx2y2,fitxy22,fity3, realnames="D")

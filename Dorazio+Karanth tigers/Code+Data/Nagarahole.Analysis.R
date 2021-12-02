@@ -4,10 +4,10 @@ library(mvtnorm)
 library(RColorBrewer)
 library(maptools)
 
-source('utilityFuncs.R')
-source('ReadTigerData.R')
-source('contTrappingArray.mcmcFuncs.R')
-source('contTrappingArray.mapOfRealizedDensity.R')
+source('./Dorazio+Karanth tigers/Code+Data/utilityFuncs.R')
+source('./Dorazio+Karanth tigers/Code+Data/ReadTigerData.R')
+source('./Dorazio+Karanth tigers/Code+Data/contTrappingArray.mcmcFuncs.R')
+source('./Dorazio+Karanth tigers/Code+Data/contTrappingArray.mapOfRealizedDensity.R')
 
 
 
@@ -22,11 +22,11 @@ ComputeIndexForNonmissingValues = function(rasterObj, indForNA) {
 
 ###  Read in camera-trap data
 resolution = 500  #  resolution (meters) used to create discrete grid of spatial domain
-shapefile = 'NHstatespace-utm'
-trapLocFile = 'trap_2015_coord.csv'
-trapOpFile = 'trap_op_ind.csv'
-sunriseANDsunsetFile = 'sunriseANDsunsetData.txt'
-detectionFile = 'Capt_date_time_noHrep.csv'
+shapefile = './Dorazio+Karanth tigers/Code+Data/NHstatespace-utm'
+trapLocFile = './Dorazio+Karanth tigers/Code+Data/trap_2015_coord.csv'
+trapOpFile = './Dorazio+Karanth tigers/Code+Data/trap_op_ind.csv'
+sunriseANDsunsetFile = './Dorazio+Karanth tigers/Code+Data/sunriseANDsunsetData.txt'
+detectionFile = './Dorazio+Karanth tigers/Code+Data/Capt_date_time_noHrep.csv'
 
 d = ReadCameraTrapData(resolution, shapefile, trapLocFile, trapOpFile, sunriseANDsunsetFile, detectionFile)
 
