@@ -295,8 +295,16 @@ ch7f.df <- data.frame(pixel.centres, ch7f.density, rep("Dblur", 2500), rep(20, 2
 names(ch7f.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
 
 # And now, combining into one data frame
-predicted_densities_all <- rbind(ch7b.df, ch7c.df, ch7e.df, ch7f.df)
+predicted_densities_all_2 <- rbind(ch7b.df, ch7e.df, ch7c.df, ch7f.df)
 # ---------------
+
+split = split(predicted_densities_all_2[2501:5000,], predicted_densities_all_2$y[2501:5000])
+predicted_densities_all_3 = do.call("rbind", rev(split))
+head(predicted_densities_all_3)
+plot(predicted_densities_all_3$value, predicted_densities_all$value[2501:5000])
+abline(0, 1, col="goldenrod")
+
+perc.diff <- (rishika.value - ian.value)*100/ian.value # To create spatial plot of percentage differences
 
 # scale the covariate plots to have the same mean as the density plots
 predicted_densities_covs <- predicted_densities_covs %>%
