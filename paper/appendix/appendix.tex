@@ -117,24 +117,29 @@ relationship with a spatial covariate to estimate expected AC density
 surfaces.
 
 We fitted our models in NIMBLE (insert reference) using data
-augmentation (REFERENCE: Tanner and Wong, 1987), which has become the
-prevailing way to fit SCR models under a Bayesian framework. This
-approach involves sampling a superpopulation of $M$ activity centres,
-including those of the $n$ animals detected on the SCR survey. We have
-an indicator variable $z_i$ for the $i$th animal, denoting whether the
-$i$th animal in the augmented population is `exists' in a given MCMC
-iteration. Rather than directly estimating $N$, the population size,
-we estimate the data augmentation parameter, $\psi$, the expected
-proportion of the animals in the superpopulation for which the
-indicator is equal to 1. For each MCMC iteration we obtain a sample
-from the posterior of $N$ using $\sum_{\i = 1}^M z_i$. A sample from
-the posterior for animal density can be obtained by dividing by the
-area of the survey region. Further details on data augmentation can be
-found in Kery AND Schaub, 2012 (REFERENCE).
+augmentation \citep{Tanner:87}\todo{Rishika, please check this is the
+  correct reference.}, which has become the prevailing way to fit SCR
+models under a Bayesian framework. This approach involves sampling a
+superpopulation of $M$ activity centres, including those of the $n$
+animals detected on the SCR survey. We have an indicator variable
+$z_i$ for the $i$th animal, denoting whether the $i$th animal in the
+augmented population is `exists' in a given MCMC iteration. Rather
+than directly estimating $N$, the population size, we estimate the
+data augmentation parameter, $\psi$, the expected proportion of the
+animals in the superpopulation for which the indicator is equal to
+1. For each MCMC iteration we obtain a sample from the posterior of
+$N$ using $\sum_{\i = 1}^M z_i$. A sample from the posterior for
+animal density can be obtained by dividing by the area of the survey
+region. Further details on data augmentation can be found in Kery AND
+Schaub, 2012 (REFERENCE)\todo[inline]{Rishika, I'm not totally sure
+  what this reference is, so I can't add the details.}
 
 We used the following uninformative priors for the detection function
 parameters, specifying a prior for $\log\{1/(2\sigma^2)\}$ rather than
-$\sigma$ directly, as per (ROYLE TEXTBOOK):
+$\sigma$ directly, as per (ROYLE TEXTBOOK):\todo{Rishika, I can't see
+  where the Royle textbook has an example of a prior on
+  $\log\{1/(2\sigma^2)\}$... Could you find a page number for such an
+  example?}
 \begin{align*}
   \lambda_0 &\sim \text{Gamma}(0.001, 0.001) \\ 
   \log\left(\frac{1}{2\sigma^2}\right) &\sim \text{Uniform}(-10, 10)
@@ -169,14 +174,12 @@ interval of () and () burn-in iterations.
 \includegraphics[width=\maxwidth]{figure/fig7-1} \caption[Figure 7]{Figure 7}\label{fig:fig7}
 \end{figure}
 
-
 \end{knitrout}
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
 \includegraphics[width=\maxwidth]{figure/fig9-1} \caption[Figure 9]{Figure 9}\label{fig:fig9}
 \end{figure}
-
 
 \end{knitrout}
 
@@ -247,10 +250,10 @@ where the denominator is a normalising constant.
 
 Bayesian models fitted via MCMC can directly sample activity centres
 of detected individuals, and also of undetected individuals using data
-augmentation (ROYLE TEXTBOOK REFERENCE), thus obtaining samples from
-$f_{\bm{x} \mid \bm{\omega}}(\bm{x} \mid \bm{\omega})$ for each
-individual. We can use these samples directly to obtain the following
-approximation of the $i$th individual's usage distribution:
+augmentation, thus obtaining samples from $f_{\bm{x} \mid
+  \bm{\omega}}(\bm{x} \mid \bm{\omega})$ for each individual. We can
+use these samples directly to obtain the following approximation of
+the $i$th individual's usage distribution:
 \begin{equation}
   f_{\bm{s} \mid \bm{\omega}}(\bm{s} \mid \bm{\omega}_i) \approx
   \frac{1}{M} \sum_{j = 1}^M f_{\bm{s} \mid \bm{x}}(\bm{s} \mid
