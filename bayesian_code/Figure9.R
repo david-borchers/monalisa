@@ -79,6 +79,10 @@ source("MCMC_Function.R")
 load("Figure 9/Fig9_MCMC_3occ.RData")
 load("Figure 9/Fig9_MCMC_10occ.RData")
 load("Figure 9/Fig9_MCMC_20occ.RData")
+# Burn-in
+results.3occ = results.3occ[-c(1:500),]
+results.10occ = results.10occ[-c(1:500),]
+results.20occ = results.20occ[-c(1:500),]
 
 # Checking the trace plots
 # 3 sampling occasions -- all looking v good

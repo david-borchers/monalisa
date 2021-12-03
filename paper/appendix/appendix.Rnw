@@ -443,6 +443,10 @@ data.20occ <- list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xli
 load("../../bayesian_code/Figure 9/Fig9_MCMC_3occ.RData")
 load("../../bayesian_code/Figure 9/Fig9_MCMC_10occ.RData")
 load("../../bayesian_code/Figure 9/Fig9_MCMC_20occ.RData")
+# Burn-in
+results.3occ = results.3occ[-c(1:500),]
+results.10occ = results.10occ[-c(1:500),]
+results.20occ = results.20occ[-c(1:500),]
 
 ## ---------------------------------------------------------------------------------------
 # Creating the objects we need
