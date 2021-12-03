@@ -104,13 +104,13 @@ and $\beta_1$:
 \beta_1 &\sim \text{Uniform}(-10, 10)
 \end{align*}
 
-When we fit each constant density model, we ran () MCMC iterations,
-where we set M to be equal to (). We also used a thinning value of (),
-an adapatation interval of () and () burn-in iterations.
+When we fit each constant density model, we ran 10,000 MCMC iterations,
+where we set M to be equal to 300. We also used an adapatation interval 
+of 1000, and discarded 500 iterations as burn-in.
 
-When fitting each inhomogeneous density model, we ran () MCMC iterations,
-and used a value of () for M. The thinning value was (), with an adaptation
-interval of () and () burn-in iterations.
+When fitting each inhomogeneous density model, we ran 100,000 MCMC iterations,
+and used a value of 9000 for M. We didn't use an adaptation interval, and disarded 
+2500 iterations as burn-in. 
 
 \subsection{Results}
 \label{sec:appendix-results}
