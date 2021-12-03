@@ -81,9 +81,7 @@ animals in the superpopulation for which the indicator is equal to
 1. For each MCMC iteration we obtain a sample from the posterior of
 $N$ using $\sum_{\i = 1}^M z_i$. A sample from the posterior for
 animal density can be obtained by dividing by the area of the survey
-region. Further details on data augmentation can be found in Kery AND
-Schaub, 2012 (REFERENCE)\todo[inline]{Rishika, I'm not totally sure
-  what this reference is, so I can't add the details.}
+region. Further details on data augmentation can be found in \citet[][pp.\ 139--157]{Kery+Schaub:12}.
 
 We used the following uninformative priors for the detection function
 parameters, specifying a prior for $\log\{1/(2\sigma^2)\}$ rather than
