@@ -263,8 +263,10 @@ detectors_df_all <- detectors_df_all %>% filter(covtype %in% c("Dgood", "Dblur")
 predicted_densities_all <- predicted_densities_all %>%
   select(x, y, value = prob_ac, covtype, occasions, array_origin) %>%
   mutate(value = value / 10000)
+# Re-saving Ian's density values for a quick comparison later:
+prev_predicted_densities_all = predicted_densities_all
 
-predicted_densities_all %>% group_by(covtype, array_origin) %>% summarize(mv = mean(value))
+prev_predicted_densities_all %>% group_by(covtype, array_origin) %>% summarize(mv = mean(value))
 # Mean density values seem to match nicely with ch7b, ch7c, ch7e, ch7f. Can compare to:
 c(mean(ch7f.density), mean(ch7e.density), mean(ch7c.density), mean(ch7b.density))
 
@@ -278,31 +280,39 @@ pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.
 # Here, covtype=Dgood, occasions=20, array_origin=15_15
 ch7b.df <- data.frame(pixel.centres, ch7b.density, rep("Dgood", 2500), rep(20, 2500), rep("15_15", 2500))
 names(ch7b.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
+# Reordering to match Ian's pixel order
+split = split(ch7b.df, ch7b.df$y)
+ch7b.df = do.call("rbind", rev(split))
 
 # ch7c
 # covtype=Dgood, occasions=20, array_origin=27_31
 ch7c.df <- data.frame(pixel.centres, ch7c.density, rep("Dgood", 2500), rep(20, 2500), rep("27_31", 2500))
 names(ch7c.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
+split = split(ch7c.df, ch7c.df$y)
+ch7c.df = do.call("rbind", rev(split))
 
 # ch7e
 # covtype=Dblur, occasions=20, array_origin=15_15
 ch7e.df <- data.frame(pixel.centres, ch7e.density, rep("Dblur", 2500), rep(20, 2500), rep("15_15", 2500))
 names(ch7e.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
+split = split(ch7e.df, ch7e.df$y)
+ch7e.df = do.call("rbind", rev(split))
 
 # ch7f
 # covtype=Dblur, occasions=20, array_origin=27_31
 ch7f.df <- data.frame(pixel.centres, ch7f.density, rep("Dblur", 2500), rep(20, 2500), rep("27_31", 2500))
 names(ch7f.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
+split = split(ch7f.df, ch7f.df$y)
+ch7f.df = do.call("rbind", rev(split))
 
 # And now, combining into one data frame
-predicted_densities_all_2 <- rbind(ch7b.df, ch7e.df, ch7c.df, ch7f.df)
+predicted_densities_all <- rbind(ch7b.df, ch7e.df, ch7c.df, ch7f.df)
 # ---------------
 
-split = split(predicted_densities_all_2[2501:5000,], predicted_densities_all_2$y[2501:5000])
-predicted_densities_all_3 = do.call("rbind", rev(split))
-head(predicted_densities_all_3)
-plot(predicted_densities_all_3$value, predicted_densities_all$value[2501:5000])
-abline(0, 1, col="goldenrod")
+# Quick check: plotting my densities against Ian's, seeing what we get
+plot(predicted_densities_all$value, prev_predicted_densities_all$value)
+abline(0, 1, col="goldenrod", lwd=2)
+# Looks pretty good
 
 perc.diff <- (rishika.value - ian.value)*100/ian.value # To create spatial plot of percentage differences
 
