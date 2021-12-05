@@ -86,7 +86,7 @@ trap_labels <- detectors_df_all %>% group_by(array_origin) %>%
 pbig <- predicted_densities_all %>% 
   filter(array_origin == "none", occasions == 20) %>%
   ggplot(aes(x, y)) + 
-  geom_raster(aes(fill = value)) +
+  geom_raster(aes(fill = pmin(15, value))) +
   geom_text(data = trap_labels, 
             inherit.aes = T, aes(colour = array_origin, label = label), size = 6) +
   # geom_point(data = detectors_df_all %>% filter(occasions == 20),
