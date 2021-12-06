@@ -165,9 +165,9 @@ all.equal(as.character(predicted_densities_all[,6]), freq_predicted_densities_al
 # Looking good, so we continue:
 
 
-# Percentage differences, as a percentage of the densities in the frequentist plot. NOTE absolute values on numerator to avoid negative percentage differences -- plotting these just seems to result in grey
-perc.diff = (abs(predicted_densities_all$value - freq_predicted_densities_all$value)/(freq_predicted_densities_all$value)) * 100
-# SO we are looking at the absolute difference between the densities of both plots relative to the frequentist plot, as a percentage.
+# Percentage differences, as a percentage of the densities in the frequentist plot
+perc.diff = (predicted_densities_all$value - freq_predicted_densities_all$value)/(freq_predicted_densities_all$value) * 100
+
 
 # Trying out a plot using Ian's code:
 # Replacing the 'value' column in predicted_densities_all with these percentage differences
@@ -211,8 +211,6 @@ brew.cols <- brewer.pal(6, "Accent")[-c(1,5)]
 orgn <- c(15, 15)
 orgn_str <- paste0(orgn[1],"_",orgn[2])
 
-fill_max <- 15
-
 plot_mona <- function(orgn, densities = predicted_densities_all){
   orgn_str <- paste0(orgn[1],"_",orgn[2])
   p <- densities %>%
@@ -226,7 +224,7 @@ plot_mona <- function(orgn, densities = predicted_densities_all){
               aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
     geom_segment(data = all_segs %>% filter(array_origin == orgn_str), inherit.aes = F, fill = NA, size = 2,
                  aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
-    scale_fill_viridis(direction = 1, limits = c(0,fill_max)) +
+    scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red", space="Lab", limits=c(-100,100)) +
     scale_colour_manual(name = "",
                         values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                         breaks=c("15_15", "15_31", "27_15", "27_31")) +
@@ -252,13 +250,14 @@ summary((predicted_densities_all %>% filter(covtype=="Dblur") %>% filter(array_o
 p2blur <- plot_mona(orgn = c(27,31), densities = predicted_densities_all %>% filter(covtype == "Dblur"))
 predicted_densities_all %>% filter(covtype=="Dblur") %>% filter(array_origin=="27_31")
 summary((predicted_densities_all %>% filter(covtype=="Dblur") %>% filter(array_origin=="27_31"))$value)
-# No predicted values -- why the grey spot??
 
 trap_labels <- detectors_df_all %>% group_by(array_origin) %>%
   summarize(x = mean(x), y = mean(y), array_origin = first(array_origin)) %>%
   mutate(label = c("(c)", "(b)"))
 
 summary((predicted_densities_covs %>% filter(array_origin == "none", covtype == "Dgood"))$value)
+
+fill_max <- 15
 
 pgoodcov <- predicted_densities_covs %>%
   filter(array_origin == "none", covtype == "Dgood") %>%
@@ -318,4 +317,10 @@ pp <- (pgoodcov | p2good | p1good) / (pblurcov | p2blur | p1blur) + plot_layout(
 
 pp
 
-## SO seems like grey spots are due to percentage differences being too high in those areas. How to deal with these? Look at maybe using the different colours as in the tiger plots so can have a different 'max' fill value, so that the colours don't get as messed up? Because if set max for fill to max of all percentage differences, top two plots just basically become dark blue!
+ggsave("Figure7Difference.png", pp, width=7.5, height=5.8, dpi=600)
+
+# So now, need to:
+# * Confirm colour palette
+# * Add legend to interpret percentage differences
+# * Also add similar legend to Figure 7, just to interpret densities
+# (Maybe ask Ian about the last two)
