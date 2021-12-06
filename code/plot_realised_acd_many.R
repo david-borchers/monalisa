@@ -212,4 +212,15 @@ pp <- pbig + p1 + p2 + p3 + p4 + plot_layout(nrow = 1) +
 
 pp
 
-ggsave("paper/mona_torch_higheffort.png", pp, width=12, height=3, dpi = 600)
+pp1234 <- p1 + p2 + p3 + p4 + plot_layout(ncol = 2) + 
+  plot_annotation(tag_levels = 'a',
+                  tag_prefix = '(',
+                  tag_sep = '', tag_suffix = ')') & 
+  theme(plot.tag = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5),
+        plot.tag.position = "bottom")
+
+pp2 <- pbig + pp1234 + plot_layout(ncol = 2, widths = c(1,2))
+pp2 
+
+ggsave("paper/mona_torch_higheffort.png", pp2, width=8, height=5, dpi = 600)
