@@ -11,6 +11,7 @@ library(viridis)
 library(RColorBrewer)
 library(patchwork)
 library(purrr)
+library(pals)
 
 # Matrix of density values used to make frequentist version of Figure 7
 load("../output/mona_raw_outputs.RData")
@@ -211,40 +212,46 @@ brew.cols <- brewer.pal(6, "Accent")[-c(1,5)]
 orgn <- c(15, 15)
 orgn_str <- paste0(orgn[1],"_",orgn[2])
 
-plot_mona <- function(orgn, densities = predicted_densities_all){
+plot_mona <- function(orgn, densities = predicted_densities_all, legend=FALSE){
   orgn_str <- paste0(orgn[1],"_",orgn[2])
   p <- densities %>%
     filter(array_origin == orgn_str, occasions == 20) %>%
     filter(x >= orgn[1] - buffersigmas*sigma, x <= orgn[1] + (4+buffersigmas)*sigma, y >= orgn[2]-buffersigmas*sigma, y <= orgn[2]+(6+buffersigmas)*sigma) %>%
     ggplot(aes(x, y)) +
     geom_raster(aes(fill = value)) +
-    geom_point(data = detectors_df_all %>% filter(array_origin == orgn_str, occasions == 20),
-               inherit.aes = T, aes(colour = array_origin), pch = 4, size = 3) +
+    geom_point(data = detectors_df_all %>% filter(array_origin == orgn_str, occasions == 20), inherit.aes = T, aes(colour = array_origin), pch = 4, size = 3, show.legend=F) +
     geom_rect(data = common_area, inherit.aes = F, colour = "white", fill = NA, size = 1, linetype = 2,
               aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
     geom_segment(data = all_segs %>% filter(array_origin == orgn_str), inherit.aes = F, fill = NA, size = 2,
-                 aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin)) +
-    scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red", space="Lab", limits=c(-100,100)) +
+                 aes(x = xmin, xend = xmax, y = ymin, yend = ymax, colour = array_origin), show.legend=F) +
+    #scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red", space="Lab", limits=c(-100,100)) +
+    scale_fill_gradientn(name = "% Change", colours = coolwarm(22), limits = c(-100,100),
+                       breaks = c(-100,-50,0,50,100), labels = c("-100", "-50", "0", "50", "100")) +
     scale_colour_manual(name = "",
                         values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                         breaks=c("15_15", "15_31", "27_15", "27_31")) +
     scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
     theme(axis.line=element_blank(),axis.text.x=element_blank(),
           axis.text.y=element_blank(),axis.ticks=element_blank(),
-          axis.title=element_blank(),legend.position="none",
+          axis.title=element_blank(),
           panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
           panel.grid.minor=element_blank(),plot.background=element_blank())
+  if (legend) {
+    p  <- p + theme(legend.position="right", legend.key.height=unit(0.7,"cm"))
+  } else {
+        p  <- p + theme(legend.position="none")
+    }
   return(p)
 }
 
 # Both of these look good:
-p1good <- plot_mona(orgn = c(15,15), densities = predicted_densities_all %>% filter(covtype == "Dgood"))
+p1good <- plot_mona(orgn = c(15,15), densities = predicted_densities_all %>% filter(covtype == "Dgood"), legend=TRUE)
 # Looking at data used here
 predicted_densities_all %>% filter(covtype=="Dgood") %>% filter(array_origin=="15_15")
 p2good <- plot_mona(orgn = c(27,31), densities = predicted_densities_all %>% filter(covtype == "Dgood"))
 predicted_densities_all %>% filter(covtype=="Dgood") %>% filter(array_origin=="27_31")
 
-p1blur <- plot_mona(orgn = c(15,15), densities = predicted_densities_all %>% filter(covtype == "Dblur"))
+p1blur <- plot_mona(orgn = c(15,15), densities = predicted_densities_all %>% filter(covtype == "Dblur"), legend=TRUE)
 predicted_densities_all %>% filter(covtype=="Dblur") %>% filter(array_origin=="15_15")
 summary((predicted_densities_all %>% filter(covtype=="Dblur") %>% filter(array_origin=="15_15"))$value)
 p2blur <- plot_mona(orgn = c(27,31), densities = predicted_densities_all %>% filter(covtype == "Dblur"))
@@ -257,6 +264,7 @@ trap_labels <- detectors_df_all %>% group_by(array_origin) %>%
 
 summary((predicted_densities_covs %>% filter(array_origin == "none", covtype == "Dgood"))$value)
 
+# For the 'goodcov', 'blurcov' plots below
 fill_max <- 15
 
 pgoodcov <- predicted_densities_covs %>%
@@ -320,7 +328,11 @@ pp
 ggsave("Figure7Difference.png", pp, width=7.5, height=5.8, dpi=600)
 
 # So now, need to:
-# * Confirm colour palette
-# * Add legend to interpret percentage differences
-# * Also add similar legend to Figure 7, just to interpret densities
-# (Maybe ask Ian about the last two)
+# * See how to move (c) and (f) over to the left!
+# * Also add similar legend to Figure 7, just to interpret densities?
+# (Maybe ask Ian about these two)
+
+sum(perc.diff > 100)
+sum(perc.diff < -100)
+summary(perc.diff)
+# So it doesn't look like we are trunacting any percentage differences! All lie within [-100,100] for the plots here.
