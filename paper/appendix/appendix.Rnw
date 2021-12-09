@@ -87,7 +87,7 @@ We used the following uninformative priors for the detection function
 parameters, specifying a prior for $\log\{1/(2\sigma^2)\}$ rather than
 $\sigma$ directly:
 \begin{align*}
-  \lambda_0 &\sim \text{Gamma}(0.001, 0.001) \\ 
+  \lambda_0 &\sim \text{Gamma}(0.001, 0.001) \\
   \log\left(\frac{1}{2\sigma^2}\right) &\sim \text{Uniform}(-10, 10)
 \end{align*}
 
@@ -105,12 +105,12 @@ and $\beta_1$:
 \end{align*}
 
 When we fit each constant density model, we ran 10,000 MCMC iterations,
-where we set M to be equal to 300. We also used an adapatation interval 
+where we set M to be equal to 300. We also used an adapatation interval
 of 1000, and discarded 500 iterations as burn-in.
 
 When fitting each inhomogeneous density model, we ran 100,000 MCMC iterations,
-and used a value of 9000 for M. We didn't use an adaptation interval, and disarded 
-2500 iterations as burn-in. 
+and used a value of 9000 for M. We didn't use an adaptation interval, and disarded
+2500 iterations as burn-in.
 
 \subsection{Results}
 \label{sec:appendix-results}
@@ -391,7 +391,7 @@ pp <- (pgoodcov | p2good | p1good) / (pblurcov | p2blur | p1blur) + plot_layout(
         plot.tag.position = "bottom")
 
 pp
-@ 
+@
 
 <<fig9, echo = FALSE, include = TRUE, fig.cap = "Figure 9", message=FALSE, fig.width=10, warning=FALSE>>=
 
@@ -553,6 +553,7 @@ p2a <- ac_densities_with_movement %>%
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y),
              colour = "black", pch = 4, size = 2) +
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -571,6 +572,7 @@ p2b <- ac_densities_with_movement %>%
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y),
              colour = "black", pch = 4, size = 2) +
+  coord_equal() +
   theme(strip.text.x = element_blank(),
         axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
@@ -583,7 +585,7 @@ p2b <- ac_densities_with_movement %>%
 p2 <- p2a / p2b
 
 p2
-@ 
+@
 
 \subsection{Discussion}
 \label{sec:appendix-discussion}
