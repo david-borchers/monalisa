@@ -23,17 +23,18 @@
 
 \renewcommand{\thesection}{S\arabic{section}}
 
-\author[1,*]{David L. Borchers}
-\author[1]{Ian Durbach}
-\author[2]{Rishika Chopara}
-\author[2]{Ben C. Stevenson}
+\author[1,2,*]{Ian Durbach}
+\author[3]{Rishika Chopara}
+\author[1,2]{David L. Borchers}
 \author[1]{Rachel Phillip}
-\author[3]{Koustubh Sharma}
+\author[4]{Koustubh Sharma}
+\author[3]{Ben C. Stevenson}
 
 \affil[1]{Centre for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
-\affil[2]{Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
-\affil[3]{Snow Leopard Trust, Seattle, Washington, United States of America}
-\affil[*]{Corresponding author: dlb@st-andrews.ac.uk}
+\affil[2]{Centre for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
+\affil[3]{Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
+\affil[4]{Snow Leopard Trust, Seattle, Washington, United States of America}
+\affil[*]{Corresponding author: id52@st-andrews.ac.uk}
 
 \date{}
 
