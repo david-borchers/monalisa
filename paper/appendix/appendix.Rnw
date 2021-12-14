@@ -417,7 +417,7 @@ pp <- (pgoodcov | p2good | p1good) / (pblurcov | p2blur | p1blur) + plot_layout(
 pp
 @
 
-<<fig9, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 7 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE>>=
+<<fig9, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 9 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE>>=
 
 ## ---------------------------------------------------------------------------------------
 # First, creating the necessary data objects
