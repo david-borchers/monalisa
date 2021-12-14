@@ -7,6 +7,7 @@ library(viridis)
 library(patchwork)
 library(scales)
 library(purrr)
+library(pals)
 
 # ----------------
 
@@ -216,6 +217,8 @@ perc.diff = (ac_densities_with_movement$value - freq_ac_densities_with_movement$
 # Replacing the values
 ac_densities_with_movement$value = perc.diff
 
+# ----------------
+
 # Continuing with the plot:
 
 # detectors are the same for all plots so just extract unique combos of (x,y)
@@ -262,16 +265,19 @@ p2a <- ac_densities_with_movement %>%
   ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
   #scale_fill_gradientn(colours = pal, limits = c(0,0.3), breaks = c(0,0.1,0.2,0.3)) +
-  scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red", space="Lab", limits=c(-100, 100)) +
+  #scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red", space="Lab", limits=c(-100, 100)) +
   #scale_fill_viridis(direction = 1, option = "viridis", limits = c(0,0.3), breaks = c(0,0.1,0.2,0.3)) +
+  scale_fill_gradientn(name = "% Change", colours = coolwarm(22), limits = c(-100,100),
+                       breaks = c(-100,-50,0,50,100), labels = c("-100", "-50", "0", "50", "100")) +
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y),
              colour = "black", pch = 4, size = 2) +
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
-        legend.position="right", legend.key.height = unit(0.7,"cm"), legend.title = element_blank(),
+        legend.position="right", legend.key.height = unit(0.7,"cm"), #legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
@@ -282,16 +288,19 @@ p2b <- ac_densities_with_movement %>%
   #scale_fill_gradientn(colours = pal, limits = c(0,0.1), breaks = c(0,0.05,0.1)) +
   #scale_fill_viridis(direction = 1, option = "viridis", trans = "log10", limits = c(1,103), oob = squish) +
   #scale_fill_viridis(direction = 1, option = "viridis", trans = "log10") +
-  scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red", space="Lab", limits=c(-100, 100)) +
+  #scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red", space="Lab", limits=c(-100, 100)) +
+  scale_fill_gradientn(name = "% Change", colours = coolwarm(22), limits = c(-100,100),
+                       breaks = c(-100,-50,0,50,100), labels = c("-100", "-50", "0", "50", "100")) +
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y),
              colour = "black", pch = 4, size = 2) +
+  coord_equal() +
   theme(strip.text.x = element_blank(),
         axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
-        legend.position="right", legend.key.height = unit(0.7,"cm"), legend.title = element_blank(),
+        legend.position="right", legend.key.height = unit(0.7,"cm"), #legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
@@ -301,4 +310,6 @@ p2 <- p2a / p2b
 
 p2
 
-ggsave("Figure9Difference.png", p2, width=8, height=6, dpi=600)
+ggsave("Figure9Difference.png", p2, width=8, height=5, dpi=600)
+
+# NOTE that only in 0.0128 of the pixels (1.3%) do we see a percentage difference greater than 100%. No pixels have a difference lower than -100%. Therefore, for interpretability, we have coloured these 1.3% of pixels as if they have a percentage difference of 100% (otherwise, we will see a large decrease in the interpretability of the plots).
