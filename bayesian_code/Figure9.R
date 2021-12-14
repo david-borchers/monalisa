@@ -66,14 +66,14 @@ library("nimble")
 source("MCMC_Function.R")
 
 # Running MCMC for simulated data from 3, 10 and 20 sampling occasions. Uncomment to run the MCMC:
-#results.3occ <- run.MCMC(data=data.3occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.3occ, file="Fig9_MCMC_3occ.RData")
+results.3occ <- run.MCMC(data=data.3occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.3occ, file="Figure 9/Fig9_MCMC_3occ.RData")
 
-#results.10occ <- run.MCMC(data=data.10occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.10occ, file="Fig9_MCMC_10occ.RData")
+results.10occ <- run.MCMC(data=data.10occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.10occ, file="Figure 9/Fig9_MCMC_10occ.RData")
 
-#results.20occ <- run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.20occ, file="Fig9_MCMC_20occ.RData")
+results.20occ <- run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.20occ, file="Figure 9/Fig9_MCMC_20occ.RData")
 
 # Loading in the RData files
 load("Figure 9/Fig9_MCMC_3occ.RData")
@@ -124,22 +124,22 @@ source("RUDMaps_Functions.R")
 pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 # Creating activity centre matrices (for explanation, see 'RUDMaps_Functions.R')
-#activity.centres.3occ <- activity.matrices(results=results.3occ, M=300)
-#ctivity.centres.10occ <- activity.matrices(results=results.10occ, M=300)
-#activity.centres.20occ <- activity.matrices(results=results.20occ, M=300)
+activity.centres.3occ <- activity.matrices(results=results.3occ, M=300)
+activity.centres.10occ <- activity.matrices(results=results.10occ, M=300)
+activity.centres.20occ <- activity.matrices(results=results.20occ, M=300)
 
 # Matrix containing z-values for each MCMC iteration (for each number of samp occ)
-#z.values.3occ <- extract.z.values(results.3occ)
-#z.values.10occ <- extract.z.values(results.10occ)
-#z.values.20occ <- extract.z.values(results.20occ)
+z.values.3occ <- extract.z.values(results.3occ)
+z.values.10occ <- extract.z.values(results.10occ)
+z.values.20occ <- extract.z.values(results.20occ)
 
 # Creating the density vectors
-#density.3occ.all.withmov <- density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
-#save(density.3occ.all.withmov, file="Fig9_3occ.RData")
-#density.10occ.all.withmov <- density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
-#save(density.10occ.all.withmov, file="Fig9_10occ.RData")
-#density.20occ.all.withmov <- density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
-#save(density.20occ.all.withmov, file="Fig9_20occ.RData")
+density.3occ.all.withmov <- density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
+save(density.3occ.all.withmov, file="Figure 9/Fig9_3occ.RData")
+density.10occ.all.withmov <- density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
+save(density.10occ.all.withmov, file="Figure 9/Fig9_10occ.RData")
+density.20occ.all.withmov <- density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
+save(density.20occ.all.withmov, file="Figure 9/Fig9_20occ.RData")
 
 # Loading in density values for each pixel
 load("Figure 9/Fig9_3occ.RData")

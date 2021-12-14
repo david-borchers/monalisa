@@ -91,9 +91,11 @@ centres <- function(xrange, yrange, x.pixels, y.pixels) {
 # extract.z.values() above; 'n.iter' is the number of MCMC iterations run to produce 'results'; xlim and ylim give the range
 # of x- and y-coordinates for the map area; ''points' indicates 'M' is the size of the superpopulation
 
-density.vector <- function(results, activity.centres, pixel.centres, z.values, n.iter=10000,
+density.vector <- function(results, activity.centres, pixel.centres, z.values,
                           xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), M=300) {
 
+  # Number of MCMC iterations we are working with
+  n.iter <- nrow(results)
   # Pixel centres
   x <- pixel.centres
 
