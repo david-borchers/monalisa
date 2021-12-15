@@ -32,11 +32,11 @@
 \author[4]{Koustubh Sharma}
 \author[3]{Ben C. Stevenson}
 
-\affil[1]{Centre for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
-\affil[2]{Centre for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
-\affil[3]{Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
-\affil[4]{Snow Leopard Trust, Seattle, Washington, United States of America}
-\affil[*]{Corresponding author: id52@st-andrews.ac.uk}
+\affil[1]{\footnotesize Centre for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
+\affil[2]{\footnotesize Centre for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
+\affil[3]{\footnotesize Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
+\affil[4]{\footnotesize Snow Leopard Trust, Seattle, Washington, United States of America}
+\affil[*]{\footnotesize Corresponding author: id52@st-andrews.ac.uk}
 
 \date{}
 
@@ -417,7 +417,7 @@ pp <- (pgoodcov | p2good | p1good) / (pblurcov | p2blur | p1blur) + plot_layout(
 pp
 @
 
-<<fig9, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 7 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE>>=
+<<fig9, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 9 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE>>=
 
 ## ---------------------------------------------------------------------------------------
 # First, creating the necessary data objects
@@ -684,34 +684,34 @@ distribution is therefore not conditional on one particular set of
 estimated parameter values, but instead considers the range of values
 across the posterior distribution of $\bm{\theta}$.
 
-\subsection{Discussion}
-
-\todo[inline]{I'm not sure that this is the best place for the
-  discussion below, but leaving it here for now.}
-
-We constructed individual usage distributions using the encounter
-function from our SCR model, but this may not always be
-appropriate. For example, if individuals cannot fully explore their
-home range within the duration of the survey, then we would not expect
-the spatial range of the detection function to match the extent of an
-animal's usage distribution.
-
-Even for longer surveys, it may not be sensible to relate the range of
-the encounter function to the size of the region used by an individual
-even for longer surveys, so care should be taken when this practice is
-used. For example, \citet{Tenan+al:17} found that the spatial scale of
-the encounter rate function for brown bears (\emph{Ursus arctos})
-estimated using SCR was not consistent with spatial usage parameters
-estimated from other data sources, although \citet{Popescu+al:14} did
-not detect any such inconsistency for a population of fishers
-(\emph{Pekania pennanti}). If alternative data sources are available
-(e.g., telemetry, or opportunistic data such as hair or scat samples)
-they may be incoprorated for improved estimation of individual usage
-distributions \citep{Tenan+al:17}.
-
-Our method also assumes that home ranges are circular, however their
-shapes are likely to be modified by variables relating to population
-and landscape connectivity \citep[see][for a review]{Drake+al:ip}.
+% \subsection{Discussion}
+% 
+% \todo[inline]{I'm not sure that this is the best place for the
+%   discussion below, but leaving it here for now.}
+% 
+% We constructed individual usage distributions using the encounter
+% function from our SCR model, but this may not always be
+% appropriate. For example, if individuals cannot fully explore their
+% home range within the duration of the survey, then we would not expect
+% the spatial range of the detection function to match the extent of an
+% animal's usage distribution.
+% 
+% Even for longer surveys, it may not be sensible to relate the range of
+% the encounter function to the size of the region used by an individual
+% even for longer surveys, so care should be taken when this practice is
+% used. For example, \citet{Tenan+al:17} found that the spatial scale of
+% the encounter rate function for brown bears (\emph{Ursus arctos})
+% estimated using SCR was not consistent with spatial usage parameters
+% estimated from other data sources, although \citet{Popescu+al:14} did
+% not detect any such inconsistency for a population of fishers
+% (\emph{Pekania pennanti}). If alternative data sources are available
+% (e.g., telemetry, or opportunistic data such as hair or scat samples)
+% they may be incoprorated for improved estimation of individual usage
+% distributions \citep{Tenan+al:17}.
+% 
+% Our method also assumes that home ranges are circular, however their
+% shapes are likely to be modified by variables relating to population
+% and landscape connectivity \citep[see][for a review]{Drake+al:ip}.
 
 
 \bibliographystyle{../mee} \bibliography{../monalisa}

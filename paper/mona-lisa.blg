@@ -3,44 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: mona-lisa.aux
 The style file: mee.bst
 Database file #1: monalisa.bib
-You've used 19 entries,
+You've used 21 entries,
             2811 wiz_defined-function locations,
-            726 strings with 9086 characters,
-and the built_in function-call counts, 15691 in all, are:
-= -- 1284
-> -- 734
+            739 strings with 9585 characters,
+and the built_in function-call counts, 17802 in all, are:
+= -- 1455
+> -- 842
 < -- 6
-+ -- 286
-- -- 261
-* -- 1424
-:= -- 2405
-add.period$ -- 38
-call.type$ -- 19
-change.case$ -- 180
-chr.to.int$ -- 19
-cite$ -- 19
-duplicate$ -- 1148
-empty$ -- 1176
-format.name$ -- 326
-if$ -- 3070
++ -- 327
+- -- 300
+* -- 1628
+:= -- 2720
+add.period$ -- 42
+call.type$ -- 21
+change.case$ -- 203
+chr.to.int$ -- 21
+cite$ -- 21
+duplicate$ -- 1306
+empty$ -- 1332
+format.name$ -- 371
+if$ -- 3483
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 197
-newline$ -- 80
-num.names$ -- 76
-pop$ -- 364
+missing$ -- 222
+newline$ -- 88
+num.names$ -- 84
+pop$ -- 410
 preamble$ -- 1
-purify$ -- 162
+purify$ -- 183
 quote$ -- 0
-skip$ -- 233
+skip$ -- 257
 stack$ -- 0
-substring$ -- 1196
-swap$ -- 490
+substring$ -- 1377
+swap$ -- 552
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 168
+type$ -- 186
 warning$ -- 0
-while$ -- 98
+while$ -- 109
 width$ -- 0
-write$ -- 229
+write$ -- 253

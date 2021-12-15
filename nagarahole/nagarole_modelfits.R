@@ -32,13 +32,16 @@ plot(cams,add =T)
 
 # fit null model (all traps)
 fit0 = secr.fit(tigerch,
-                mask=tigermask)
+                mask=tigermask,
+                model=list(lambda0~1),
+                detectfn = 14)
 
 # fit D ~ y model (all traps)
 fity = secr.fit(tigerch,
                 mask=tigermask,
-                model=list(D~y),
-                start=list(g0=detectpar(fit0)$g0,sigma=detectpar(fit0)$sigma))
+                model=list(D~y,lambda0~1),
+                start=list(lambda0=detectpar(fit0)$lambda0,sigma=detectpar(fit0)$sigma),
+                detectfn = 14)
 
 # predicted density surface for D ~ 1 (all traps), note these are standardised to sum to one
 # (see the predicted_densities_for_D0 function for details)
@@ -48,7 +51,6 @@ predicted_densities_0$traps <- "All traps, no cov."
 # predicted intensity surface for D ~ y (all traps)
 predy = predictDsurface(fity,mask=tigermask,se.D=TRUE,cl.D=TRUE)
 covariates(predy)$cv = (covariates(predy)$SE.0/covariates(predy)$D.0)*100
-covariates(predy)[c("D.0","SE.0","lcl.0","ucl.0")] = covariates(predy)[c("D.0","SE.0","lcl.0","ucl.0")]*100^2
 predicted_densities_y <- data.frame(x = predy$x, y = predy$y, value = covariates(predy)$D.0, 
                                     traps = "All traps, northing")
 
@@ -70,13 +72,16 @@ reduced_cams <- cams[cams_to_include,]
 
 # fit null model (reduced traps)
 fit0_rt = secr.fit(subset(tigerch, traps = reduced_cams$id),
-                   mask=tigermask)
+                   mask=tigermask,
+                   model=list(lambda0~1),
+                   detectfn = 14)
 
 # fit D ~ y model (reduced traps)
 fity_rt = secr.fit(subset(tigerch, traps = reduced_cams$id),
                    mask=tigermask,
-                   model=list(D~y),
-                   start=list(g0=detectpar(fit0_rt)$g0,sigma=detectpar(fit0_rt)$sigma))
+                   model=list(D~y,lambda0~1),
+                   start=list(lambda0=detectpar(fit0_rt)$lambda0,sigma=detectpar(fit0_rt)$sigma),
+                   detectfn = 14)
 
 # predicted density surface for D ~ 1 (reduced traps)
 predicted_densities_0_rt  <- predicted_densities_for_D0(fit0_rt, reduced_cams, tigermask)
@@ -86,7 +91,6 @@ predicted_densities_0_rt$traps <- "Subset #1, no cov."
 # predicted intensity surface for D ~ y (reduced traps)
 predy = predictDsurface(fity_rt, mask=tigermask, se.D=TRUE, cl.D=TRUE)
 covariates(predy)$cv = (covariates(predy)$SE.0/covariates(predy)$D.0)*100
-covariates(predy)[c("D.0","SE.0","lcl.0","ucl.0")] = covariates(predy)[c("D.0","SE.0","lcl.0","ucl.0")]*100^2
 predicted_densities_y_rt <- data.frame(x = predy$x, y = predy$y, 
                                        value = covariates(predy)$D.0, 
                                        traps = "Subset #1, northing")
@@ -110,13 +114,16 @@ reduced_cams2 <- cams[cams_to_include,]
 
 # fit null model (reduced traps)
 fit0_rt2 = secr.fit(subset(tigerch, traps = reduced_cams2$id),
-                    mask=tigermask)
+                    mask=tigermask,
+                    model=list(lambda0~1),
+                    detectfn = 14)
 
 # fit D ~ y model (reduced traps)
 fity_rt2 = secr.fit(subset(tigerch, traps = reduced_cams2$id),
                     mask=tigermask,
-                    model=list(D~y),
-                    start=list(g0=detectpar(fit0_rt2)$g0,sigma=detectpar(fit0_rt2)$sigma))
+                    model=list(D~y, lambda0~1),
+                    start=list(lambda0=detectpar(fit0_rt2)$lambda0,sigma=detectpar(fit0_rt2)$sigma),
+                    detectfn = 14)
 
 # predicted density surface for D ~ 1 (reduced traps)
 predicted_densities_0_rt2  <- predicted_densities_for_D0(fit0_rt2, reduced_cams2, tigermask)
@@ -125,8 +132,11 @@ predicted_densities_0_rt2$traps <- "Subset #2, no cov."
 # predicted intensity surface for D ~ y (reduced traps)
 predy = predictDsurface(fity_rt2, mask=tigermask, se.D=TRUE, cl.D=TRUE)
 covariates(predy)$cv = (covariates(predy)$SE.0/covariates(predy)$D.0)*100
-covariates(predy)[c("D.0","SE.0","lcl.0","ucl.0")] = covariates(predy)[c("D.0","SE.0","lcl.0","ucl.0")]*100^2
 predicted_densities_y_rt2 <- data.frame(x = predy$x, y = predy$y, value = covariates(predy)$D.0, 
                                         traps = "Subset #2, northing")
 
-save.image("nagarahole/output/nagarole_modelruns.RData")
+save(predicted_densities_0, predicted_densities_0_rt, predicted_densities_0_rt2,
+     predicted_densities_y, predicted_densities_y_rt, predicted_densities_y_rt2,
+     fit0, fit0_rt, fit0_rt2, fity, fity_rt, fity_rt2,
+     tigermask, cams, highD_cams, tigerch,
+     file = "nagarahole/output/nagarole_modelruns.RData")
