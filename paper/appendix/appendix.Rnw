@@ -79,13 +79,13 @@ way to fit SCR models under a Bayesian framework. This approach
 involves sampling a superpopulation of $M$ activity centres, including
 those of the $n$ animals detected on the SCR survey. We have an
 indicator variable $z_i$ for the $i$th animal, denoting whether the
-$i$th animal in the augmented population is `exists' in a given MCMC
+$i$th animal in the augmented population `exists' in a given MCMC
 iteration. Rather than directly estimating $N$, the population size,
 we estimate the data augmentation parameter, $\psi$, the proportion of
 the animals in the superpopulation for which the indicator is equal to
 1. For each MCMC iteration we obtain a sample from the posterior of
 $N$ using $\sum_{\i = 1}^M z_i$. A sample from the posterior for
-animal density can be obtained by dividing by the area of the survey
+animal density can be obtained by dividing each estimate of $N$ by the area of the survey
 region. Further details on data augmentation can be found in
 \citet[][pp.\ 139--157]{Kery+Schaub:12}.
 
@@ -110,11 +110,11 @@ and $\beta_1$:
 \beta_1 &\sim \text{Uniform}(-10, 10)
 \end{align*}
 
-When we fit each constant density model, we ran 10\,000 MCMC
+When we fit each constant density model, we ran 11\,000 MCMC
 iterations, where we set M to be equal to 300. We also used an
-adapatation interval of 1000, and discarded 500 iterations as burn-in.
+adapatation interval of 1000, and discarded 1500 iterations as burn-in.
 
-When fitting each inhomogeneous density model, we ran 100\,000 MCMC
+When fitting each inhomogeneous density model, we ran 101\,000 MCMC
 iterations, and used a value of 9000 for M. We didn't use an
 adaptation interval, and disarded 2500 iterations as burn-in.
 
