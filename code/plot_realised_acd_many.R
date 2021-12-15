@@ -86,7 +86,7 @@ trap_labels <- detectors_df_all %>% group_by(array_origin) %>%
 pbig <- predicted_densities_all %>% 
   filter(array_origin == "none", occasions == 20) %>%
   ggplot(aes(x, y)) + 
-  geom_raster(aes(fill = value)) +
+  geom_raster(aes(fill = pmin(15, value))) +
   geom_text(data = trap_labels, 
             inherit.aes = T, aes(colour = array_origin, label = label), size = 6) +
   # geom_point(data = detectors_df_all %>% filter(occasions == 20),
@@ -100,6 +100,7 @@ pbig <- predicted_densities_all %>%
                       values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                       breaks=c("15_15", "15_31", "27_15", "27_31")) + 
   scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title=element_blank(),legend.position="none",
@@ -127,6 +128,7 @@ predicted_densities_all %>%
                       values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                       breaks=c("15_15", "15_31", "27_15", "27_31")) + 
   scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title=element_blank(),legend.position="none",
@@ -152,6 +154,7 @@ plot_mona_orig <- function(orgn){
                         values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                         breaks=c("15_15", "15_31", "27_15", "27_31")) + 
     scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+    coord_equal() +
     theme(axis.line=element_blank(),axis.text.x=element_blank(),
           axis.text.y=element_blank(),axis.ticks=element_blank(),
           axis.title=element_blank(),legend.position="none",
@@ -180,6 +183,7 @@ plot_mona <- function(orgn, densities = predicted_densities_all){
                         values = c("15_15" = brew.cols[1], "15_31" = brew.cols[2], "27_15" = brew.cols[3], "27_31" = brew.cols[4]),
                         breaks=c("15_15", "15_31", "27_15", "27_31")) + 
     scale_shape_manual(name = "", values = c("15_15" = 1, "15_31" = 2, "27_15" = 3, "27_31" = 4)) +
+    coord_equal() +
     theme(axis.line=element_blank(),axis.text.x=element_blank(),
           axis.text.y=element_blank(),axis.ticks=element_blank(),
           axis.title=element_blank(),legend.position="none",
@@ -208,4 +212,15 @@ pp <- pbig + p1 + p2 + p3 + p4 + plot_layout(nrow = 1) +
 
 pp
 
-ggsave("paper/mona_torch_higheffort.png", pp, width=12, height=3, dpi = 600)
+pp1234 <- p1 + p2 + p3 + p4 + plot_layout(ncol = 2) + 
+  plot_annotation(tag_levels = 'a',
+                  tag_prefix = '(',
+                  tag_sep = '', tag_suffix = ')') & 
+  theme(plot.tag = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5),
+        plot.tag.position = "bottom")
+
+pp2 <- pbig + pp1234 + plot_layout(ncol = 2, widths = c(1,2))
+pp2 
+
+ggsave("paper/mona_torch_higheffort.png", pp2, width=8, height=5, dpi = 600)

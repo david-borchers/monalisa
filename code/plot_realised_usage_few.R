@@ -171,6 +171,7 @@ p1 <- ac_densities_with_movement %>%
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y), 
              colour = "black", pch = 4, size = 2) + 
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -189,6 +190,7 @@ p2a <- ac_densities_with_movement %>%
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y), 
              colour = "black", pch = 4, size = 2) + 
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -207,6 +209,7 @@ p2b <- ac_densities_with_movement %>%
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y), 
              colour = "black", pch = 4, size = 2) + 
+  coord_equal() +
   theme(strip.text.x = element_blank(), 
         axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
@@ -230,6 +233,7 @@ p2c <- ac_densities_with_movement %>%
   facet_grid(movetype ~ occasions) +
   geom_point(data = detectors, aes(x,y), 
              colour = "black", pch = 4, size = 2) + 
+  coord_equal() +
   theme(strip.text.x = element_blank(), 
         axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
@@ -247,5 +251,5 @@ p2
 
 #ggsave("paper/mona_with_movement_unstd.png", p1, width=8, height=6, dpi = 600)
 #ggsave("paper/mona_with_movement.png", p2, width=8, height=6, dpi = 600)
-ggsave("paper/mona_with_movement.png", p2, width=8, height=6, dpi = 600)
+ggsave("paper/mona_with_movement.png", p2, width=8, height=5, dpi = 600)
 

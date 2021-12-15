@@ -24,6 +24,7 @@ p1 <- df %>%
   geom_raster(aes(fill = value)) +
   scale_fill_viridis(limits = c(0, maxD)) +
   facet_wrap(~ grid, nrow = 1) +
+  coord_equal() +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),

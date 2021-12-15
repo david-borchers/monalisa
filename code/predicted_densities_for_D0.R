@@ -23,7 +23,7 @@ predicted_densities_for_D0 <- function(cfit, detectors, mymesh, captures.only){
   # p(nd) = p(nd and ac here) + p(nd and ac not here)
   # = p(nd|ac)p(ac) + p(nd|nac)p(nac)
   
-  p_nd.ac <- 1 - pdot(mymesh, detectors, detectfn="HHN", detectpar=detectpar(cfit), noccasions = noccasions)
+  p_nd.ac <- 1 - pdot(mymesh, traps(cfit$capthist), detectfn="HHN", detectpar=detectpar(cfit), noccasions = noccasions)
   p_ac <- 1 / nrow(mymesh)
   p_nd.nac <- sum(p_nd.ac * 1/(nrow(mymesh) - 1)) - ((1/(nrow(mymesh)-1)) * p_nd.ac)
   p_nd <- p_nd.ac * p_ac + p_nd.nac * (1 - p_ac)
