@@ -118,7 +118,7 @@ run.MCMC.inhom <- function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, d
       sy[k] ~ dunif(1, 51) # Prior for row of matrix that represents where in 'pixel.centres.order' the activity centre lies
       ind_x[k] <- trunc(sx[k]) # Finding the row of 'pixel.centres.order' that contains the sampled activity centre
       ind_y[k] <- trunc(sy[k]) # Finding the column of 'pixel.centres.order' that contains the sampled activity centre
-      s[k] <- pixel.centres.order[ind_x[k], ind_y[k]] # Finding the corresponding entry in 'pixel.centres.order', which represents the index on the pixel that contains the sampled activity centre
+      s[k] <- pixel.centres.order[ind_x[k], ind_y[k]] # Finding the corresponding entry in 'pixel.centres.order', which represents the index of the pixel that contains the sampled activity centre
       ones[k] ~ dbern(probs[s[k]]) # Adds to the likelihood the probability of our activity centre falling into the given pixel centre
 
       # Likelihood, following Wolverine NIMBLE example found at: https://nimble-dev.github.io/nimbleSCR/wolverine_example.html

@@ -65,7 +65,6 @@ dev.off()
 # ch7e trace plots for beta0 and beta1 look like they are hitting some sort of limit, but we haven't placed a limit on beta0 and beta1?
 
 
-
 # Checking posterior means for beta0 and beta1
 # ch7b
 ch7b.beta0 <- mean(ch7b.sample[,"beta0"])
@@ -79,6 +78,8 @@ ch7e.beta1 <- mean(ch7e.sample[,"beta1"])
 # ch7f
 ch7f.beta0 <- mean(ch7f.sample[,"beta0"])
 ch7f.beta1 <- mean(ch7f.sample[,"beta1"])
+
+
 
 # Checking posterior means for N. True N is 7451 - posterior means seem fine, ch7f being about 1000 above likely due to 'bad' covariate
 mean(ch7b.sample[,"N"])

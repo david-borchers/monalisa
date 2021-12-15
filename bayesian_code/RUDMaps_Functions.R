@@ -11,8 +11,7 @@ library("spatstat")
 activity.matrices <- function(results, M) {
   # Creating an empty list
   list.ans <- list()
-  # Using a for loop to create a matrix for each animal in the superpopulation, containing all of the sampled activity centres
-  # for each animal. Each matrix is stored in a separate element of the list created above.
+  # Using a for loop to create a matrix for each animal in the superpopulation, containing all of the sampled activity centres for each animal. Each matrix is stored in a separate element of the list created above.
   for (i in 1:M) {
     s1 <- paste("s[", i, ", 1]", sep="")
     s2 <- paste("s[", i, ", 2]", sep="")
@@ -27,12 +26,10 @@ activity.matrices <- function(results, M) {
   # Extracting "z" values from MCMC results -- each row will contain z-values for one MCMC iteration; columns will contain z-values for each animal
   z.values <- results[,grep("z", names)]
 
-  ## Multiplying the activity centre matrices by the corresponding column of z-values for each animal - this means that
-  ## any activity centres associated with a z-value of 0 will be set to (0, 0).
+  ## Multiplying the activity centre matrices by the corresponding column of z-values for each animal - this means that any activity centres associated with a z-value of 0 will be set to (0, 0).
   # Creating an empty list
   new.list <- list()
-  # Using a for loop to multiply the activity centre matrices by the corresponding z-values for each animal (as described above),
-  # and storing the resulting matrices in a new list
+  # Using a for loop to multiply the activity centre matrices by the corresponding z-values for each animal (as described above), and storing the resulting matrices in a new list
   for (i in 1:M) {
     multiply <- list.ans[[i]] * z.values[,i]
     new.list[[i]] <- multiply
@@ -88,11 +85,9 @@ density.vector <- function(results, activity.centres, pixel.centres, z.values,
   x <- pixel.centres
 
   ## Running a double-nested loop so we can work over each animal from each MCMC iteration
-  # Empty list where each element will be a vector (generated using data from each MCMC iteration, so number of elements will
-  # be equal to number of MCMC iterations we ran)
+  # Empty list where each element will be a vector (generated using data from each MCMC iteration, so number of elements will be equal to number of MCMC iterations we ran)
   iter.vectors <- list()
-  # Generating a density vector for each MCMC iteration -- the inner loop generates the density values using sampled values for each
-  # animal from the ith MCMC iteration, and the outer loop means that this is repeated for each MCMC iteration
+  # Generating a density vector for each MCMC iteration -- the inner loop generates the density values using sampled values for each animal from the ith MCMC iteration, and the outer loop means that this is repeated for each MCMC iteration
   for (i in 1:n.iter) {
     print(i)
     # Sigma value for ith MCMC iteration
