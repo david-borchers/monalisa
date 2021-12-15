@@ -138,5 +138,5 @@ predicted_densities_y_rt2 <- data.frame(x = predy$x, y = predy$y, value = covari
 save(predicted_densities_0, predicted_densities_0_rt, predicted_densities_0_rt2,
      predicted_densities_y, predicted_densities_y_rt, predicted_densities_y_rt2,
      fit0, fit0_rt, fit0_rt2, fity, fity_rt, fity_rt2,
-     tigermask, cams, highD_cams, tigerch,
+     tigermask, cams, reduced_cams, reduced_cams2, highD_cams, tigerch,
      file = "nagarahole/output/nagarole_modelruns.RData")
