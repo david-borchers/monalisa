@@ -1,53 +1,49 @@
-## Here, 'data' refers to a data object created following the method in 'Gathering_Simulated_Data.R' (can also see examples in 'Figure6_Figure7_Code.R'). Note that due to the way in which we subset xlim and ylim below, the lower value must occur first in these vectors.
+## Function to generate MCMC samples when fitting a homogeneous density model
 
-## 'M' is the size of the superpopulation and 'lambda0.prior' is the prior chosen for the lambda0 parameter.
+## The arguments we need to provide (in order) are:
+# * 'data', which refers to a data object created in a similar manner to the data objects from the beginning of 'Figure9.R'. This is a list that should include 'encounter.data', 'trap.loc', 'xlim', 'ylim' and 'n.occasions' elements
+# * The size of the superpopulation
+# * The number of MCMC iterations you want to run
+# * The number of adaptation iterations you want (different from burn-in)
+# * The number of burn-in iterations that we want to use (these will be discarded for us)
+# * The initial value for lambda0 for the MCMC sampling
+# * The initial value for 'log_coeff' for the MCMC sampling (see NIMBLE model below for an idea of what parameter this is)
+# * The value of the thinning parameter for the MCMC
+# * 'parameters', the vector of parameters we want to monitor
 
-## 'n.iter' is the number of MCMC iterations you want to run, 'n.adapt' is the number of iterations for adaptation you want (different from burn-in), 'n.burn' is the number of burn-in iterations that we want to use.
 
-## 'lambda0.start' gives the initial value for lambda0 for the MCMC sampling.
-
-## 'log_coeff.start' gives the initial value for 'log_coeff' (as we are using a log-uniform prior for the 'coeff' parameter).
-
-## 'thin' sets the thinning parameter for the MCMC.
-
-run.MCMC <- function(data, M, coeff.prior, parameters, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0.start = runif(1, 0, 50), log_coeff.start=runif(1, 0, 1), thin = 1) {
-
-  ## Encounter matrix, no rows of zeroes - need to remove rows of zeroes manually!
+run.MCMC <- function(data, M, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0.start = runif(1, 0, 50), log_coeff.start=runif(1, 0, 1), thin = 1, parameters) {
+  ## Subsetting the data we'll use in the NIMBLE model:
+  # Encounter matrix, no rows of zeroes
   y <- data$encounter.data
-  ## Removing rows of zeroes in encounter data
+  # Removing rows of zeroes in encounter data
   y <- y[apply(y, 1, sum)>0, ]
-  ## Trap locations matrix
+  # Trap locations matrix
   traplocs <- data$trap.loc
-  ## Number of traps
+  # Number of traps
   trap.no <- nrow(traplocs)
-  ## Number of occasions over which data was collected
+  # Number of occasions over which data was collected
   n.occ <- data$n.occasions
-  ## xlim
+  # xlim
   xlim <- data$xlim
-  ## ylim
+  # ylim
   ylim <- data$ylim
-  ## Number of animals detected
+  # Number of animals detected
   pop.size <- nrow(y)
 
   ## Data augmentation
-  # Total number of possible animals that could be living in the area - this INCLUDES the number of animals that
-  # WERE detected/the number of animals from the original population size that weren't detected!
+  # Setting the size of the super-population
   M <- M
-  # Adding all-0 rows (so that, in total, we have encounter data for 500 animals, out of which
-  # M-pop.size were unobserved at the traps, but could possibly have existed in the area)
+  # Adding all-0 rows (so that, in total, we have encounter data for M animals)
   y <- rbind(y, matrix(0, nrow=M-pop.size, ncol=ncol(y)))
-  # Vector of 0's and 1's - 1 if a 'real' individual (a detected individual), 0 for an 'added' individual - i.e.
-  # an individual that we are considering, but was never detected at a trap
+  # Vector of 0's and 1's corresponding to our encounter data matrix - 1 if a 'real' individual (a detected individual), 0 for an 'added' individual (i.e. an individual that we are considering, but was never detected at a trap)
   z <- c(rep(1, pop.size), rep(0, M-pop.size))
 
-  ## Starting values for s (activity centres) - want activity centres at or near the traps at which individuals were captured - make activity
-  ## centre the 'mean' for all the traps at which the individual was detected
-  # NOTE - activity center created for every individual, real or potential
-  ## Generating 'random' activity centres for ALL individuals (real/potential), and later will make activity centre
-  ## the 'mean' of all the traps at which individuals were detected, for detected individuals ONLY
+  ## Setting the starting values for s (activity centres for each animal)
+  # For observed animals, we want these initialised activity centres to be at or near the traps at which individuals were captured. So, we'll make the starting activity centre the 'mean' location for all of the traps at which they were caught.
+  # First, generating 'random' activity centres for ALL individuals in our supopulation
   sst <- cbind(runif(M, xlim[1], xlim[2]), runif(M, ylim[1], ylim[2]))
-  # NOTE - need a 'next' condition below because some rows DO contain all zeroes
-
+ # Now, for observed animals, making their initial activity centre the 'mean' of all of the traps at which they were detected
   for (i in 1:pop.size) {
     if (sum(y[i,])==0) {next}
     sst[i,1] <- mean(traplocs[y[i,]>0,1])
@@ -55,13 +51,7 @@ run.MCMC <- function(data, M, coeff.prior, parameters, n.iter=1000, n.adapt = 10
   }
 
   ## NIMBLE model
-  # We could monitor multiple things here: lambda0, psi, log_coeff, coeff, sigma, z-values and s-values (activity centres) -
-  # MCMC will find posterior distirbutions for these values, so that will be able to determine the likely values of these (i.e.
-  # the values of these under which the data is most likely and which we expected to be the most likely!) NOTE that our previous
-  # beliefs for the values will only come into play if we have uniform priors (which we do tend to have - so here, we are
-  # mainly looking for parameter values that maximise the likelihood function).
-  # Generally, we enter the argument: parameters = c("lambda0", "coeff", "sigma", "N", "D", "z", "s") - these are the parameters we tend to monitor!
-
+  # We could monitor multiple things here: lambda0, psi, log_coeff, coeff, sigma, z-values and s-values (activity centres). Generally, we enter the argument: parameters = c("lambda0", "coeff", "sigma", "N", "D", "z", "s") - these are the parameters we tend to monitor!
   x <- nimbleCode({
     lambda0~dgamma(0.001, 0.001)
     psi ~ dunif(0,1)

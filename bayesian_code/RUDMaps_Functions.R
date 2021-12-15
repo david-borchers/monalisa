@@ -1,13 +1,10 @@
-## Functions that are needed to produce the figures
+## Functions that are needed to produce the RUD maps
 
 ## Loading the necessary packages
 library("mvtnorm")
 library("spatstat")
 
-
-## Function to gather the sampled activity centres for each animal. This function will produce a list, where each element
-## is a matrix containing the sampled activity centres for each animal in the superpopulation. The ith row of each
-## matrix will contain 0's if the given animal didn't exist (i.e. had a z-value of 0) on the ith MCMC iteration.
+## Function to gather the sampled activity centres for each animal. This function will produce a list, where each element is a matrix containing the sampled activity centres for each animal in the superpopulation. The ith row of each matrix will contain 0's if the given animal didn't exist (i.e. had a z-value of 0) on the ith MCMC iteration.
 
 # Here, 'results' is the MCMC samples and M is the size of the superpopulation.
 
@@ -47,9 +44,7 @@ activity.matrices <- function(results, M) {
 
 
 
-## The function below generates a matrix containing all of the z-values from a set of MCMC samples. The result will be
-## a matrix, where each row contains all of the z-values sampled in one MCMC iteration. Each column contains all of the z-values
-## sampled for one animal in the superpopulation.
+## The function below generates a matrix containing all of the z-values from a set of MCMC samples. The result will be a matrix, where each row contains all of the z-values sampled in one MCMC iteration. Each column contains all of the z-values sampled for one animal in the superpopulation.
 
 # Here, 'results' is a set of MCMC samples
 
@@ -66,10 +61,7 @@ extract.z.values <- function(results) {
 
 ## Function to generate pixel centres across map area
 
-# Here, xrange and yrange give the range of x- and y-coordinates for the map area (i.e. the lower value of xrange
-# gives the leftmost x-coordinate of the pixels that are furthest to the left in our map area, and the upper value gives the
-# leftmost x-coordinates of pixels that are furthest to the right, and so on). In addition, x.pixels and y.pixels give the number
-# of pixels being used in the x- and y-direction.
+# Here, xrange and yrange give the range of x- and y-coordinates for the map area (i.e. the lower value of xrange gives the leftmost x-coordinate of the pixels that are furthest to the left in our map area, and the upper value gives the leftmost x-coordinates of pixels that are furthest to the right, and so on). In addition, x.pixels and y.pixels give the number of pixels being used in the x- and y-direction.
 
 centres <- function(xrange, yrange, x.pixels, y.pixels) {
   # Creating an object of class 'owin' representing our map area
@@ -83,13 +75,9 @@ centres <- function(xrange, yrange, x.pixels, y.pixels) {
 }
 
 
-## Function to generate density vectors for RUD maps (realised usage density maps). The vector will contain the final density
-## values for each pixel
+## Function to generate density vectors for RUD maps (realised usage density maps). The vector will contain the final density values for each pixel
 
-# Here, 'results' is a set of MCMC samples, 'activity.centres' is an object produced using the activity.matrices() function
-# above, 'pixel.centres' is an object produced using the centres() function above; 'z.values' is an object produced using
-# extract.z.values() above; 'n.iter' is the number of MCMC iterations run to produce 'results'; xlim and ylim give the range
-# of x- and y-coordinates for the map area; ''points' indicates 'M' is the size of the superpopulation
+# Here, 'results' is a set of MCMC samples, 'activity.centres' is an object produced using the activity.matrices() function above, 'pixel.centres' is an object produced using the centres() function above; 'z.values' is an object produced using extract.z.values() above; 'n.iter' is the number of MCMC iterations run to produce 'results'; xlim and ylim give the range of x- and y-coordinates for the map area; ''points' indicates 'M' is the size of the superpopulation
 
 density.vector <- function(results, activity.centres, pixel.centres, z.values,
                           xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), M=300) {
