@@ -65,7 +65,6 @@ dev.off()
 # ch7e trace plots for beta0 and beta1 look like they are hitting some sort of limit, but we haven't placed a limit on beta0 and beta1?
 
 
-
 # Checking posterior means for beta0 and beta1
 # ch7b
 ch7b.beta0 <- mean(ch7b.sample[,"beta0"])
@@ -79,6 +78,8 @@ ch7e.beta1 <- mean(ch7e.sample[,"beta1"])
 # ch7f
 ch7f.beta0 <- mean(ch7f.sample[,"beta0"])
 ch7f.beta1 <- mean(ch7f.sample[,"beta1"])
+
+
 
 # Checking posterior means for N. True N is 7451 - posterior means seem fine, ch7f being about 1000 above likely due to 'bad' covariate
 mean(ch7b.sample[,"N"])
@@ -111,10 +112,10 @@ ch7c.ch7f.capthist <- capthists_expected_acd_many$capthist[2][[1]]
 
 # ch7b - looking good!
 ch7b.fit <- secr.fit(capthist=ch7b.ch7e.capthist, model=D~log(Dgood_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
-# Looking at estimates of beta0 -- looking pretty similar
-ch7b.beta0 # -10.6741
-log(exp(-1.4489734)/10000) # -10.65931
-# Comparing to the MCMC credible intervals. They look pretty good:
+## Looking at estimates of beta0 -- looking pretty similar
+ch7b.beta0 # beta0 is -10.6741 from MCMC
+log(exp(-1.4489734)/10000) # beta0 is -10.65931 from secr.fit
+## Comparing to the MCMC credible intervals. They look pretty good:
 quantile(ch7b.sample[,'beta1'], probs=c(0.025, 0.5, 0.975))
 # secr: (1.002, 1.270) and now is (1.007, 1.272)
 quantile(ch7b.sample[,'lambda0']/20, probs=c(0.025, 0.5, 0.975))
@@ -124,10 +125,10 @@ quantile(ch7b.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
 
 # ch7c - looking good!
 ch7c.fit <- secr.fit(capthist=ch7c.ch7f.capthist, model=D~log(Dgood_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
-# Looking at estimates of beta0 -- looking pretty similar
-ch7c.beta0 # -10.6641
-log(exp(-1.4462406)/10000) # -10.65658
-# Comparing to the MCMC credible intervals. They look pretty good:
+## Looking at estimates of beta0 -- looking pretty similar
+ch7c.beta0 # -10.6641 from MCMC
+log(exp(-1.4462406)/10000) # -10.65658 from secr.fit
+## Comparing to the MCMC credible intervals. They look pretty good:
 quantile(ch7c.sample[,'beta1'], probs=c(0.025, 0.5, 0.975))
 # secr: (1.023, 1.257) and now is (1.026, 1.261)
 quantile(ch7c.sample[,'lambda0']/20, probs=c(0.025, 0.5, 0.975))
@@ -137,10 +138,10 @@ quantile(ch7c.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
 
 # ch7e - looking good! :)
 ch7e.fit <- secr.fit(capthist=ch7b.ch7e.capthist, model=D~log(Dblur_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
-# Looking at estimates of beta0 -- looking pretty similar
-ch7e.beta0 # -21.8867
-log(exp(-12.8007829)/10000) # -22.01112 :)
-# Comparing to the MCMC credible intervals. They look pretty good:
+## Looking at estimates of beta0 -- looking pretty similar
+ch7e.beta0 # -21.8867 from MCMC
+log(exp(-12.8007829)/10000) # -22.01112 from secr.fit
+## Comparing to the MCMC credible intervals. They look pretty good:
 quantile(ch7e.sample[,'beta1'], probs=c(0.025, 0.5, 0.975))
 # secr: (1.928, 2.518) and now is (1.942, 2.464)
 quantile(ch7e.sample[,'lambda0']/20, probs=c(0.025, 0.5, 0.975))
@@ -150,10 +151,10 @@ quantile(ch7e.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
 
 # ch7e - looking good!!!
 ch7f.fit <- secr.fit(capthist=ch7c.ch7f.capthist, model=D~log(Dblur_bigD), mask=mlmesh, detectfn="HHN") # logged covariate
-# Looking at estimates of beta0 -- looking pretty similar
-ch7f.beta0 # -19.25819
-log(exp(-10.1519810)/10000) # -19.362 :)
-# Comparing to the MCMC credible intervals. They look pretty good:
+## Looking at estimates of beta0 -- looking pretty similar
+ch7f.beta0 # -19.25819 from MCMC
+log(exp(-10.1519810)/10000) # -19.362 from secr.fit
+## Comparing to the MCMC credible intervals. They look pretty good:
 quantile(ch7f.sample[,'beta1'], probs=c(0.025, 0.5, 0.975))
 # secr: (1.762, 2.203) and now is (1.758, 2.185)
 quantile(ch7f.sample[,'lambda0']/20, probs=c(0.025, 0.5, 0.975))
@@ -222,7 +223,7 @@ for (i in 1:2500) {
 
 ## ---------------------------------------------------------------------------------------
 
-# Using Ian's code to create plots
+# Creating the plots
 
 ## ---------------------------------------------------------------------------------------
 
@@ -236,42 +237,42 @@ library(RColorBrewer)
 library(patchwork)
 library(purrr)
 
-# Seems like we load in these files
+# We need to load in these files
 load("../output/mona_raw_outputs.RData")
 load("../output/mona_inputs.RData")
 
-# process the covariates -- it looks like this object contains the covariate values used to create the first plots in both rows
+# Process the covariates -- this object contains the covariate values used to create the first plots in both rows
 predicted_densities_covs <- mona_df %>% dplyr::select(x,y,Dgood_bigD,Dblur_bigD) %>%
   pivot_longer(cols=c(Dgood_bigD,Dblur_bigD), names_to = "covtype") %>% arrange(x,y) %>%
   mutate(value = value/10000,
          array_origin = "none") %>%
   mutate(covtype = str_remove(covtype, "_bigD"))
 
-# process the outputs -- I think predicted_densities_all is what we want to replace, seems to contain density values for each pixel
+# Process the outputs -- predicted_densities_all is what we want to replace with our MCMC results, as it contains density values for each pixel
 predicted_densities_all <- res_expected_acd_many %>% purrr::map("predicted_densities") %>% map_df(bind_rows)
 detectors_df_all <- res_expected_acd_many %>% purrr::map("detectors_df") %>% map_df(bind_rows)
 
-# change covariate variable names to be consistent with mona_inputs
+# Change covariate variable names to be consistent with mona_inputs
 predicted_densities_all <- predicted_densities_all %>% mutate(covtype = str_remove(covtype, "D~log\\(")) %>% mutate(covtype = str_remove(covtype, "_bigD\\)"))
 detectors_df_all <- detectors_df_all %>% mutate(covtype = str_remove(covtype, "D~log\\(")) %>% mutate(covtype = str_remove(covtype, "_bigD\\)"))
 
-# choose covariates we want
+# Choose covariates we want
 predicted_densities_all <- predicted_densities_all %>% filter(covtype %in% c("Dgood", "Dblur"))
 detectors_df_all <- detectors_df_all %>% filter(covtype %in% c("Dgood", "Dblur"))
 
-# choose variables we need
+# Choose variables we need
 predicted_densities_all <- predicted_densities_all %>%
   select(x, y, value = prob_ac, covtype, occasions, array_origin) %>%
   mutate(value = value / 10000)
-# Re-saving Ian's density values for a quick comparison later:
-prev_predicted_densities_all = predicted_densities_all
 
+# Re-saving frequentist density values for a quick comparison later:
+prev_predicted_densities_all <- predicted_densities_all
 prev_predicted_densities_all %>% group_by(covtype, array_origin) %>% summarize(mv = mean(value))
-# Mean density values seem to match nicely with ch7b, ch7c, ch7e, ch7f. Can compare to:
+# Frequentist mean density values seem to match nicely with MCMC mean density values for ch7b, ch7c, ch7e, ch7f. Can frequentist means above to following means from MCMC:
 c(mean(ch7f.density), mean(ch7e.density), mean(ch7c.density), mean(ch7b.density))
 
 # ---------------
-# Seems like now is a good time to replace predicted_densities_all so that it now contains our density values.
+# Now, we replace predicted_densities_all so that it contains our density values
 # Matrix of pixel centres
 source("RUDMaps_Functions.R")
 pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
@@ -280,7 +281,7 @@ pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.
 # Here, covtype=Dgood, occasions=20, array_origin=15_15
 ch7b.df <- data.frame(pixel.centres, ch7b.density, rep("Dgood", 2500), rep(20, 2500), rep("15_15", 2500))
 names(ch7b.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
-# Reordering to match Ian's pixel order
+# Reordering to match pixel order
 split = split(ch7b.df, ch7b.df$y)
 ch7b.df = do.call("rbind", rev(split))
 
@@ -309,14 +310,12 @@ ch7f.df = do.call("rbind", rev(split))
 predicted_densities_all <- rbind(ch7b.df, ch7e.df, ch7c.df, ch7f.df)
 # ---------------
 
-# Quick check: plotting my densities against Ian's, seeing what we get
-plot(predicted_densities_all$value, prev_predicted_densities_all$value)
-abline(0, 1, col="goldenrod", lwd=2)
-# Looks pretty good
+## Quick check: can plot frequentist vs Bayesian densities
+#plot(predicted_densities_all$value, prev_predicted_densities_all$value)
+#abline(0, 1, col="goldenrod", lwd=2)
+## Looks pretty good
 
-perc.diff <- (rishika.value - ian.value)*100/ian.value # To create spatial plot of percentage differences
-
-# scale the covariate plots to have the same mean as the density plots
+# Scale the covariate plots to have the same mean as the density plots
 predicted_densities_covs <- predicted_densities_covs %>%
   group_by(covtype, array_origin) %>%
   mutate(value = value * mean(predicted_densities_all$value) / mean(predicted_densities_covs$value)) %>%
