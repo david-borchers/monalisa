@@ -75,6 +75,11 @@ highD_cams_pts <- rbind(highD_cams %>% mutate(x = x + c(250, 750),
 
 ### plotting
 
+labs_p1 <- data.frame(x = 600000, y = 1302000, traps = c("All traps, no cov.", "Subset #1, no cov.", "Subset #2, no cov."), label = c("(a)", "(b)", "(c)"))
+labs_p2 <- data.frame(x = 600000, y = 1302000, traps = c("Subset #1, no cov.", "Subset #2, no cov."), label = c("(d)", "(e)"))
+labs_p3 <- data.frame(x = 600000, y = 1302000, traps = c("All traps, northing", "Subset #1, northing", "Subset #2, northing"), label = c("(a)", "(b)", "(c)"))
+labs_p4 <- data.frame(x = 600000, y = 1302000, traps = c("Subset #1, northing", "Subset #2, northing"), label = c("(d)", "(e)"))
+
 # densities for constant density model, different arrays
 p1 <- predicted_densities %>% 
   filter(str_detect(traps, "no cov.")) %>% 
@@ -84,6 +89,7 @@ p1 <- predicted_densities %>%
              inherit.aes = T, colour = "black", pch = 4, alpha = 0.5, size = 0.5) +
   geom_point(data = highD_cams_pts %>% filter(str_detect(traps, "no cov.")), 
              inherit.aes = T, colour = "red", pch = 6, size = 0.8) +
+  geom_text(data = labs_p1, aes(label = label)) +
   scale_fill_viridis(name = bquote("Tiger ACs/km"^2), direction = -1, limits = c(0,1.1), breaks = c(0,.25,.50,.75,1)) +
   # scale_fill_viridis(name = "Density", direction = -1, limits = c(0.00005,0.00225), 
   #                    breaks = c(2e-4, 7e-4, 1.2e-3, 1.7e-3, 2.2e-3), 
@@ -103,6 +109,7 @@ p2 <- reduced_traps_differences %>%
   geom_raster(aes(fill = valuediff)) +
   geom_point(data = detectors %>% filter(str_detect(traps, "no cov."), !str_detect(traps, "All traps")), 
              inherit.aes = T, colour = "black", pch = 4, alpha = 0.5, size = 0.5) +
+  geom_text(data = labs_p2, aes(label = label)) +
   #scale_fill_continuous_divergingx(name = "% Change", palette = "RdYlBu", rev = TRUE, mid = 0, l3 = -100, c3 = -200) +
   # scale_fill_continuous_divergingx(name = "% Change", palette = "RdBu", rev = TRUE, mid = 0, l3 = -100, p3 = 0.5, p4 = 1.3) +
   scale_fill_gradientn(name = "Change", colours = coolwarm(22), limits = c(-1,1), breaks = c(-1,-.50,0,.50,1)) +
@@ -132,6 +139,7 @@ p3 <- predicted_densities %>%
   geom_raster(aes(fill = value)) +
   geom_point(data = detectors %>% filter(str_detect(traps, "northing")), 
              inherit.aes = T, colour = "black", pch = 4, alpha = 0.5, size = 0.5) +
+  geom_text(data = labs_p3, aes(label = label)) +
   scale_fill_viridis(name = bquote("Tiger ACs/km"^2), direction = -1, limits = c(0,1.10), breaks = c(0,.25,.50,.75,1)) +
   # scale_fill_viridis(name = "Density", direction = -1, breaks = c(2e-4, 3e-4, 4e-4, 5e-4), 
   #                    labels = c("0.0002", "0.0003", "0.0004", "0.0005")) + 
@@ -153,6 +161,7 @@ p4 <- reduced_traps_differences %>%
   geom_raster(aes(fill = valuediff)) +
   geom_point(data = detectors %>% filter(str_detect(traps, "northing"), !str_detect(traps, "All traps")), 
              inherit.aes = T, colour = "black", pch = 4, alpha = 0.5, size = 0.5) +
+  geom_text(data = labs_p4, aes(label = label)) +
   # scale_fill_gradientn(name = "% Change", colours = coolwarm(22),
   #                      limits = c(-maxabsdiff_nocov, maxabsdiff_nocov),
   #                      breaks = c(-15,-10,-5,0,5,10,15)) +
@@ -193,6 +202,7 @@ su1 <- dd %>%
   filter(covtype == "Realised AC") %>%
   ggplot(aes(x/1000, y/1000)) + 
   geom_raster(aes(fill = value)) +
+  annotate("text", x = 600, y = 1302, label = "(a)") +
   scale_fill_viridis(name = bquote("Tiger ACs/km"^2), direction = -1, limits = c(0,1.1), breaks = c(0,.25,.50,.75,1)) +
   # scale_fill_viridis(name = "Density", direction = -1, breaks = c(2e-4, 1.2e-3, 2.2e-3), 
   #                    labels = c("0.0002", "0.0012", "0.0022")) + 
@@ -211,6 +221,7 @@ su2 <- dd %>%
   filter(covtype != "Realised AC") %>%
   ggplot(aes(x/1000, y/1000)) + 
   geom_raster(aes(fill = value)) +
+  annotate("text", x = 600, y = 1302, label = "(b)") +
   #scale_fill_viridis(name = bquote("Tigers/km"^2), direction = -1, limits = c(0,0.5)) +
   scale_fill_viridis(name = bquote("Tigers/km"^2), direction = -1, limits = c(0,1.1), breaks = c(0,.25,.50,.75,1)) +
   # scale_fill_viridis(name = "Density", direction = -1, begin = 0, end = 1,

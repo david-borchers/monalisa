@@ -179,4 +179,4 @@ save(res_realised_and_expected_acd_few, file = "output/res_realised_and_expected
 # 
 # fig7_results <- pmap(parlist4, .f = run_secr, simulated_points = simulated_points_few, my.seed = 123, captures.only = T)
 
-save(res_realised_acd_many, res_expected_acd_many, res_realised_and_expected_acd_few, file = "output/new_mona_raw_outputs.RData")
+save(res_realised_acd_many, res_expected_acd_many, res_realised_and_expected_acd_few, file = "output/mona_raw_outputs.RData")

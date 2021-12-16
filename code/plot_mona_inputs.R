@@ -34,4 +34,4 @@ p1 <- df %>%
 
 p1
 
-ggsave("paper/mona_inputdata.png", p1, width=7, height=3, dpi = 300)
+ggsave("paper/mona_inputdata.png", p1, width=7, height=2.5, dpi = 300)

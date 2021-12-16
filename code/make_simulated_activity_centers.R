@@ -1,9 +1,11 @@
 # generates the two sets of simulated activity centers used in the paper
 
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 # library(devtools)
 #install_github("rachelphillip/SCR-Book/scrmlebook")
-library(scrmlebook)
+library(secr)
 
 source("code/make_simulated_points_plottable.R")
 
@@ -20,8 +22,8 @@ mlmesh <- read.mask(data = mona_df)
 # If we want n_pts points then we need to multiply D by 10000 * (n_pts / sum(D))
 
 # large number of activity centers (dataset 1 in paper)
-n_pts <- 7500  # desired number of points to generate, in expectation
-D_for_sim = covariates(mlmesh)$D / sum(covariates(mlmesh)$D) * 10000 * n_pts
+# n_pts <- 7500  # desired number of points to generate, in expectation
+D_for_sim = mona_df$D_bigD # covariates(mlmesh)$D / sum(covariates(mlmesh)$D) * 10000 * n_pts
 simulated_points_lots <- sim.popn(D = D_for_sim, 
                                   core = mlmesh, 
                                   model2D = "IHP", 
@@ -29,8 +31,8 @@ simulated_points_lots <- sim.popn(D = D_for_sim,
                                   seed = 123)
 
 # small number of activity centers (dataset 2 in paper)
-n_pts <- 80  # desired number of points to generate, in expectation
-D_for_sim = covariates(mlmesh)$D / sum(covariates(mlmesh)$D) * 10000 * n_pts
+# n_pts <- 80  # desired number of points to generate, in expectation
+D_for_sim = mona_df$D_smallD # covariates(mlmesh)$D / sum(covariates(mlmesh)$D) * 10000 * n_pts
 simulated_points_few <- sim.popn(D = D_for_sim, 
                                  core = mlmesh, 
                                  model2D = "IHP", 
