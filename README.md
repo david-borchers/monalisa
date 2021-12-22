@@ -20,8 +20,8 @@ Other folders store model output (**output**) and input files for the paper (**p
 **To reproduce the Bayesian Mona Lisa analysis**
 
 - use the simulated capture histories from *output/capthists.RData* to run the MCMC models.
-- for Figure 7, go to the **bayesian_code** folder, and run *Figure 7/ch7b.R*, *Figure 7/ch7c.R*, *Figure 7/ch7e.R* and *Figure 7/ch7f.R* to run the MCMC for plots (b), (c), (e) and (f), respectively. Using a machine with a lot of RAM is recommended, and a few hours will be needed to run the MCMC models. Then, run *Figure7.R* to create the plot. 
-- for Figure 9, go to the **bayesian_code** folder and run *Figure9.R*. This file contains function calls that will run the MCMC, and then put together the final figure. The MCMC models will be fairly quick to run (even with a standard amount of RAM). 
+- to recreate Figure 7, go to the **bayesian_code** folder and run *Figure7.R*, which loads in *Figure 7/ch7b.RData*, *Figure 7/ch7c.RData*, *Figure 7/ch7e.RData* and *Figure 7/ch7f.RData*. These RData files contain the MCMC samples for this figure. Alternatively, run *Figure 7/ch7b.R*, *Figure 7/ch7c.R*, *Figure 7/ch7e.R* and *Figure 7/ch7f.R* to run the MCMC for plots (b), (c), (e) and (f), respectively. Using a machine with a lot of RAM is recommended, and a few hours will be needed to run the MCMC models. Then, run *Figure7.R* to create the plot. 
+- to recreate Figure 9, go to the **bayesian_code** folder and run *Figure9.R*. This file contains function calls that will run the MCMC, create the density vectors for the maps, and create the final figure. The MCMC models will be fairly quick to run (even with a standard amount of RAM), but creating the density vectors for row 2 of the figure can take up to an hour (with standard RAM). Alternatively, uncomment the load() statements as described in the file to load in the MCMC samples/density vectors used in the paper. 
 
 **To reproduce the Nagarahole analysis**
 
