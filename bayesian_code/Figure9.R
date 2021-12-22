@@ -61,20 +61,21 @@ library("nimble")
 # Function we need
 source("MCMC_Function.R")
 
-## Running MCMC for simulated data from 3, 10 and 20 sampling occasions. Uncomment to run the MCMC:
-#results.3occ <- run.MCMC(data=data.3occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.3occ, file="Figure 9/Fig9_MCMC_3occ.RData")
+## Running MCMC for simulated data from 3, 10 and 20 sampling occasions.
+results.3occ <- run.MCMC(data=data.3occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.3occ, file="Figure 9/Fig9_MCMC_3occ.RData")
 
-#results.10occ <- run.MCMC(data=data.10occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.10occ, file="Figure 9/Fig9_MCMC_10occ.RData")
+results.10occ <- run.MCMC(data=data.10occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.10occ, file="Figure 9/Fig9_MCMC_10occ.RData")
 
-#results.20occ <- run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.20occ, file="Figure 9/Fig9_MCMC_20occ.RData")
+results.20occ <- run.MCMC(data=data.20occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+save(results.20occ, file="Figure 9/Fig9_MCMC_20occ.RData")
 
-# Loading in the RData files
-load("Figure 9/Fig9_MCMC_3occ.RData")
-load("Figure 9/Fig9_MCMC_10occ.RData")
-load("Figure 9/Fig9_MCMC_20occ.RData")
+# Loading in the RData files -- uncomment this if don't want to run the MCMC
+#load("Figure 9/Fig9_MCMC_3occ.RData")
+#load("Figure 9/Fig9_MCMC_10occ.RData")
+#load("Figure 9/Fig9_MCMC_20occ.RData")
+
 # Burn-in
 results.3occ <- results.3occ[-c(1:500),]
 results.10occ <- results.10occ[-c(1:500),]
@@ -86,13 +87,11 @@ plot(results.3occ[,"lambda0"], type='l')
 plot(results.3occ[,"sigma"], type='l')
 plot(results.3occ[,"N"], type='l')
 plot(results.3occ[,"D"], type='l')
-
 # 10 sampling occasions -- v good
 plot(results.10occ[,"lambda0"], type='l')
 plot(results.10occ[,"sigma"], type='l')
 plot(results.10occ[,"N"], type='l')
 plot(results.10occ[,"D"], type='l')
-
 # 20 sampling occaions -- looking v good
 plot(results.20occ[,"lambda0"], type='l')
 plot(results.20occ[,"sigma"], type='l')
@@ -112,35 +111,36 @@ density.3occ.all <- no.movement.density.vector(results=results.3occ, M=300, xlim
 density.10occ.all <-  no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 density.20occ.all <- no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
-## Row 2: RUD maps. Once again, creating vectors that contain the density values for each pixel (we use more steps/create more objects in the process to do so than above). Can uncomment lines below to run the code! Other than 'pixel.centres' object which we need to create, just use the load statements at the bottom
+## Row 2: RUD maps. Once again, creating vectors that contain the density values for each pixel (we use more steps/create more objects in the process to do so than above).
 
 source("RUDMaps_Functions.R")
 
-# Coordinates for all pixel centres
+# Coordinates for all pixel centres -- whether we load in the RData files/create the density vector ourselves, we need to run this line
 pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
-## Creating activity centre matrices (for explanation, see 'RUDMaps_Functions.R')
-#activity.centres.3occ <- activity.matrices(results=results.3occ, M=300)
-#activity.centres.10occ <- activity.matrices(results=results.10occ, M=300)
-#activity.centres.20occ <- activity.matrices(results=results.20occ, M=300)
 
-## Matrix containing z-values for each MCMC iteration (for each number of samp occ)
-#z.values.3occ <- extract.z.values(results.3occ)
-#z.values.10occ <- extract.z.values(results.10occ)
-#z.values.20occ <- extract.z.values(results.20occ)
+# Creating activity centre matrices (for explanation, see 'RUDMaps_Functions.R')
+activity.centres.3occ <- activity.matrices(results=results.3occ, M=300)
+activity.centres.10occ <- activity.matrices(results=results.10occ, M=300)
+activity.centres.20occ <- activity.matrices(results=results.20occ, M=300)
 
-## Creating the density vectors
-#density.3occ.all.withmov <- density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
-#save(density.3occ.all.withmov, file="Figure 9/Fig9_3occ.RData")
-#density.10occ.all.withmov <- density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
-#save(density.10occ.all.withmov, file="Figure 9/Fig9_10occ.RData")
-#density.20occ.all.withmov <- density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
-#save(density.20occ.all.withmov, file="Figure 9/Fig9_20occ.RData")
+# Matrix containing z-values for each MCMC iteration (for each number of samp occ)
+z.values.3occ <- extract.z.values(results.3occ)
+z.values.10occ <- extract.z.values(results.10occ)
+z.values.20occ <- extract.z.values(results.20occ)
 
-# Loading in density values for each pixel
-load("Figure 9/Fig9_3occ.RData")
-load("Figure 9/Fig9_10occ.RData")
-load("Figure 9/Fig9_20occ.RData")
+# Creating the density vectors
+density.3occ.all.withmov <- density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
+save(density.3occ.all.withmov, file="Figure 9/Fig9_3occ.RData")
+density.10occ.all.withmov <- density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
+save(density.10occ.all.withmov, file="Figure 9/Fig9_10occ.RData")
+density.20occ.all.withmov <- density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
+save(density.20occ.all.withmov, file="Figure 9/Fig9_20occ.RData")
+
+# Loading in density values for each pixel -- uncomment this if don't want to run activity.matrices(), extract.z.values() and density.vector()
+#load("Figure 9/Fig9_3occ.RData")
+#load("Figure 9/Fig9_10occ.RData")
+#load("Figure 9/Fig9_20occ.RData")
 
 ## ---------------------------------------------------------------------------------------
 

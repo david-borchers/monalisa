@@ -62,26 +62,9 @@ plot(ch7f.sample[,'N'], type="l", main="N", ylab="N value")
 plot(ch7f.sample[,'D'], type="l", main="D", ylab="D value")
 mtext("ch7f trace plots", outer=TRUE, cex=1.5)
 dev.off()
-# ch7e trace plots for beta0 and beta1 look like they are hitting some sort of limit, but we haven't placed a limit on beta0 and beta1?
 
 
-# Checking posterior means for beta0 and beta1
-# ch7b
-ch7b.beta0 <- mean(ch7b.sample[,"beta0"])
-ch7b.beta1 <- mean(ch7b.sample[,"beta1"])
-# ch7c
-ch7c.beta0 <- mean(ch7c.sample[,"beta0"])
-ch7c.beta1 <- mean(ch7c.sample[,"beta1"])
-# ch7e
-ch7e.beta0 <- mean(ch7e.sample[,"beta0"])
-ch7e.beta1 <- mean(ch7e.sample[,"beta1"])
-# ch7f
-ch7f.beta0 <- mean(ch7f.sample[,"beta0"])
-ch7f.beta1 <- mean(ch7f.sample[,"beta1"])
-
-
-
-# Checking posterior means for N. True N is 7451 - posterior means seem fine, ch7f being about 1000 above likely due to 'bad' covariate
+# Checking posterior means for N. True N is 7451 - looks quite good
 mean(ch7b.sample[,"N"])
 mean(ch7c.sample[,"N"])
 mean(ch7e.sample[,"N"])
@@ -100,8 +83,21 @@ mean(ch7e.sample[,'lambda0'])
 mean(ch7f.sample[,'lambda0'])
 
 
+# Saving posterior means for beta0 and beta1
+# ch7b
+ch7b.beta0 <- mean(ch7b.sample[,"beta0"])
+ch7b.beta1 <- mean(ch7b.sample[,"beta1"])
+# ch7c
+ch7c.beta0 <- mean(ch7c.sample[,"beta0"])
+ch7c.beta1 <- mean(ch7c.sample[,"beta1"])
+# ch7e
+ch7e.beta0 <- mean(ch7e.sample[,"beta0"])
+ch7e.beta1 <- mean(ch7e.sample[,"beta1"])
+# ch7f
+ch7f.beta0 <- mean(ch7f.sample[,"beta0"])
+ch7f.beta1 <- mean(ch7f.sample[,"beta1"])
 
-# Comparing MCMC results to secr.fit -- overall, looking really good! So looks like the MCMC ran 'correctly'
+# Comparing MCMC results to secr.fit -- overall, looking really good! So looks like the MCMC results are reliable
 library("secr")
 # Mask
 mlmesh <- read.mask(data=mona_df)
@@ -162,6 +158,7 @@ quantile(ch7f.sample[,'lambda0']/20, probs=c(0.025, 0.5, 0.975))
 quantile(ch7f.sample[,'sigma'], probs=c(0.025, 0.5, 0.975))
 # secr: is (1.989, 2.048) and now is (1.990, 2.049)
 
+## Overall, it looks like we can trust the results from our MCMC. Therefore, we will continue
 
 ## ---------------------------------------------------------------------------------------
 
