@@ -1,67 +1,74 @@
-\documentclass[10pt,a4paper]{article}
-\usepackage{authblk}
+\documentclass[useAMS,usenatbib,referee]{biom}
+%\usepackage{authblk}
 \usepackage{graphicx}
-\usepackage{subcaption}
-\usepackage{float}
+%\usepackage{subcaption}
+%\usepackage{float}
 \usepackage{amsmath}
-\usepackage{bm}
-\usepackage[authoryear,round, longnamesfirst]{natbib}
-\usepackage{textcomp}
-\usepackage{setspace}
-\usepackage{appendix}
-\doublespacing
-\usepackage{fancyhdr}
-\usepackage[]{todonotes}
-\presetkeys{todonotes}{fancyline, color=white}{}
+%\usepackage{bm}
+%\usepackage[authoryear,round, longnamesfirst]{natbib}
+%\usepackage{textcomp}
+%\usepackage{setspace}
+%\usepackage{appendix}
+%\doublespacing
+%\usepackage{fancyhdr}
+%\usepackage[]{todonotes}
+%\presetkeys{todonotes}{fancyline, color=white}{}
 \usepackage{url}
 
-\pagestyle{fancy}
-\rhead{That's not the Mona Lisa}
-\lhead{}
+%\pagestyle{fancy}
+%\rhead{That's not the Mona Lisa}
+%\lhead{}
 
-\usepackage{geometry}
-\geometry{margin=4cm}
+%\usepackage{geometry}
+%\geometry{margin=4cm}
 
-\usepackage{lineno}
-\linenumbers
+%\usepackage{lineno}
+%\linenumbers
 %\linespread{1.6}
 
-\title{That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
-\author[1,2,*]{Ian Durbach}
-\author[3]{Rishika Chopara}
-\author[1,2]{David L. Borchers}
-\author[1]{Rachel Phillip}
-\author[4]{Koustubh Sharma}
-\author[3]{Ben C. Stevenson}
-\affil[1]{\footnotesize Centre for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
-\affil[2]{\footnotesize Centre for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
-\affil[3]{\footnotesize Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
-\affil[4]{\footnotesize Snow Leopard Trust, Seattle, Washington, United States of America}
-\affil[*]{\footnotesize Corresponding author: indurbach@gmail.com}
+\title[How to interpret SCR density surface estimates]{That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
 
-\date{}
+%\author
+%{John Author\emailx{author@address.edu} \\
+%Department of Statistics, University of Warwick, Coventry CV4 7AL, U.K. 
+%\and
+%Kathy Author\emailx{anotherauthor@address.edu} \\
+%Department of Biostatistics, University of North Carolina at Chapel Hill, 
+%Chapel Hill, North Carolina, U.S.A.}
+
+%\author{John Author$^{1,*}$\email{author@address.edu}, 
+%Kathy Author$^{2,**}$\email{anotherauthor@address.edu}, and 
+%Wilma Flinstone$^{3,***}$\email{wilma@bedrock.edu} \\
+%$^{1}$Centre for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, \\ Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland \\
+%$^{2}$Department of Biostatistics, University of North Carolina at 
+%Chapel Hill, Chapel Hill, North Carolina, U.S.A. \\
+%$^{3}$Department of Geology, University of Bedrock, Bedrock, Kansas, U.S.A.}
+
+\author{Ian Durbach$^{1,2,*}$, Rishika Chopara$^{3}$, David L. Borchers$^{1}$, Rachel Phillip$^{1}$, Koustubh Sharma$^{4}$ \and Ben C. Stevenson$^{3}$ \\
+$^{1}$Centre for Research into Ecological and Environmental Modelling, \\ School of Mathematics and Statistics, Univeristy of St Andrews, Scotland \\
+$^{2}$Centre for Statistics in Ecology, the Environment and Conservation, \\ Department of Statistical Sciences, University of Cape Town, South Africa \\
+$^{3}$Department of Statistics, University of Auckland, Auckland 1010, New Zealand \\
+$^{4}$Snow Leopard Trust, Seattle, Washington, United States of America \\
+\email{indurbach@gmail.com}}
 
 \begin{document}
 %\baselineskip = 2\baselineskip 
-\maketitle
+%\maketitle
 
 \begin{abstract}
-\vspace{-1em}
-\noindent 
-\begin{enumerate}
-\item Non-uniform density surfaces obtained from spatial capture-recapture (SCR) analyses are often misinterpreted and this leads to incorrect inferences about the populations under study. Change in density across space is often confused with change in uncertainty about estimated density across space. There is also often a lack of clarity about what the surface of interest really is.
-\item We focus on three distinct kinds of surface: (1) the expected activity centre (AC) density surface, (2) the realised AC density surface, and (3) the realised usage density surface. The first of these is the intensity of the point process generating ACs, the second is the AC locations from a realisation of the process, and the third is the expected space usage from a realisation of the process. For easy visual interpretation, we use a monochrome image of the Mona Lisa as the true AC density surface and illustrate correct and incorrect inferences from simulated SCR surveys with this density. We also illustrate with a real SCR survey of tigers in the Nagarahole game reserve.
-\item We show that treating estimates of the realised AC density surface as a species distribution map or an estimate of the expected AC density surface results in invalid and misleading ecological inferences. This surface is highly dependent on where the detectors are placed and very different surfaces can be obtained by surveying exactly the same animals with detectors placed at different locations. A valid way to obtain a species distribution map or an estimate of the expected AC density surface from SCR data is to estimate the intensity of a point process model for ACs, which may depend on spatially-referenced covariates. Realised usage density surfaces are obtained similarly, but include expected movement about ACs. 
-\item To avoid misinterpretation, practitioners should state explicitly the kind of density surface they are estimating and should be careful to draw inferences appropriate to that kind of surface. In particular, realised AC density surfaces should not be interpreted as if they were expected AC density surfaces.
-\end{enumerate}
+Spatial capture-recapture (SCR) methods are often used to estimate density surfaces, and these are often misinterpreted. In particular, trend in density is confused with trend in uncertainty. We illustrate correct and incorrect inference visually by treating an image of the Mona Lisa as an animal activity centre (AC) intensity and simulating SCR surveys from it. We also illustrate with a real SCR survey. Inferences can be drawn about the AC intensity, the realised AC density, and the realised usage density. The first is the intensity of a point process generating ACs, the second arises from a single realisation of the process, while the third is a combination of a realisation and usage intensity about points. We show that treating realised AC density estimates as estimates of AC intensity results in invalid and misleading ecological inferences, and that estimates of the realised surface are highly dependent on where the detectors are placed. Estimates of the expected AC density surface should be obtained by estimating the intensity of a point process model for ACs. Realised usage density is obtained similarly, but includes expected usage intensity about ACs. Practitioners should state explicitly the kind of density surface they are estimating, should be careful to draw inferences appropriate to that kind of surface, and realised AC density should not be confused with AC intensity.
 \end{abstract}
 
-\textbf{Keywords}: Spatial capture-recapture, density surface
+\begin{keywords}
+Spatial capture-recapture, density surface, species distribution modelling
+\end{keywords}
+
+\maketitle 
 
 \section{Introduction}
 
 Spatial capture-recapture (SCR) models \citep*{Efford:04,Borchers+Efford:08, Royle+Young:08} are now widely used to estimate animal abundance and distribution from a variety of data types, including that from camera-traps, hair snares and dung surveys, live-captures, and acoustic detectors% \citep[][for example]{Dawson+Efford:09,Kidney+al:13,Stevenson+al:15,Borchers+al:15,Loveridge+al:17}
-. These methods use the location of the detectors (e.g.\ traps) and the locations at which animals were detected (their spatial capture histories) to estimate animal density. The methods have two basic components: a spatial model that quantifies animal activity centre (hereafter abbreviated to ``AC'') density at all points in the survey region, and an encounter model that quantifies the expected detection frequency or detection probability, given the AC locations and the detector locations. 
+. These methods use the location of the detectors (e.g.\ traps) and the locations at which animals were detected (their spatial capture histories) to estimate animal density. The methods have two basic components: a spatial model that quantifies animal activity center (hereafter abbreviated to ``AC'') density at all points in the survey region, and an encounter model that quantifies the expected detection frequency or detection probability, given the AC locations and the detector locations. 
 
 SCR density estimates are often presented graphically in the form of estimated density maps, these being easy to absorb and interpret, at least on the face of it.  However, there are various kinds of density maps that one can produce from SCR analyses and depending on what is presented, it is easy to misinterpret the maps. The most common form of misinterpretation is treating maps that include both spatially varying uncertainty about location and spatially varying AC density estimates as if they were maps of AC density alone. There is also a lack of clarity about whether it is AC density or space use density that is being presented.
 
@@ -105,31 +112,31 @@ We focus on densities 1, 2, and 4. Figure~\ref{fig:densities} shows examples of 
 
 If we are interested in explaining why density tends to be high in some places and lower in others, or in characterising the process that governs the distribution of ACs, then we are primarily interested in estimating a density surface like that shown in Figure~\ref{fig:densities}(a). In this example, it is easting that influences this density, but in general it might be any of a wide variety of habitat or environmental covariates, some of which may be unobserved and evidenced only by spatial clustering of ACs. 
 
-If we are interested only in where the ACs are, and not in explaining why they are there, then Figure~\ref{fig:densities}(b) suffices. But suppose that we observe ACs with some error. For example, Figure~\ref{fig:acesterr} shows the distributions of estimated AC locations when the locations are estimated with bivariate normal errors with (a) small standard errors, (b) larger standard errors, and (c) standard errors increasing linearly from the centre of the plot. The estimation uncertainty ``spreads'' each AC according to a bivariate normal distribution, with greater spreading when there is greater uncertainty.
+If we are interested only in where the ACs are, and not in explaining why they are there, then Figure~\ref{fig:densities}(b) suffices. But suppose that we observe ACs with some error. For example, Figure~\ref{fig:acesterr} shows the distributions of estimated AC locations when the locations are estimated with bivariate normal errors with (a) small standard errors, (b) larger standard errors, and (c) standard errors increasing linearly from the center of the plot. The estimation uncertainty ``spreads'' each AC according to a bivariate normal distribution, with greater spreading when there is greater uncertainty.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{acesterr.pdf}
 \includegraphics[width=\textwidth]{sigmas.pdf}
-\caption{Examples of the density of the ACs of Figure~\ref{fig:densities}(b), when observed with bivariate normal estimation errors with standard errors (a) $\sigma=2.5$, (b) $\sigma=15$, and (c) $\sigma=2.5$ at the centre of the plot, rising linearly to $\sigma=2.5$ by the edge of the plot. True ACs shown as grey dots. The colour scales of panels (a) to (c) are such that the highest and lowest densities in each plot is the same.
+\caption{Examples of the density of the ACs of Figure~\ref{fig:densities}(b), when observed with bivariate normal estimation errors with standard errors (a) $\sigma=2.5$, (b) $\sigma=15$, and (c) $\sigma=2.5$ at the center of the plot, rising linearly to $\sigma=2.5$ by the edge of the plot. True ACs shown as grey dots. The colour scales of panels (a) to (c) are such that the highest and lowest densities in each plot is the same.
 Panels (d) to (f) plot the standard errors of the observation errors against the x-axis. Vertical dashed lines show the extent of the survey region in panels (a) to (c); a buffer beyond this is included because spreading of points outside it affect the plot within the survey region.}
 \label{fig:acesterr}
 \end{figure}
 
 Ignoring the actual AC dots (because they cannot be observed), Figure~\ref{fig:acesterr}(a) gives a reasonable visual representation of where the ACs are. It is much more difficult to pick out individual ACs from Figure~\ref{fig:acesterr}(b), but it gives a reasonable representation of where the high- and low-density regions of ACs are -- much like Figure~\ref{fig:densities}(a), but customised somewhat for this particular realisation of AC locations rather than their long-run average locations. Note, however, that these two figures are representations of exactly the same set of ACs and that if one interprets them as plots of AC density, they contradict each other. Figure~\ref{fig:acesterr}(a) says that almost all the region has low density (red in the plot) and that there are lots of small high-density regions, while Figure~\ref{fig:acesterr}(b) says that there is much less variation in density, that there are large swathes of higher density (the yellow towards the right) and large swathes of low density towards the left. The reason why Figure~\ref{fig:acesterr}(b) shows less variation in density is not that there is less variation in the population (there are exactly the same ACs in both (a) and (b)), it is that we are less sure about the location of the ACs in (b). To interpret this as less variation in AC density is to invite incorrect ecological inferences.
 
-Now what about Figure~\ref{fig:acesterr}(c)? If this is interpreted as indicating where the high and low-density regions are, it is misleading. It says that the highest density region is in the centre of the plot, and that the region with most variation in density is the central region, which is not true. 
+Now what about Figure~\ref{fig:acesterr}(c)? If this is interpreted as indicating where the high and low-density regions are, it is misleading. It says that the highest density region is in the center of the plot, and that the region with most variation in density is the central region, which is not true. 
 
-The fact that there is only small observation error in the centre of the plot and large observation error at the edges means that the ACs near the centre are not spread much and therefore appear as higher peaks in the surface, with low regions where there are no ACs. Near the edges of the plot, on the other hand, observation error is high and ACs are spread a lot, which both flattens the peaks at individual AC locations and ``fills in'' the troughs where the are no ACs. We see the same effect with the usage density maps (Figure~\ref{fig:acuseesterr}), albeit less pronounced because the usage about the ACs already ``spreads'' around points before any observation error occurs.
+The fact that there is only small observation error in the center of the plot and large observation error at the edges means that the ACs near the center are not spread much and therefore appear as higher peaks in the surface, with low regions where there are no ACs. Near the edges of the plot, on the other hand, observation error is high and ACs are spread a lot, which both flattens the peaks at individual AC locations and ``fills in'' the troughs where the are no ACs. We see the same effect with the usage density maps (Figure~\ref{fig:acuseesterr}), albeit less pronounced because the usage about the ACs already ``spreads'' around points before any observation error occurs.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{acuseesterr.pdf}
-\caption{Examples of the usage density of Figure~\ref{fig:densities}(c), when observed with bivariate normal estimation errors with standard errors (a) $\sigma=2.5$, (b) $\sigma=15$, and (c) $\sigma=2.5$ at the centre of the plot, rising linearly to $\sigma=2.5$ by the edge of the plot. True ACs shown as grey dots. The colour scales of the three plots are such that the highest and lowest densities in each plot is the same.}
+\caption{Examples of the usage density of Figure~\ref{fig:densities}(c), when observed with bivariate normal estimation errors with standard errors (a) $\sigma=2.5$, (b) $\sigma=15$, and (c) $\sigma=2.5$ at the center of the plot, rising linearly to $\sigma=2.5$ by the edge of the plot. True ACs shown as grey dots. The colour scales of the three plots are such that the highest and lowest densities in each plot is the same.}
 \label{fig:acuseesterr}
 \end{figure}
 
-It is a feature of SCR surveys that the AC locations of individuals farther from the detector array tend to be estimated with greater uncertainty than individuals within the array. This is illustrated in Figure~\ref{fig:screrr}, which shows the estimated probability density functions for ACs of two animals detected on a simulated SCR survey with a 4$\times$4 array placed in the centre of the population shown in Figure~\ref{fig:densities}(b). The reason contours in the top right of the figure ``avoid'' the triangle is because the detection function range, estimated from the whole survey, not just the points shown, is large and if the AC was near the triangle, other detectors would have high probability of detecting it. The fact that they did not makes them ``repel'' the AC. %\todo[inline,size=\footnotesize]{BCS: How come the contours in the top-right are avoiding the black triangle? Shouldn't the contours be happy to cover the triangle, because the animal was detected there?\\ DLB: This is because the detection function range (estimated from the whole survey, not just the points shown) is large and if the AC was near the triangle, other detectors would have high probability of detecting it. The fact that they did not makes them ``repel'' the AC. I've added this to the text.}
+It is a feature of SCR surveys that the AC locations of individuals farther from the detector array tend to be estimated with greater uncertainty than individuals within the array. This is illustrated in Figure~\ref{fig:screrr}, which shows the estimated probability density functions for ACs of two animals detected on a simulated SCR survey with a 4$\times$4 array placed in the center of the population shown in Figure~\ref{fig:densities}(b). The reason contours in the top right of the figure ``avoid'' the triangle is because the detection function range, estimated from the whole survey, not just the points shown, is large and if the AC was near the triangle, other detectors would have high probability of detecting it. The fact that they did not makes them ``repel'' the AC. %\todo[inline,size=\footnotesize]{BCS: How come the contours in the top-right are avoiding the black triangle? Shouldn't the contours be happy to cover the triangle, because the animal was detected there?\\ DLB: This is because the detection function range (estimated from the whole survey, not just the points shown) is large and if the AC was near the triangle, other detectors would have high probability of detecting it. The fact that they did not makes them ``repel'' the AC. I've added this to the text.}
 
 \begin{figure}[htbp]
 \centering
@@ -188,7 +195,7 @@ Maximum likelihood (ML) and Bayesian SCR estimation methods are documented in a 
 
 Given spatial capture histories, ML and Bayesian methods are also able to estimate the locations of ACs (like those shown in Figure~\ref{fig:densities}(b), for example). While ACs are points, there is always uncertainty associated with estimating their locations, so that SCR estimates of AC locations are probability density functions (PDFs), not points. Estimates of these PDFs are conditional on the spatial capture histories of the individuals concerned -- because the capture histories contain the information on where each animal's AC was (see the capture histories and estimated location densities in Figure~\ref{fig:screrr}, for example). Details of how one obtains these estimated AC PDFs are contained in Section 4.3 of \cite{Borchers+Efford:08} for ML methods and the section ``Estimating derived parameters'' on page 3238 of \cite{Royle+al:09b} for Bayesian methods.
 
-Note that we can obtain AC PDFs for undetected animals, because although the animals were unobserved, we know their capture histories -- namely no capture at every detector. Note also that all undetected animals will have the same AC PDF\footnote{This is not the case if there are individual-level covariates that affect detection probability estimates, but this is a complication that we ignore here in order to present as clear and uncomplicated an exposition of they key points of this paper as we can.} because they all have the same capture history. 
+Note that we can obtain AC PDFs for undetected animals, because although the animals were unobserved, we know their capture histories -- namely no capture at every detector. Note also that all undetected animals will have the same AC PDF because they all have the same capture history (unless there are individual-level covariates that affect detection probability estimates, a complication that we ignore here in order to present as clear and uncomplicated an exposition of they key points of this paper as we can). 
 
 Suppose that we estimate from an SCR survey that there are $\hat{N}$ animals within the survey region. If one adds up the AC PDFs for all $n$ detected animals, and the $\hat{N}-n$ AC PDFs of the undetected animals, at all points in the survey region, one gets a surface that is in many publications (including those listed in the Introduction) interpreted as a density surface for ACs, or sometimes for animal locations. This is an estimate of the realised AC density. It has been referred to as the estimated distribution, or density of \textit{animals}. However, animals distribute themselves around their ACs, so that AC density and animal density are not the same thing. Suppose for example, that we are certain that there is exactly one AC in a region that has surface area 1 (so that AC density in this region is 1). Suppose also that the animal with an AC in this region ranges wider than this region, and spends exactly half its time in this region. It is not certain that there is an animal in the region at any time, so that animal density will be less than 1. In this example, it would be fair to say that the \textit{animal} density in the region is 0.5. To avoid confusion, we refer to this as the ``usage density'' rather than ``animal density''. Details of how one estimates the realised usage density surface from an estimate of the realised AC density surface are given in Supplementary Material B.
 
@@ -224,13 +231,13 @@ When using relatively few activity centers (Figure~\ref{mlinputs}c), visual inte
 
 To estimate the realised AC surface, we assumed a model with constant density. To estimate an expected density surface, we generated covariates by manipulating the true density surfaces to blur them, using two levels of blurring, as shown in Figure~\ref{mona_peaky_avgd}, with either a strong (relatively little blurring) or weaker (more blurring) covariate effect. Pixel intensities were rescaled after blurring so that the number of expected activity centers remained the same as in the original surface (i.e., either 7,500 or 80). Because they are based on true density, these covariates are very informative about the true densities although the strength of the association between the covariate and true density is substantially lower for the ``Moderate'' covariate. For each of these covariates we estimated a corresponding expected AC density. Note that, because density is parameterised with a log link (see Section \ref{secrmethods}) but the blurred surfaces were obtained directly from the true density surface (so that $D(\mathbf{s})\approx x_k(\mathbf{s})$, with the degree of blurring determining the accuracy of approximation), covariates were log-transformed to ensure the model was correctly specified.
 
-For each activity centre scenario, we simulated 100 capture histories (at each array, keeping the locations of activity centres fixed) and estimated the expected AC density surface, realised AC density surface and realised usage density surface for each simulated capture history. This allowed us to average the density surfaces over repeated simulated surveys (for example, to show that differences between these surfaces the true population density surface are not a result of only a single survey being possible) as well as use the density surfaces from a single simulated survey (to show the typical output a researcher would obtain). We show both averaged and single-survey surfaces depending on our goals, making it clear in each case what we are referring to. We used maximum likelihood inference using the \texttt{secr} package\footnote{Realised AC density surfaces can be produced in \texttt{secr} with the \texttt{fx.total} function. Documentation warns the user that ``the surface represents what is known from the data about a specific realisation of the spatial point process for home range centres: varying the intensity of sampling will change its shape. It is not an unbiased estimate of a biologically meaningful density surface.''} \citep{secr:21} in R version 4.1.2 and Bayesian inference using the \texttt{NIMBLE} package \citep{deValpine:17, Turek:21}, also in R. Here were report on the maximum likelihood estimates; the Bayesian estimates are not materially different and are reported in Supplementary Material A.
+For each activity center scenario, we simulated 100 capture histories (at each array, keeping the locations of activity centers fixed) and estimated the expected AC density surface, realised AC density surface and realised usage density surface for each simulated capture history. This allowed us to average the density surfaces over repeated simulated surveys (for example, to show that differences between these surfaces the true population density surface are not a result of only a single survey being possible) as well as use the density surfaces from a single simulated survey (to show the typical output a researcher would obtain). We show both averaged and single-survey surfaces depending on our goals, making it clear in each case what we are referring to. We used maximum likelihood inference using the \texttt{secr} package \citep{secr:21} in R version 4.1.2 and Bayesian inference using the \texttt{NIMBLE} package \citep{deValpine:17, Turek:21}, also in R. Here were report on the maximum likelihood estimates; the Bayesian estimates are not materially different and are reported in Supplementary Material A.
 
 %We simulated capture histories and from them estimated the realised AC density surface and the realised usage density surface for each simulation and compared them to the true population density surface. We conducted maximum likelihood inference using the {\it secr} package in R version 3.4.3 and Bayesian inference using the NIMBLE package, also in R.\todo{Is this right - NIMBLE?} Here were report on the maximum likelihood estimates; the Bayesian estimates are not materially different and are reported in Appendix~\ref{appx:Bayesinference}.\todo{Need to create the appendix.}
 
 \subsection{Results}
 
-\subsubsection{Realised AC densities with many activity centers}
+\subsubsection{Realised activity center densities with many activity centers}
 
 %The same patterns hold in two dimensions under the standard wildlife survey assumptions of Poisson-distributed activity centers (with constant intensity) and detectability inversely related to distance from activity center (Figure \ref{mona1low} and \ref{mona1hi}). A single sampling occasion was sufficient to capture the broad features of the Mona Lisa, but only close to where detectors were located (Figure \ref{mona1low}, first row). 
 
@@ -241,7 +248,7 @@ A striking feature of realised AC density surface estimates shown in Figure~\ref
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{mona_torch_higheffort.png}
-\caption{Plot (a) shows the true AC densities. Plots (b), (c), (d) (e) show the estimated realised AC surfaces (averaged over 100 simulations) estimated using a 4$\times$3 array placed at four different locations. The orange, red, grey and yellow corner marks in plots (b) to (e) indicate the location of each of (b) to (e) in plot (a). The white dashed box located in the centre of the Mona Lisa's face in plot (a) is also shown in plots (b) to (d) so that one can easily compare the predictions of the centre of the face from each array.}
+\caption{Plot (a) shows the true AC densities. Plots (b), (c), (d) (e) show the estimated realised AC surfaces (averaged over 100 simulations) estimated using a 4$\times$3 array placed at four different locations. The orange, red, grey and yellow corner marks in plots (b) to (e) indicate the location of each of (b) to (e) in plot (a). The white dashed box located in the center of the Mona Lisa's face in plot (a) is also shown in plots (b) to (d) so that one can easily compare the predictions of the center of the face from each array.}
 \label{mona_torch_higheffort}
 \end{figure}
 
@@ -257,7 +264,7 @@ A striking feature of realised AC density surface estimates shown in Figure~\ref
 
 \subsubsection{Expected activity center densities with many activity centers}
 
-Introducing covariates into the density models allowed us to recover features of the Mona Lisa across the entire image, not just near where detectors were located (Figure~\ref{mona_covariates}). Recovery will seldom be this good in reality - we have covariates that are more strongly related to true density than would usually be obtainable -- and extrapolation so far beyond the area where data was collected is in any case ill-advised. Notwithstanding this, it is true in general that because the expected AC surface depends on the relationship between the covariate and density, the model uses estimates of this relationship obtained where it has lots of information (within the array) to infer density beyond the array. From a single survey\footnote{With such large sample sizes estimates of model coefficients show almost no variability from survey to survey and hence the expected AC surface, which is based on these coefficients, is also nearly identical between surveys. It makes almost no difference whether the results are averaged over repeated simulated surveys or not: the resulting expected AC surfaces are almost identical.}, with our ``Strong'' covariate (Figure~\ref{mona_covariates}a-c) we recovered all of the broad features of the Mona Lisa, and many of the fine scale features such as eyes, shading of clouds, {\it etc}. With the ``Moderate'' covariate (Figure~\ref{mona_covariates}d-f) we recovered broad scale features but no finer details. Importantly, the estimates within the dashed rectangle are almost identical for all array placements - these estimates are not sensitive to where the array is placed.
+Introducing covariates into the density models allowed us to recover features of the Mona Lisa across the entire image, not just near where detectors were located (Figure~\ref{mona_covariates}). Recovery will seldom be this good in reality -- we have covariates that are more strongly related to true density than would usually be obtainable -- and extrapolation so far beyond the area where data was collected is in any case ill-advised. Notwithstanding this, it is true in general that because the expected AC surface depends on the relationship between the covariate and density, the model uses estimates of this relationship obtained where it has lots of information (within the array) to infer density beyond the array. With such large sample sizes estimates of model coefficients show almost no variability from survey to survey and hence the expected AC surface, which is based on these coefficients, is also nearly identical between surveys. It makes almost no difference whether the results are averaged over repeated simulated surveys or not: the resulting expected AC surfaces are almost identical. From a single survey, with our ``Strong'' covariate (Figure~\ref{mona_covariates}a-c) we recovered all of the broad features of the Mona Lisa, and many of the fine scale features such as eyes, shading of clouds, {\it etc}. With the ``Moderate'' covariate (Figure~\ref{mona_covariates}d-f) we recovered broad scale features but no finer details. Importantly, the estimates within the dashed rectangle are almost identical for all array placements - these estimates are not sensitive to where the array is placed.
 
 %With a ``weak'' covariate, the estimated density surface essentially reverted to the mean intensity of the process across the entire region. With a ``locally strong'' covariate -- one that is a good indicator of density in some parts of the study region but poor elsewhere -- the dependency on array location was reintroduced. If the array was located where the covariate was strong, the estimated density surface was accurate in that vicinity. If the array was located where the covariate was weak, then the model estimated no relationship between covariate and density and reverted back to the mean intensity everywhere in the region (Figure \ref{covariates}). 
 
@@ -268,94 +275,67 @@ Introducing covariates into the density models allowed us to recover features of
 \label{mona_covariates}
 \end{figure}
 
-\subsubsection{AC densities with fewer activity centers}
-
+\subsubsection{Activity center and usage densities with fewer activity centers}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{mona_peaky_avgd.png}
-\caption{Estimates of realised AC density surfaces from a constant density model (first row) and expected activity center density surfaces from a model with density depending on ``Strong'' or ``Moderate'' covariates (second and third rows respectively). The 84 realised activity centers are shown in Figure~\ref{mlinputs}c. Detectors are shown as crosses. Results are averaged over 100 simulated surveys.}
+\caption{Estimates of realised AC density surfaces from a constant density model (first row), expected activity center density surfaces from a model with density depending on ``Strong'' or ``Moderate'' covariates (second and third rows respectively), and realised usage surfaces (last row). The 84 realised activity centers are shown in Figure~\ref{mlinputs}c. Detectors are shown as crosses. Results are averaged over 100 simulated surveys.}
 \label{mona_peaky_avgd}
 \end{figure}
 
-Figure~\ref{mona_peaky_avgd} shows the average realised AC density (top row) and the expected AC density (middle and bottom rows) for smaller sample sizes  from 100 simulations. An average of 31, 40 and 44 of the 84 ACs present in Figure~\ref{mlinputs}c was detected, giving average numbers of detections of each detected individual of 2.5, 6.6 and 12, respectively.
+Figure~\ref{mona_peaky_avgd} shows the average realised AC density (top row) and the expected AC density (second and third rows) for smaller sample sizes  from 100 simulations. An average of 31, 40 and 44 of the 84 ACs present in Figure~\ref{mlinputs}c was detected, giving average numbers of detections of each detected individual of 2.5, 6.6 and 12, respectively.
 
 Notice that the estimates of the realised AC surface (top row) (a) do not really recover the Mona Lisa in any recognisable way, (b) become more ``spiked'' (density concentrated more closely around ACs) inside the array as sample size increases, and (c) predict flat density far from the array. We discuss each of these features below.
 
 Regarding (a), realised AC surfaces are not designed to recover the expected density (which is what the Mona Lisa image is), they are designed to estimate the location of ACs and reflect the uncertainty in this estimation. Point (b) is a consequence of this: as sample size increases, the amount of information on where the ACs in the vicinity of the detectors are increases and hence the probability density of AC location contracts about the AC locations. Point (c) is another consequence: because ACs far from the array are not detected, there is no information in the sample on their location other than that contained in the SCR estimate of mean density, and so all the model ``knows'' about AC location far from the array is that they occur in space at the estimated mean density of ACs. 
 
-We also note that because Figure~\ref{mona_peaky_avgd} shows estimates averaged over 100 simulations, the realised AC densities in the plot are smoother than would be obtained from any single survey. An example from a single survey is shown in Figure \ref{move}.
+We also note that because Figure~\ref{mona_peaky_avgd} shows estimates averaged over 100 simulations, the realised AC densities in the plot are smoother than would be obtained from any single survey. An example from a single survey is shown in Supplementary Material A.
 
 %We observed similar patterns under the more ``wildlife survey appropriate'' condition in which we generated only 85 activity centers across the study region (Figure \ref{peaky}). In this case there is a large difference between the mean intensity surface (the Mona Lisa) and the activity center surface in this realization (85 points), and so it is not surprising that the estimated realised AC density surface looks nothing like the Mona Lisa (Figure \ref{peaky}, first row). Nevertheless, a model assuming constant density gives increasingly accurate estimates of the locations of activity centers in the vicinity of detectors as survey effort increases, but very little information is obtained elsewhere, and this does not change with survey effort (Figure \ref{peaky}, first row). This gives the estimated activity center surfaces a characteristic pattern -- the surface becomes increasingly peaked or ``spiky'' around detectors as survey effort increases, but remains flat away from the array. 
 
 %Any covariate model returns a surface that is some multiple of the covariate surface. Whether this is a good approximation of the true mean intensity surface depends on the strength of the covariate and sample size. With a strong covariate and sufficient sampling occasions we recovered the Mona Lisa, but with only a single occasion the direction of the relationship was incorrectly estimated, so that dark areas were predicted as light and light areas as dark (Figure \ref{peaky}, second row). This error was corrected by additional occasions. The same pattern occured with a moderate covariate, but the effect of the weaker covariate is clear in that we did not recover as good an approximation of the Mona Lisa (Figure \ref{peaky}, third row). Additional sampling would not help with this. Note that in both cases the surface we recovered is an approximation of the mean intensity surface. It does not give a good approximation to the locations of the 85 activity centers in this particular realization.
 
-Estimates of the expected AC density surface recover the Mona Lisa image well in the ``Strong'' covariate relationship scenarios (middle row of Figure~\ref{mona_peaky_avgd}), with greater focus as sample size increases and hence the amount of information about the relationship increases. The same is true in the case of the ``Moderate'' covariate scenarios (bottom row), but with a weaker relationship between covariate and true density, the image is more blurred, i.e. the covariate cannot pick out the high-resolution features of the density surface.
+Estimates of the expected AC density surface recover the Mona Lisa image well in the ``Strong'' covariate relationship scenarios (second row of Figure~\ref{mona_peaky_avgd}), with greater focus as sample size increases and hence the amount of information about the relationship increases. The same is true in the case of the ``Moderate'' covariate scenarios (third row), but with a weaker relationship between covariate and true density, the image is more blurred, i.e. the covariate cannot pick out the high-resolution features of the density surface.
 
-\subsubsection{Realised usage densities with few activity centers}
-
-Estimates of realised usage density surface estimates are shown in Figure~\ref{move}. The realised usage surfaces add an encounter function that is fairly insensitive to sample size, around the realised AC surface (see Supplementary Material B for details). This dilutes the effect of the realised AC surface concentrating around ACs as sample size increases and results in a smoother surface. Realised usage surfaces are higher than realised AC surfaces because each single AC generates multiple points of usage.
+Estimates of realised usage density are shown in the bottom row of plots in Figure~\ref{mona_peaky_avgd}. The realised usage surfaces add an encounter function that is fairly insensitive to sample size, around the realised AC surface (see Supplementary Material B for details). This dilutes the effect of the realised AC surface concentrating around ACs as sample size increases and results in a smoother surface. Realised usage surfaces are higher than realised AC surfaces because each single AC generates multiple points of usage.
 
 %The  realised usage density surfaces are not just smoothed versions of the realised AC surfaces, however. In our example unobserved animals were estimated to be spending their time on the outskirts of the study region, far away from any detectors (Figure \ref{move}, second row), which is quite different from the homogenous surface when considering only at activity centers (Figure \ref{move}, first row). In contrast, the realised animal density surface for captured animals {\it was} essentially a smoothed version of the realised activity center surface around the detector array, and so very similar in terms of the broad patterns it showed (Figure \ref{move}, third row).
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=1\textwidth]{mona_with_movement.png}
-\caption{Estimates of realised AC density surfaces from a constant density model (first row) and the corresponding realised usage surfaces (second row, note that colour is shown on a log scale), for both observed and unobserved animals. Detectors are shown as crosses. Results are from a single simulated survey.}
-\label{move}
-\end{figure}
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=1\textwidth]{mona_with_movement.png}
+%\caption{Estimates of realised AC density surfaces from a constant density model (first row) and the corresponding realised usage surfaces (second row, note that colour is shown on a log scale), for both observed and unobserved animals. Detectors are shown as crosses. Results are from a single simulated survey.}
+%\label{move}
+%\end{figure}
 
 \section{Camera-trap survey of tigers in Nagarahole, India}
 
 \subsection{Materials and methods}
-We reanalysed data obtained from a camera trap survey of tigers {\it Panthera tigris} living in and around the Nagarahole Tiger Reserve of Karnataka, India, as reported in \cite{Dorazio+Karanth:17}. A description of the survey can be found in  \cite{Dorazio+Karanth:17}. It used an array of 162 motion-activated camera traps, these being placed at 2–3 km intervals throughout the area (Figure~\ref{tigernocov}a). 
+We reanalysed data obtained from a camera trap survey of tigers {\it Panthera tigris} living in and around the Nagarahole Tiger Reserve of Karnataka, India, as reported in \cite{Dorazio+Karanth:17}. A description of the survey can be found in  \cite{Dorazio+Karanth:17}. It used an array of 162 motion-activated camera traps, these being placed at 2–3 km intervals throughout the area (Figure~\ref{tigers}, ``All traps''). 
 
-We fit a model assuming constant density, using three different trap arrays. The first array was the same one used in the original study, and from these data we estimate both the realised AC density and the realised usage density. The second array was a subset of traps that excluded about 70\% of the traps, leaving a large region without traps in the interior of the study region (Figure \ref{tigernocov}b). The third used a subset of traps that excluded eight detectors from each of two interior areas of the survey area in which the original survey showed the realised AC density to be 
-particularly high (Figure \ref{tigernocov}c). 
+We fit a model assuming constant density, using three different trap arrays. The first array was the same one used in the original study, and from these data we estimate both the realised AC density and the realised usage density. The second array was a subset of traps that excluded about 70\% of the traps, leaving a large region without traps in the interior of the study region (Figure \ref{tigers}, ``Subset \#1''). The third used a subset of traps that excluded eight detectors from each of two interior areas of the survey area in which the original survey showed the realised AC density to be particularly high (Figure \ref{tigernocov}, ``Subset \#2''). 
 
 We also fitted a number of covariate models to the three arrays. We investigated models in which density depended on longitude and latitude, as smooths or linear effects. The model with the lowest AIC was one in which the log of density depends linearly on latitude, and we report results from this model. 
 
 \subsection{Results} 
 %The same broad patterns were visible in our reanalysis of the Nagarahole tiger survey (Figures \ref{tigernocov} to \ref{tigerspaceuse}). 
 
-\subsubsection{Realised activity center densities}
+The full array of traps used in the original Nagarahole study clearly showed two spikes representing high realised AC center density in the interior of the study region (Figure \ref{tigers}a). When we refitted using a subset of traps that excludes traps in the interior of the study region, high realised AC density areas in the interior of the region were replaced by a flat surface indicating a homogenous low density, and the high density regions described above were not detected  (Figure \ref{tigers}b,d). We also observed some regions where estimated density {\it increased} after the removal of the interior traps (see the easternmost detectors in Figure \ref{tigers}b,d). %This occurs when animals have their activity centers near to, but outside, the area circumscribed by an array -- estimated activity centers then tend to be pulled towards the traps that they are closest to. 
 
-The full array of traps used in the original Nagarahole study clearly showed three areas of high realised AC center density in the interior of the study region, along easting $\approx 625$ and northing $\approx 1,324, 1,330$ or $1,336$ (Figure \ref{tigernocov}a). 
-
-When we refitted using a subset of traps that excludes traps in the interior of the study region, high realised AC density areas in the interior of the region were replaced by a flat surface indicating a homogenous low density, and the three high density regions described above were not detected  (Figure \ref{tigernocov}b,d). We also observed some regions where estimated density {\it increased} after the removal of the interior traps (see the easternmost detectors in Figure \ref{tigernocov}b,d). %This occurs when animals have their activity centers near to, but outside, the area circumscribed by an array -- estimated activity centers then tend to be pulled towards the traps that they are closest to. 
-
-With the second subset of traps, which exclude eight detectors from each of two high density interior areas, the constant density model still recognized that activity centers are located in these areas, but the estimated locations of these activity centers showed a clear shift from what was found in the original survey (Figure \ref{tigernocov}c,e). The estimated location of the northernmost of the two activity centers moved to the south east, while the other activity center moved to the south.
+With the second subset of traps, which exclude eight detectors from each of two high density interior areas, the constant density model still recognized that activity centers are located in these areas, but the estimated locations of these activity centers showed a clear shift from what was found in the original survey (Figure \ref{tigers}c,e). The estimated location of the northernmost of the two activity centers moved to the south east, while the other activity center moved to the south.
 
 % ID -- added two options for relative differences v1 and v2. v2 makes change relative to density with all traps if change is negative, and relative to density with reduced set of traps if positive. This makes all changes lie between -100 and +100, and avoids very large positive relative changes where density was tiny in the all traps density surface. Bit weird so I prefer v1, but that makes the colour scales asymmetric (see plot legend). Can squash the blue side but needs more ggplot than I know.
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{tiger_surfaces_nocovs.png}
-\caption{Estimated realised activity center densities of tigers in Nagarahole Tiger Sanctuary, India, obtained using different camera trap arrays. Plots (a), (b), and (c) show estimated densities; plots (d) and (e) show differences between the estimated densities obtained using using trap subset \#1 and \#2 and those obtained using all traps. Detectors are shown as black crosses. Red triangles in (c) show the location of what were two high-density spots in (a).}
-\label{tigernocov}
+\includegraphics[width=1\textwidth]{tiger_surfaces.png}
+\caption{A reanalysis of an SCR survey of tigers in Nagarahole Tiger Sanctuary, India, showing the realised AC densities (first row), expected AC densities (second row) and realised usage densities (third row) obtained with different camera trap arrays. The first three plots in each row show estimated densities; the last two plots show differences between the estimated densities obtained using using trap subset \#1 and \#2 and those obtained using all traps. Detectors are shown as black crosses, and red triangles show the location of what were two high-density spots in (a).}
+\label{tigers}
 \end{figure}
 
-\subsubsection{Expected activity center densities}
+The expected AC density surface obtained from this model showed the estimated density increasing southwards across the region, with density in the extreme south roughly four times that in the extreme north (Figure \ref{tigers}f). Estimates of expected AC density are much less spatially variable than estimates of realised AC density, and are much less sensitive to changes in the array of traps, providing that the array gives sufficient coverage of the covariate space to estimate the covariate relationship (Figure \ref{tigers}g-j). 
 
-The expected AC density surface obtained from this model showed the estimated density increasing southwards across the region, with density in the extreme south roughly four times that in the extreme north (Figure \ref{tigercov}a). Estimates of expected AC density are much less spatially variable than estimates of realised AC density, and are much less sensitive to changes in the array of traps, providing that the array gives sufficient coverage of the covariate space to estimate the covariate relationship (Figure \ref{tigercov}b-e). 
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=1\textwidth]{tiger_surfaces_covs.png}
-\caption{Estimated expected AC density of tigers in Nagarahole Tiger Sanctuary, India, obtained using different camera trap arrays. Plots (a), (b), and (c) show estimates of expected AC densities; plots (d) and (e) show differences between these when using using using trap subset \#1 and \#2, and those obtained using all traps. Detectors are shown as black crosses. The colour scale for (d) and (e) is the same as that for plots (d) and (e) of Figure~\ref{tigernocov}.}
-\label{tigercov}
-\end{figure}
-
-\subsubsection{Realised usage densities}
-
-An estimate of the realised usage density surface is shown alongside that of the realised AC density surface  in Figure~\ref{tigerspaceuse}. The realised usage density surface is smoother than the realised AC density surface, as expected - because animals ``spread'' themselves about their ACs by moving within their home ranges. % Activity center densities were highest in those cells where sufficient information had been gathered to precisely identify where a single tiger's activity center was. Adding movement to the surface had the effect of dispersing each area of high (activity center) density across a much wider area, the extent of which depended on the estimated range of movement. The estimated spatial scale parameter for the fitted half-normal detection function we used was $\sigma=1.85$km, so that animals can move a substantial distance from their activity centers, relative to the size of the study area. As a result, animal density was highest in areas in which there were several activity centers in relatively close proximity to one another, even if the location of these activity centers was less precisely known than other activity centers. This occured in areas near the southern and south-western borders of the reserve, as well as in a central location near $N=1340$ (Figure \ref{tigerspaceuse}). In contrast, animal density was low in areas that contained only a single activity center, even if the location of the activity center was precisely known (for example at $N=1330$, $E=624$).
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.6\textwidth]{tiger_spaceuse.png}
-\caption{Estimated (a) realised activity center density surfaces from a constant density model and (b) realised usage density surfaces for tigers in Nagarahole Tiger Sanctuary, India. High density areas are indicated in blue, low density areas in yellow. Detectors are shown as red crosses.}
-\label{tigerspaceuse}
-\end{figure}
-
+An estimate of the realised usage density surface is shown alongside that of the realised AC density surface in Figure~\ref{tigers}k-o. The realised usage density surface is smoother than the realised AC density surface, as expected - because animals ``spread'' themselves about their ACs by moving within their home ranges. As a result, it is also less sensitive to where traps are located.  % Activity center densities were highest in those cells where sufficient information had been gathered to precisely identify where a single tiger's activity center was. Adding movement to the surface had the effect of dispersing each area of high (activity center) density across a much wider area, the extent of which depended on the estimated range of movement. The estimated spatial scale parameter for the fitted half-normal detection function we used was $\sigma=1.85$km, so that animals can move a substantial distance from their activity centers, relative to the size of the study area. As a result, animal density was highest in areas in which there were several activity centers in relatively close proximity to one another, even if the location of these activity centers was less precisely known than other activity centers. This occured in areas near the southern and south-western borders of the reserve, as well as in a central location near $N=1340$ (Figure \ref{tigerspaceuse}). In contrast, animal density was low in areas that contained only a single activity center, even if the location of the activity center was precisely known (for example at $N=1330$, $E=624$).
 
 \section{Discussion} \label{discussion}
 The realised AC density obtained from an SCR model cannot be interpreted as a species distribution model. Species distribution models predict where species are likely to occur by correlating environmental covariates with species occurrence or species density. %Their rationale is to find favourable habitats and predict that animals will be found in similar habitats across the study region. 
@@ -363,7 +343,7 @@ A species distribution model will tend to place higher densities at locations wh
 
 In contrast, high realised AC density occurs where the model is most certain that an activity center is located. Crucially, location of high- and low-density regions of a realised AC density surface depends on (a) where detectors are located (if one was using SCR to identify areas of high density e.g.\ for conservation purposes, or to locate animals, different areas would be identified depending on where the array was placed), and (b) on survey effort (with higher effort resulting in higher troughs and spikes in the realised AC density surface). Different arrays produce quite different estimates for exactly the same AC locations. A useful metaphor here is of SCR as a torch shining a light onto the true activity centers -- what you see depends on where you shine the torch (detector locations) and how brightly you shine it (survey effort). If you interpret the uniform darkness outside of the beam to mean that everything outside the beam is the same, you fundamentally misunderstand the nature of torches and will draw fundamentally incorrect conclusions.
 
-Realised AC surfaces tend to be flat away from where detectors are located. It is important to understand that this flatness reflects a lack of knowledge about the density surface away from detectors, and does not mean that the density surface is flat away from detectors. This point is clearly stated in \cite{{Royle+al:13a}}\footnote{They say: ``As we move away from `where the data live' (away from the detector array) we see that the density approaches the mean density. This is a property of the estimator as long as the detection function decreases sufficiently rapidly as a function of distance. ... predictions tend toward the global mean as the influence of data diminishes'' \citep[p165-166][]{Royle+al:13a}} but is misinterpreted whenever researchers explicitly or implicitly treat realised activity center densities as maps of the spatial distribution of activity centers across the study area. %An exception is when the study region is fully covered by a dense array of detectors, effectively shining an SCR ``torch'' on the whole region. 
+Realised AC surfaces tend to be flat away from where detectors are located. It is important to understand that this flatness reflects a lack of knowledge about the density surface away from detectors, and does not mean that the density surface is flat away from detectors. This point is clearly stated in \cite{Royle+al:13a}, who say (p165-166) ``As we move away from `where the data live' (away from the detector array) we see that the density approaches the mean density. This is a property of the estimator as long as the detection function decreases sufficiently rapidly as a function of distance. ... predictions tend toward the global mean as the influence of data diminishes'', but is misinterpreted whenever researchers explicitly or implicitly treat realised activity center densities as maps of the spatial distribution of activity centers across the study area. %An exception is when the study region is fully covered by a dense array of detectors, effectively shining an SCR ``torch'' on the whole region. 
 
 Another way to see that flatness away from detectors reflects uncertainty rather than homogenous density is to plot lower and upper percentiles at each pixel, rather than just the posterior mean -- the differences between these percentiles would be large away from detectors and small close to detectors. It seems that this is rarely done, or at least reported in the literature; a practice that would be worth changing. 
 
@@ -406,18 +386,18 @@ Our main messages are:
 
 This work was part-funded by the Royal Society of New Zealand through Marsden grant UOA-1929.
 
-\section*{Conflict of interest statement}
-
-The authors declare no potential conflicts of interest.
+%\section*{Conflict of interest statement}
+%
+%The authors declare no potential conflicts of interest.
 
 \section*{Data availability}
 
 All data and code used in the paper, along with model objects and results, are available at \url{https://github.com/david-borchers/monalisa}. If accepted we would use Zenodo to create a permanent DOI link to the version of the repository used to generate the results in the paper.
 
-\section*{Authors' contributions} 
-DB conceived the initial idea of clarifying density surface meanings. BS conceived the idea of usage density surfaces and developed the theory describing these. ID and RP designed the Mona Lisa simulations. ID and RP implemented the simulations using maximum likelihood methods. RC and BS implemented the simulations using Bayesian methods. ID designed and implemented the Nagarahole re-analysis. KS provided guidance on misinterpretation and feedback on proposed guidelines. DB, ID, BS and RC wrote the paper. All authors contributed critically to the drafts and gave final approval for publication.
+%\section*{Authors' contributions} 
+%DB conceived the initial idea of clarifying density surface meanings. BS conceived the idea of usage density surfaces and developed the theory describing these. ID and RP designed the Mona Lisa simulations. ID and RP implemented the simulations using maximum likelihood methods. RC and BS implemented the simulations using Bayesian methods. ID designed and implemented the Nagarahole re-analysis. KS provided guidance on misinterpretation and feedback on proposed guidelines. DB, ID, BS and RC wrote the paper. All authors contributed critically to the drafts and gave final approval for publication.
 
-\bibliographystyle{mee}
+\bibliographystyle{biom}
 \bibliography{monalisa}
 
 

@@ -36,11 +36,11 @@
 \affil[2]{\footnotesize Centre for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
 \affil[3]{\footnotesize Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
 \affil[4]{\footnotesize Snow Leopard Trust, Seattle, Washington, United States of America}
-\affil[*]{\footnotesize Corresponding author: id52@st-andrews.ac.uk}
+\affil[*]{\footnotesize Corresponding author: indurbach@gmail.com}
 
 \date{}
 
-\title{That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
+\title{Supplementary Material: That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
 
 
 \begin{document}
@@ -54,12 +54,11 @@ fitting maximum-likelihood SCR models to simulated data. In this
 appendix we reproduce results from Section 4 using Bayesian models
 fitted via MCMC to demonstrate that our conclusions are not simply a
 consequence of adopting a classical approach. We focus on reproducing
-Figures 7 and 9 from the manuscript; Figures 6 and 8 are based on
-averages over 100 simulations, which would require considerable
+Figures 5 and a single-simulation version of Figure 6 from the manuscript; other figures are based on averages over 100 simulations, which would require considerable
 computation time given that fitting SCR models via MCMC is more time
 consuming than maximum likelihood.
 
-In Section \ref{sec:appendix-model-fitting} we describe our Baysian
+In Section \ref{sec:appendix-model-fitting} we describe our Bayesian
 models, and in Section \ref{sec:appendix-results} we summarise our
 results.
 
@@ -112,11 +111,11 @@ and $\beta_1$:
 
 When we fit each constant density model, we ran 11\,000 MCMC
 iterations, where we set M to be equal to 300. We also used an
-adapatation interval of 1000, and discarded 1500 iterations as burn-in.
+adaptation interval of 1000, and discarded 1500 iterations as burn-in.
 
 When fitting each inhomogeneous density model, we ran 101\,000 MCMC
 iterations, and used a value of 9000 for M. We didn't use an
-adaptation interval, and disarded 2500 iterations as burn-in.
+adaptation interval, and discarded 2500 iterations as burn-in.
 
 \subsection{Results}
 \label{sec:appendix-results}
@@ -129,10 +128,9 @@ via maximum likelihood models fitted to the same data.
 
 The plots based on our Bayesian models fitted via MCMC (Figures
 \ref{fig:fig7} and \ref{fig:fig9}, respectively) were qualitatively
-similar to those based on maximum likelihood mdoels presented in the
-manuscript (Figures 7 and 9, respectively). We observed that the
+similar to those based on maximum likelihood models (respectively, Figure 5 and a single-survey version of Figure 6 shown in\ref{fig:fig9-mle}). We observed that the
 locations with the highest AC densities in Figure \ref{fig:fig9} were
-shifted slightly further from the detectors, relative to Figure 9. A
+shifted slightly further from the detectors, relative to Figure \ref{fig:fig9-mle}. A
 potential explanation for subtle differences is that our Bayesian
 plots are constructed based on entire posterior distributions, whereas
 the maximum likelihood alternatives only use point estimates.
@@ -514,25 +512,25 @@ detectors_df_all <- detectors_df_all %>% distinct()
 # ---------------
 # Creating objects that contain the density values for each map, along with other required information
 # 3 sampling occasions
-df.3occ.all <- data.frame(pixel.centres, density.3occ.all, as.factor(rep("D~1", 2500)), as.factor(rep("None", 2500)), as.factor(rep(3,2500)))
+df.3occ.all <- data.frame(pixel.centres, density.3occ.all, as.factor(rep("D~1", 2500)), as.factor(rep("Realised AC", 2500)), as.factor(rep(3,2500)))
 names(df.3occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 # 10 sampling occasions
-df.10occ.all <- data.frame(pixel.centres, density.10occ.all, as.factor(rep("D~1", 2500)),  as.factor(rep("None", 2500)), as.factor(rep(10,2500)))
+df.10occ.all <- data.frame(pixel.centres, density.10occ.all, as.factor(rep("D~1", 2500)),  as.factor(rep("Realised AC", 2500)), as.factor(rep(10,2500)))
 names(df.10occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 # 20 sampling occasions
-df.20occ.all <- data.frame(pixel.centres, density.20occ.all, as.factor(rep("D~1", 2500)), as.factor(rep("None", 2500)), as.factor(rep(20,2500)))
+df.20occ.all <- data.frame(pixel.centres, density.20occ.all, as.factor(rep("D~1", 2500)), as.factor(rep("Realised AC", 2500)), as.factor(rep(20,2500)))
 names(df.20occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 ## Combining these objects into one data frame
 ac_densities_without_movement <- rbind.data.frame(df.3occ.all, df.10occ.all, df.20occ.all)
 
 # 3 sampling occasions
-df.3occ.all.withmov <- data.frame(pixel.centres, density.3occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("With movement", 2500)), as.factor(rep(3,2500)))
+df.3occ.all.withmov <- data.frame(pixel.centres, density.3occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("Realised usage", 2500)), as.factor(rep(3,2500)))
 names(df.3occ.all.withmov) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 # 10 sampling occasions
-df.10occ.all.withmov <- data.frame(pixel.centres, density.10occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("With movement", 2500)), as.factor(rep(10,2500)))
+df.10occ.all.withmov <- data.frame(pixel.centres, density.10occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("Realised usage", 2500)), as.factor(rep(10,2500)))
 names(df.10occ.all.withmov) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 # 20 sampling occasions
-df.20occ.all.withmov <- data.frame(pixel.centres, density.20occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("With movement", 2500)), as.factor(rep(20,2500)))
+df.20occ.all.withmov <- data.frame(pixel.centres, density.20occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("Realised usage", 2500)), as.factor(rep(20,2500)))
 names(df.20occ.all.withmov) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 ## Combining these objects into one data frame
 ac_densities_with_movement <- rbind.data.frame(df.3occ.all.withmov, df.10occ.all.withmov, df.20occ.all.withmov)
@@ -569,7 +567,7 @@ p1 <- ac_densities_with_movement %>%
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
 p2a <- ac_densities_with_movement %>%
-  filter(occasions != capthist_labels[1], movetype == "None") %>%
+  filter(occasions != capthist_labels[1], movetype == "Realised AC") %>%
   ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
   #scale_fill_gradientn(colours = pal, limits = c(0,0.3), breaks = c(0,0.1,0.2,0.3)) +
@@ -587,7 +585,7 @@ p2a <- ac_densities_with_movement %>%
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
 p2b <- ac_densities_with_movement %>%
-  filter(occasions != capthist_labels[1], movetype == "With movement") %>%
+  filter(occasions != capthist_labels[1], movetype == "Realised usage") %>%
   ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
   #scale_fill_gradientn(colours = pal, limits = c(0,0.1), breaks = c(0,0.05,0.1)) +
