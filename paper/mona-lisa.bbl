@@ -1,4 +1,4 @@
-\begin{thebibliography}{21}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Alexander \emph{et~al.}(2015)Alexander, Gopalaswamy, Shi \&
@@ -45,9 +45,19 @@ Dorazio, R.M. \& Karanth, K.U. (2017) A hierarchical model for estimating the
   recorders.
 \newblock \emph{PlosOne}, \textbf{12}.
 
+\bibitem[{Drake \emph{et~al.}(in press)Drake, Lambin \&
+  Sutherland}]{Drake+al:ip}
+Drake, J., Lambin, X. \& Sutherland, C. (in press) The value of considering
+  demographic contributions to connectivity: a review.
+\newblock \emph{Ecography}.
+
 \bibitem[{Efford(2004)}]{Efford:04}
 Efford, M.G. (2004) Density estimation in live-trapping studies.
 \newblock \emph{Oikos}, \textbf{106}, 598--610.
+
+\bibitem[{Efford(2021)}]{secr:21}
+Efford, M.G. (2021) \emph{secr: Spatially explicit capture-recapture models}.
+\newblock R package version 4.4.8.
 
 \bibitem[{Elliot \& Gopalaswamy(2016)}]{Elliot+Gopalaswamy:16}
 Elliot, N.B. \& Gopalaswamy, A.M. (2016) Toward accurate and precise estimates
@@ -91,6 +101,13 @@ Lavariega, M.C., R{\'\i}os-Sol{\'\i}s, J.A., Flores-Mart{\'\i}nez, J.J.,
   (panthera onca) in the chinantla region, mexico.
 \newblock \emph{Tropical Conservation Science}, \textbf{13}, 1940082920917825.
 
+\bibitem[{Popescu \emph{et~al.}(2014)Popescu, de~Valpine \&
+  Sweitzer}]{Popescu+al:14}
+Popescu, V.D., de~Valpine, P. \& Sweitzer, R.A. (2014) Testing the consistency
+  of wildlife data types before combining them: the case of camera traps and
+  telemetry.
+\newblock \emph{Ecology and Evolution}, \textbf{4}, 933--943.
+
 \bibitem[{Qi \emph{et~al.}(2015)Qi, Shi, Wang, Li, Sun, Hua \& Jiang}]{Qi2015}
 Qi, J., Shi, Q., Wang, G., Li, Z., Sun, Q., Hua, Y. \& Jiang, G. (2015) Spatial
   distribution drivers of amur leopard density in northeast china.
@@ -120,6 +137,13 @@ Srivathsa, A., Rodrigues, R.G., Toh, K.B., Zachariah, A., Taylor, R.W., Oli,
   Next-generation sequencing and spatial capture--recapture models offer
   opportunities for conservation monitoring of an endangered social canid.
 \newblock \emph{Biological Conservation}, \textbf{256}, 109028.
+
+\bibitem[{Tenan \emph{et~al.}(2017)Tenan, Pedrini, Bragalanti, Groff \&
+  Sutherland}]{Tenan+al:17}
+Tenan, S., Pedrini, P., Bragalanti, N., Groff, C. \& Sutherland, C. (2017) Data
+  integration for inference about spatial processes: A model-based approach to
+  test and account for data inconsistency.
+\newblock \emph{PlosOne}, \textbf{12}, e0185588.
 
 \bibitem[{Turek \emph{et~al.}(2021)Turek, Milleret, Ergon, Br{\o}seth, Dupont,
   Bischof \& de~Valpine}]{Turek:21}

@@ -1,46 +1,46 @@
-This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2021)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: mona-lisa.aux
 The style file: mee.bst
 Database file #1: monalisa.bib
-You've used 21 entries,
+You've used 25 entries,
             2811 wiz_defined-function locations,
-            739 strings with 9585 characters,
-and the built_in function-call counts, 17802 in all, are:
-= -- 1455
-> -- 842
-< -- 6
-+ -- 327
-- -- 300
-* -- 1628
-:= -- 2720
-add.period$ -- 42
-call.type$ -- 21
-change.case$ -- 203
-chr.to.int$ -- 21
-cite$ -- 21
-duplicate$ -- 1306
-empty$ -- 1332
-format.name$ -- 371
-if$ -- 3483
+            760 strings with 10270 characters,
+and the built_in function-call counts, 20377 in all, are:
+= -- 1670
+> -- 946
+< -- 7
++ -- 369
+- -- 336
+* -- 1843
+:= -- 3125
+add.period$ -- 50
+call.type$ -- 25
+change.case$ -- 235
+chr.to.int$ -- 25
+cite$ -- 25
+duplicate$ -- 1503
+empty$ -- 1529
+format.name$ -- 417
+if$ -- 3983
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 222
-newline$ -- 88
-num.names$ -- 84
-pop$ -- 410
+missing$ -- 255
+newline$ -- 104
+num.names$ -- 100
+pop$ -- 478
 preamble$ -- 1
-purify$ -- 183
+purify$ -- 211
 quote$ -- 0
-skip$ -- 257
+skip$ -- 308
 stack$ -- 0
-substring$ -- 1377
-swap$ -- 552
+substring$ -- 1548
+swap$ -- 634
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 186
+type$ -- 222
 warning$ -- 0
-while$ -- 109
+while$ -- 127
 width$ -- 0
-write$ -- 253
+write$ -- 299
