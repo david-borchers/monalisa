@@ -38,7 +38,7 @@ D.linear.x = function(mask,Dleft,Dright) {
 distance = function(to,from) return(sqrt((to[1]-from[1])^2 + (to[2]-from[2])^2))
 
 addnormal = function(ac,mask,sigma,lambda=1) {
-  dists = apply(mask,1,distance,from=ac)
+  dists = unlist(apply(mask,1,distance,from=ac))
   dens = lambda*exp(-dists^2/(2*sigma^2))
   dens = dens/sum(dens)
   return(dens)
