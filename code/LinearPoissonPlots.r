@@ -99,11 +99,11 @@ plot(trapboundary)
 plot(inspdf.maxacerr,col=terrain.colors(40),what="image",add=TRUE)
 plot(inpop,pch=19,cex=0.25,col="darkgray",add=TRUE)
 
-# Create increasing error density surface, up to max.error.sigma (V slow!) and add do mask
+# Create increasing error density surface, up to max.error.sigma (V slow!) and add to mask
 acerrtrend = rep(0,dim(mask)[1])
 d = sigmad = rep(0,dim(pop)[1])
 for(i in 1:dim(pop)[1]) d[i] = sqrt(sum((pop[i,]-errpts[1,])^2))
-# make sigma increas up to sill of max.error.sigma at dmax:
+# make sigma increase up to sill of max.error.sigma at dmax:
 for(i in 1:dim(pop)[1]) sigmad[i] = min(max.error.sigma,error.sigma + d[i]/dmax*(max.error.sigma-error.sigma))
 system.time(for(i in 1:dim(pop)[1]) acerrtrend <- acerrtrend + addnormal(pop[i,],mask,sigma=sigmad[i])) # This is slow!
 covariates(mask)$acerrtrend = acerrtrend
@@ -220,6 +220,19 @@ points(errpts,pch="+")
 # Plot various kinds of densities
 # ===============================
 
+#pdf(file="./paper/sigmas.pdf",h=2,w=6)
+#par(mfrow=c(1,3),mar=c(1,4,1,1))
+#plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),ylab=expression(sigma))
+#segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+#par(mar=c(1,1,1,1))
+#plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma))
+#segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+#plot(x,sigma,type="l",xaxt="n",ylim=c(0,max.error.sigma))
+#segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+
+
+
+
 pdf(file="./paper/densities.pdf",h=2,w=6)
 par(mfrow=c(1,3),mar=c(0.25,0.25,1.5,0.25))
 # Plot the ac density surface
@@ -236,39 +249,12 @@ plot(inspdf.usage,col=heat.colors(40),what="image",add=TRUE)
 plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
 dev.off()
 
-
-pdf(file="./paper/sigmas.pdf",h=2,w=6)
-par(mfrow=c(1,3),mar=c(1,4,1,1))
-plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),ylab=expression(sigma))
-segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
-par(mar=c(1,1,1,1))
-plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma))
-segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
-plot(x,sigma,type="l",xaxt="n",ylim=c(0,max.error.sigma))
-segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
-
-
-
-
 # Plot sigmas and activity centre density maps with observation error
 x0 = bbox(boundary)[1,1]
 xmax = bbox(boundary)[1,2]
 xmid = errpts[1,1]
 x = c(x0,(xmid-dmax),xmid,(xmid+dmax),xmax)
 sigma = c(max.error.sigma,max.error.sigma,error.sigma,max.error.sigma,max.error.sigma)
-
-pdf(file="./paper/sigmas.pdf",h=1,w=6)
-par(mfrow=c(1,3),mar=c(1,2,1.5,2))
-#plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab=expression(sigma),main="(d)")
-plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab="",main="(d)")
-segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
-#plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",xlab="",ylab=expression(sigma),ylim=c(0,max.error.sigma),main="(e)")
-plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",xlab="",ylab="",ylim=c(0,max.error.sigma),main="(e)")
-segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
-#plot(x,sigma,type="l",xaxt="n",xlab="",ylab=expression(sigma),ylim=c(0,max.error.sigma),main="(f)")
-plot(x,sigma,type="l",xaxt="n",xlab="",ylab="",ylim=c(0,max.error.sigma),main="(f)")
-segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
-dev.off()
 
 pdf(file="./paper/acesterr.pdf",h=2,w=6)
 # Plot with small error
@@ -288,6 +274,69 @@ plot(inspdf.acerrtrend,col=heat.colors(40),what="image",add=TRUE)
 plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
 dev.off()
 
+pdf(file="./paper/sigmas.pdf",h=1,w=6)
+par(mfrow=c(1,3),mar=c(1,2,1.5,2))
+#plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab=expression(sigma),main="(d)")
+plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab="",main="(d)")
+segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+#plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",xlab="",ylab=expression(sigma),ylim=c(0,max.error.sigma),main="(e)")
+plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",xlab="",ylab="",ylim=c(0,max.error.sigma),main="(e)")
+segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+#plot(x,sigma,type="l",xaxt="n",xlab="",ylab=expression(sigma),ylim=c(0,max.error.sigma),main="(f)")
+plot(x,sigma,type="l",xaxt="n",xlab="",ylab="",ylim=c(0,max.error.sigma),main="(f)")
+segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+dev.off()
+
+# Now redo with labels that allow all three plots to be put in one, and as png instead of pdf:
+
+jpeg(file="./paper/densities2.jpg",h=2,w=6,units="in",res=720)
+par(mfrow=c(1,3),mar=c(0.25,0.25,1.5,0.25))
+# Plot the ac density surface
+plot(trapboundary,main="(a)")
+plot(inspdf.D,col=heat.colors(40),what="image",add=TRUE)
+# Plot the realised acs
+par(mar=c(0.25,0.25,1.5,0.25))
+plot(trapboundary,main="(b)")
+plot(inpop,pch=19,cex=0.25,add=TRUE)
+# Plot the usage density surface
+par(mar=c(0.25,0.25,1.5,0.25))
+plot(trapboundary,main="(c)")
+plot(inspdf.usage,col=heat.colors(40),what="image",add=TRUE)
+plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
+dev.off()
+
+
+jpeg(file="./paper/acesterr2.jpg",h=2,w=6,units="in",res=720)
+# Plot with small error
+par(mfrow=c(1,3),mar=c(0.25,0.25,1.5,0.25))
+plot(trapboundary,main="(d)")
+plot(inspdf.acerr,col=heat.colors(40),what="image",add=TRUE)
+plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
+# Plot with large error
+par(mar=c(0.25,0.25,1.5,0.25))
+plot(trapboundary,main="(e)")
+plot(inspdf.maxacerr,col=heat.colors(40),what="image",add=TRUE)
+plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
+# Plot with small-to-large error
+par(mar=c(0.25,0.25,1.5,0.25))
+plot(trapboundary,main="(f)")
+plot(inspdf.acerrtrend,col=heat.colors(40),what="image",add=TRUE)
+plot(inpop,pch=19,cex=0.25,col="gray",add=TRUE)
+dev.off()
+
+
+jpeg(file="./paper/sigmas2.jpg",h=1,w=6,units="in",res=720)
+par(mfrow=c(1,3),mar=c(1,2,1.5,2))
+#plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab=expression(sigma),main="(d)")
+plot(c(x0,xmax),rep(error.sigma,2),type="l",xaxt="n",ylim=c(0,max.error.sigma),xlab="",ylab="",main="(g)")
+segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+#plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",xlab="",ylab=expression(sigma),ylim=c(0,max.error.sigma),main="(e)")
+plot(c(x0,xmax),rep(max.error.sigma,2),type="l",xaxt="n",xlab="",ylab="",ylim=c(0,max.error.sigma),main="(h)")
+segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+#plot(x,sigma,type="l",xaxt="n",xlab="",ylab=expression(sigma),ylim=c(0,max.error.sigma),main="(f)")
+plot(x,sigma,type="l",xaxt="n",xlab="",ylab="",ylim=c(0,max.error.sigma),main="(i)")
+segments(c(x0+buffer,xmax-buffer),rep(0,2),c(x0+buffer,xmax-buffer),rep(max.error.sigma,2),lty=2)
+dev.off()
 
 
 pdf(file="./paper/acuseesterr.pdf",h=2,w=6)
