@@ -51,34 +51,28 @@ ch7b.cv <- numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7b.sample[,'beta0'] + ch7b.sample[,'beta1']*(log(dgood)[i]))
-  # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
+  # Saving density value for ith pixel. This should be the posterior sd for the density for the ith pixel
   ch7b.cv[i] <- sd(density.vec)/mean(density.vec)
 }
 
 # ch7c
 ch7c.cv <- numeric()
 for (i in 1:2500) {
-  # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7c.sample[,'beta0'] + ch7c.sample[,'beta1']*(log(dgood)[i]))
-  # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7c.cv[i] <- sd(density.vec)/mean(density.vec)
 }
 
 # ch7e
 ch7e.cv <- numeric()
 for (i in 1:2500) {
-  # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7e.sample[,'beta0'] + ch7e.sample[,'beta1']*(log(dblur)[i]))
-  # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7e.cv[i] <- sd(density.vec)/mean(density.vec)
 }
 
 # ch7f
 ch7f.cv <- numeric()
 for (i in 1:2500) {
-  # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7f.sample[,'beta0'] + ch7f.sample[,'beta1']*(log(dblur)[i]))
-  # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7f.cv[i] <- sd(density.vec)/mean(density.vec)
 }
 
@@ -136,29 +130,29 @@ pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.
 ch7b.df <- data.frame(pixel.centres, ch7b.cv, rep("Dgood", 2500), rep(20, 2500), rep("27_31", 2500))
 names(ch7b.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
 # Reordering to match pixel order
-split = split(ch7b.df, ch7b.df$y)
-ch7b.df = do.call("rbind", rev(split))
+split <-  split(ch7b.df, ch7b.df$y)
+ch7b.df <-  do.call("rbind", rev(split))
 
 # ch7c
 # covtype=Dgood, occasions=20, array_origin=15_15
 ch7c.df <- data.frame(pixel.centres, ch7c.cv, rep("Dgood", 2500), rep(20, 2500), rep("15_15", 2500))
 names(ch7c.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
-split = split(ch7c.df, ch7c.df$y)
-ch7c.df = do.call("rbind", rev(split))
+split <-  split(ch7c.df, ch7c.df$y)
+ch7c.df <-  do.call("rbind", rev(split))
 
 # ch7e
 # covtype=Dblur, occasions=20, array_origin=27_31
 ch7e.df <- data.frame(pixel.centres, ch7e.cv, rep("Dblur", 2500), rep(20, 2500), rep("27_31", 2500))
 names(ch7e.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
-split = split(ch7e.df, ch7e.df$y)
-ch7e.df = do.call("rbind", rev(split))
+split <-  split(ch7e.df, ch7e.df$y)
+ch7e.df <-  do.call("rbind", rev(split))
 
 # ch7f
 # covtype=Dblur, occasions=20, array_origin=15_15
 ch7f.df <- data.frame(pixel.centres, ch7f.cv, rep("Dblur", 2500), rep(20, 2500), rep("15_15", 2500))
 names(ch7f.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
-split = split(ch7f.df, ch7f.df$y)
-ch7f.df = do.call("rbind", rev(split))
+split <-  split(ch7f.df, ch7f.df$y)
+ch7f.df <-  do.call("rbind", rev(split))
 
 # And now, combining into one data frame
 predicted_densities_all <- rbind(ch7b.df, ch7e.df, ch7c.df, ch7f.df)
@@ -308,59 +302,83 @@ ggsave("Figure7_UncertaintyPlot.png", pp, width=7.5, height=5.8, dpi = 600)
 
 ## ----------------------- Uncertainty plot for Figure 9 ----------------------------------
 
-# Basically, what we are already doing with the RACD maps is finding the posterior mean of the number of activity centres in a given pixel
-# So, what we want is to find the posterior standard deviation of the number of activity centres in a pixel, and divide it by the posterior mean to give the CV (coefficient of variation), which we will then plot in our uncertainty plots!
+# Basically, what we are already doing with the RACD maps is finding the posterior mean of the number of activity centres in a given pixel.
+# To create our uncertainty plots, we want to find the posterior standard deviation of the number of activity centres in each pixel, and divide this by the posterior mean of the number of activity centres in each pixel (therefore finding the CV for each pixel).
 
-load("Figure 9/Fig9_MCMC_3occ.RData")
-results = results.3occ
-xlim = c(0.5, 50.5)
-ylim = c(0.5, 50.5)
-M = 300
+# Function to find the posterior standard deviation for the number of activity centres in each pixel, modelled after no.movement.density.vector(). Posterior sd's will be in corresponding order to posterior means found using no.movement.density.vector().
+sd.RACD <- function(xlim, ylim, results, M) {
 
-# Points at which local density will be estimated
-xg <- seq(xlim[1], xlim[2], by=1)
-yg <- seq(ylim[1], ylim[2], by=1)
+  ## Pixel centres we are working with
+  xg <- seq(xlim[1], xlim[2], by=1)
+  yg <- seq(ylim[1], ylim[2], by=1)
 
-# Extracting z-values
-# Names of variables that have been monitored
-names <- names(results[1,])
-# Extracting "z" values from MCMC results
-Z <- results[,grep("z", names)]
+  ## Extracting z-values
+  # Names of variables that have been monitored
+  names <- names(results[1,])
+  # Extracting "z" values from MCMC results
+  Z <- results[,grep("z", names)]
 
-# Extracting activity centres
-# Extracting "s" values from MCMC results (i.e. extracting sampled activity centres)
-S <- results[,grep("s[^i]", names)]
-# x-coordinates of all activity centres
-Sx <- S[,1:M]
-# y-coordinates of all activity centres
-Sy <- S[,-(1:M)]
+  ## Extracting activity centres
+  # Extracting "s" values from MCMC results (i.e. extracting sampled activity centres)
+  S <- results[,grep("s[^i]", names)]
+  # x-coordinates of all activity centres
+  Sx <- S[,1:M]
+  # y-coordinates of all activity centres
+  Sy <- S[,-(1:M)]
 
-# For each iteration, want number of animals alive and in each cell -- this is what we store in the 'Dn.vals' matrix
-head(Sx)
-Dn.vals = matrix(0, nrow=10000, ncol=2500)
-for (i in 1:10000) {
-  if ((i %% 100) == 0) print(i)
-  Sxout = Sx[i,][Z[i,] == 1]
-  Sxout = cut(Sxout, breaks=xg, include.lowest=TRUE)
-  Syout = Sy[i,][Z[i,] == 1]
-  Syout = cut(Syout, breaks=yg, include.lowest=TRUE)
-  Dn.vals[i,] = as.vector(table(Sxout, Syout))
+  ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell
+  Dn.vals = matrix(0, nrow=10000, ncol=2500)
+  for (i in 1:10000) {
+    if ((i %% 100) == 0) print(i) # Track progress
+    Sxout = Sx[i,][Z[i,] == 1]
+    Sxout = cut(Sxout, breaks=xg, include.lowest=TRUE)
+    Syout = Sy[i,][Z[i,] == 1]
+    Syout = cut(Syout, breaks=yg, include.lowest=TRUE)
+    Dn.vals[i,] = as.vector(table(Sxout, Syout))
+  }
+
+  ## Posterior standard deviation for number of activity centres in each pixel
+  density.vector <- apply(Dn.vals, 2, sd)
 }
 
-# Posterior mean of number of animals in each pixel
-range(apply(Dn.vals, 2, mean))
-posterior.means = apply(Dn.vals, 2, mean)
-# WANT TO check that this is the same as the density values used in our RACD map -- if so, can confirm that with an RACD map, we are indeed finding the posterior mean, and we just need to find the posterior sd to find the CV values we want to use in our uncertainty plots
+# Loading in MCMC results
+load("Figure 9/Fig9_MCMC_3occ.RData")
+load("Figure 9/Fig9_MCMC_10occ.RData")
+load("Figure 9/Fig9_MCMC_20occ.RData")
 
-# Density vector we use in our RACD maps:
+# Calculating CV for each pixel
 source("DensityVectorFunction_RACDMaps.R")
-density.3occ.all <- no.movement.density.vector(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-range(density.3occ.all)
+# 3 sampling occasions
+cv.3occ = sd.RACD(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+# 10 sampling occasions
+cv.10occ = sd.RACD(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+# 20 sampling occasions
+cv.20occ = sd.RACD(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
-head(Dn.vals)
-head(posterior.means); head(density.3occ.all)
-all.equal(posterior.means, density.3occ.all) # Cool! :)
-# SO what we are doing with an RACD map IS just finding a posterior mean for each cell!
+summary(cv.3occ); summary(cv.10occ); summary(cv.20occ)
+# Why do we get NA's for 10 occ and 20 occ? Looking into this:
+sd.10occ = sd.RACD(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+summary(sd.10occ) # No NA's here
+mean.10occ = no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+summary(mean.10occ) # No NA's here
+0 / 0 # Maybe this is what's happening? Taking a closer look:
+cbind(sd.10occ[which(sd.10occ==0)], mean.10occ[which(sd.10occ==0)]) # Yes, and there are 18 of these
+summary(cv.10occ) # And we have 18 NA's here... so it looks like we have NA's when the posterior mean for a cel is 0. Seems okay? Checking that the same is occurring for 20 occ...
+sd.20occ = sd.RACD(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+mean.20occ = no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+cbind(sd.20occ[which(sd.20occ==0)], mean.20occ[which(sd.20occ==0)]) # 25 rows of matching 0's
+summary(cv.20occ) # 25 NA's. So yes, looks like NA's are occurring due to posterior means of 0. I think is okay...
 
-## Later, can amend no.movement.density.vector() function so that uses a for loop similar to the above -- easier to amend later to work with posterior distn's than the current approach.
-## Make sure that somewhere in code, e.g. maybe in no.movement.density.vector(), have some comment about what would do if pixel area was not 1!!! (e.g. would divide mean by pixel area, I think??)
+# Now, wanting to take a look at when we have CV values of 100 (which seems to also occur for 10 occ and 20 occ):
+cbind(sd.10occ[which(cv.10occ==100)], mean.10occ[which(cv.10occ==100)]) # So these occur when we have a v v small posterior mean (0.0001) and a sd of 0.01. Seems not crazy?
+cbind(sd.20occ[which(cv.20occ==100)], mean.20occ[which(cv.20occ==100)]) # Same thing here. Seems okay?
+
+# The fact that we only get v low posterior means/posterior means of 0 when we increase sampling occasions seems to be what we would expect. Looking at the RACDs for 10 occ and 20 occ, the nature of these maps means that as we get more information the surface becomes more 'spiky' around the detectors. We expect to get lower posterior means in this area than if we had fewer sampling occ (e.g. 3 samp occ). And otherwise, we don't expect density in the areas away from the detector to change. Our results seem to make sense so far! This means that we see a greater range of posterior means as we move from 3, to 10, to 20 occ and we also see a greater range of CV values as we move from 3 to 10 to 20 samp occ. So the values we have *seem* to make sense. We will continue with the uncertainty plots.
+
+## ----------------------------------------------------------------------------------------
+
+## Creating the plot
+
+## ----------------------------------------------------------------------------------------
+
+

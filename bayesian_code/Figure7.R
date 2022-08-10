@@ -195,27 +195,21 @@ for (i in 1:2500) {
 # ch7c
 ch7c.density <- numeric()
 for (i in 1:2500) {
-  # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7c.sample[,'beta0'] + ch7c.sample[,'beta1']*(log(dgood)[i]))
-  # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7c.density[i] <- mean(density.vec)
 }
 
 # ch7e
 ch7e.density <- numeric()
 for (i in 1:2500) {
-  # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7e.sample[,'beta0'] + ch7e.sample[,'beta1']*(log(dblur)[i]))
-  # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7e.density[i] <- mean(density.vec)
 }
 
 # ch7f
 ch7f.density <- numeric()
 for (i in 1:2500) {
-  # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7f.sample[,'beta0'] + ch7f.sample[,'beta1']*(log(dblur)[i]))
-  # Saving density value for ith pixel. This should be the posterior mean for the density for the ith pixel
   ch7f.density[i] <- mean(density.vec)
 }
 
@@ -280,29 +274,29 @@ pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.
 ch7b.df <- data.frame(pixel.centres, ch7b.density, rep("Dgood", 2500), rep(20, 2500), rep("27_31", 2500))
 names(ch7b.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
 # Reordering to match pixel order
-split = split(ch7b.df, ch7b.df$y)
-ch7b.df = do.call("rbind", rev(split))
+split <-  split(ch7b.df, ch7b.df$y)
+ch7b.df <-  do.call("rbind", rev(split))
 
 # ch7c
 # covtype=Dgood, occasions=20, array_origin=15_15
 ch7c.df <- data.frame(pixel.centres, ch7c.density, rep("Dgood", 2500), rep(20, 2500), rep("15_15", 2500))
 names(ch7c.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
-split = split(ch7c.df, ch7c.df$y)
-ch7c.df = do.call("rbind", rev(split))
+split <-  split(ch7c.df, ch7c.df$y)
+ch7c.df <-  do.call("rbind", rev(split))
 
 # ch7e
 # covtype=Dblur, occasions=20, array_origin=27_31
 ch7e.df <- data.frame(pixel.centres, ch7e.density, rep("Dblur", 2500), rep(20, 2500), rep("27_31", 2500))
 names(ch7e.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
-split = split(ch7e.df, ch7e.df$y)
-ch7e.df = do.call("rbind", rev(split))
+split <-  split(ch7e.df, ch7e.df$y)
+ch7e.df <-  do.call("rbind", rev(split))
 
 # ch7f
 # covtype=Dblur, occasions=20, array_origin=15_15
 ch7f.df <- data.frame(pixel.centres, ch7f.density, rep("Dblur", 2500), rep(20, 2500), rep("15_15", 2500))
 names(ch7f.df) <- c("x", "y", "value", "covtype", "occasions", "array_origin")
-split = split(ch7f.df, ch7f.df$y)
-ch7f.df = do.call("rbind", rev(split))
+split <-  split(ch7f.df, ch7f.df$y)
+ch7f.df <-  do.call("rbind", rev(split))
 
 # And now, combining into one data frame
 predicted_densities_all <- rbind(ch7b.df, ch7e.df, ch7c.df, ch7f.df)

@@ -13,8 +13,6 @@ no.movement.density.vector <- function(xlim, ylim, results, M) {
   names <- names(results[1,])
   # Extracting "z" values from MCMC results
   Z <- results[,grep("z", names)]
-  # Logical vector - TRUE if z=1, FALSE if z=0 - for EACH z-value, each iteration
-  logical <- (Z == 1)
 
   ## Extracting activity centres
   # Extracting "s" values from MCMC results (i.e. extracting sampled activity centres)
@@ -23,19 +21,19 @@ no.movement.density.vector <- function(xlim, ylim, results, M) {
   Sx <- S[,1:M]
   # y-coordinates of all activity centres
   Sy <- S[,-(1:M)]
-  # Extracting relevant activity centres - x co-ordinates and y co-ordinates where z=1
-  Sxout <- Sx[logical == 1]
-  Syout <- Sy[logical == 1]
 
-  ## Associating each activity centre from above with the pixel it falls into
-  Sxout <- cut(Sxout, breaks=xg, include.lowest=TRUE)
-  Syout <- cut(Syout, breaks=yg, include.lowest=TRUE)
+  ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell
+  Dn.vals = matrix(0, nrow=10000, ncol=2500)
+  for (i in 1:10000) {
+    if ((i %% 100) == 0) print(i) # Track progress
+    Sxout = Sx[i,][Z[i,] == 1]
+    Sxout = cut(Sxout, breaks=xg, include.lowest=TRUE)
+    Syout = Sy[i,][Z[i,] == 1]
+    Syout = cut(Syout, breaks=yg, include.lowest=TRUE)
+    Dn.vals[i,] = as.vector(table(Sxout, Syout))
+  }
 
-  ## Tallying up how many activity centres are in each pixel
-  Dn <- table(Sxout, Syout)
-
-  ## Dividing the number of times an activity centre fell in each pixel by the number of iterations
-  table <- Dn/nrow(Z)
-  density.vector <- as.vector(table)
+  ## Posterior mean for number of activity centres in each pixel
+  density.vector <- apply(Dn.vals, 2, mean)
 }
 
