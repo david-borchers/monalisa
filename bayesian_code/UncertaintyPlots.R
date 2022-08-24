@@ -327,14 +327,16 @@ sd.RACD <- function(xlim, ylim, results, M) {
   Sy <- S[,-(1:M)]
 
   ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell
-  Dn.vals = matrix(0, nrow=10000, ncol=2500)
-  for (i in 1:10000) {
+  # Number of pixel centres
+  npix <-  (length(xg) - 1) * (length(yg) - 1)
+  Dn.vals <-  matrix(0, nrow=nrow(results), ncol=npix)
+  for (i in 1:nrow(results)) {
     if ((i %% 100) == 0) print(i) # Track progress
-    Sxout = Sx[i,][Z[i,] == 1]
-    Sxout = cut(Sxout, breaks=xg, include.lowest=TRUE)
-    Syout = Sy[i,][Z[i,] == 1]
-    Syout = cut(Syout, breaks=yg, include.lowest=TRUE)
-    Dn.vals[i,] = as.vector(table(Sxout, Syout))
+    Sxout <-  Sx[i,][Z[i,] == 1]
+    Sxout <-  cut(Sxout, breaks=xg, include.lowest=TRUE)
+    Syout <-  Sy[i,][Z[i,] == 1]
+    Syout <-  cut(Syout, breaks=yg, include.lowest=TRUE)
+    Dn.vals[i,] <-  as.vector(table(Sxout, Syout))
   }
 
   ## Posterior standard deviation for number of activity centres in each pixel
@@ -349,23 +351,23 @@ load("Figure 9/Fig9_MCMC_20occ.RData")
 # Calculating CV for each pixel
 source("DensityVectorFunction_RACDMaps.R")
 # 3 sampling occasions
-cv.3occ = sd.RACD(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+cv.3occ <-  sd.RACD(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.3occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 # 10 sampling occasions
-cv.10occ = sd.RACD(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+cv.10occ <-  sd.RACD(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 # 20 sampling occasions
-cv.20occ = sd.RACD(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+cv.20occ <-  sd.RACD(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))/no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
 summary(cv.3occ); summary(cv.10occ); summary(cv.20occ)
 # Why do we get NA's for 10 occ and 20 occ? Looking into this:
-sd.10occ = sd.RACD(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+sd.10occ <-  sd.RACD(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 summary(sd.10occ) # No NA's here
-mean.10occ = no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+mean.10occ <-  no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 summary(mean.10occ) # No NA's here
 0 / 0 # Maybe this is what's happening? Taking a closer look:
 cbind(sd.10occ[which(sd.10occ==0)], mean.10occ[which(sd.10occ==0)]) # Yes, and there are 18 of these
 summary(cv.10occ) # And we have 18 NA's here... so it looks like we have NA's when the posterior mean for a cell is 0. Seems okay? Checking that the same is occurring for 20 occ...
-sd.20occ = sd.RACD(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-mean.20occ = no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+sd.20occ <-  sd.RACD(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+mean.20occ <-  no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 cbind(sd.20occ[which(sd.20occ==0)], mean.20occ[which(sd.20occ==0)]) # 25 rows of matching 0's
 summary(cv.20occ) # 25 NA's. So yes, looks like NA's are occurring due to posterior means of 0. I think is okay...
 
@@ -376,9 +378,9 @@ cbind(sd.20occ[which(cv.20occ==100)], mean.20occ[which(cv.20occ==100)]) # Same t
 # The fact that we only get v low posterior means/posterior means of 0 when we increase sampling occasions seems to be what we would expect. Looking at the RACDs for 10 occ and 20 occ, the nature of these maps means that as we get more information the surface becomes more 'spiky' around the detectors. We expect to get lower posterior means in this area than if we had fewer sampling occ (e.g. 3 samp occ). And otherwise, we don't expect density in the areas away from the detector to change. Our results seem to make sense so far! This means that we see a greater range of posterior means as we move from 3, to 10, to 20 occ and we also see a greater range of CV values as we move from 3 to 10 to 20 samp occ. So the values we have *seem* to make sense/have a reasonable explanation.
 
 # Maybe we can replace the NA's with 0's? Just to represent the fact that the posterior means are 0 when we see CV = NA?
-cv.10occ[which(is.na(cv.10occ))] = 0
+cv.10occ[which(is.na(cv.10occ))] <-  0
 summary(cv.10occ) # Cool, have replaced the NA's with 0's here
-cv.20occ[which(is.na(cv.20occ))] = 0
+cv.20occ[which(is.na(cv.20occ))] <-  0
 summary(cv.20occ)
 
 ## ----------------------------------------------------------------------------------------
@@ -470,7 +472,6 @@ detectors <- detectors_df_all %>% group_by(x,y) %>% count()
 
 # Column labels for plots
 capthist_labels <-  paste(c(sum(encounterdat.3occ), sum(encounterdat.10occ), sum(encounterdat.20occ)), "detections\n", paste("(", c(nrow(encounterdat.3occ), nrow(encounterdat.10occ), nrow(encounterdat.20occ)), sep=""),  "individuals)")
-#capthist_labels <-  c("null", capthist_labels) # Adding this 'extra' level for Ian's code below to work
 
 # Relabel factor levels for occasion variable
 ac_densities$occasions <- factor(ac_densities$occasions,
