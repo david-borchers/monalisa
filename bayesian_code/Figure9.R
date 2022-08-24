@@ -11,7 +11,7 @@ load("../output/capthists.RData")
 
 # In Figure 9, we have columns with: 31 inividuals, 40 individuals and 44 individuals. We are working with 3/10/20 occasions, one set of simulated data for each number of occasions.
 
-# 3 sampling occasions (first column)
+## 3 sampling occasions (first column)
 first.col <- capthists_realised_and_expected_acd_few$capthist[[1]]
 # Summing capture histories over all of the 3 sampling occasions
 encounterdat.3occ <- matrix(0, nrow=nrow(first.col[,1,]), ncol=ncol(first.col[,1,]))

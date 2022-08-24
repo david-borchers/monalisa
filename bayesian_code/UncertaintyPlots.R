@@ -363,7 +363,7 @@ mean.10occ = no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5
 summary(mean.10occ) # No NA's here
 0 / 0 # Maybe this is what's happening? Taking a closer look:
 cbind(sd.10occ[which(sd.10occ==0)], mean.10occ[which(sd.10occ==0)]) # Yes, and there are 18 of these
-summary(cv.10occ) # And we have 18 NA's here... so it looks like we have NA's when the posterior mean for a cel is 0. Seems okay? Checking that the same is occurring for 20 occ...
+summary(cv.10occ) # And we have 18 NA's here... so it looks like we have NA's when the posterior mean for a cell is 0. Seems okay? Checking that the same is occurring for 20 occ...
 sd.20occ = sd.RACD(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 mean.20occ = no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 cbind(sd.20occ[which(sd.20occ==0)], mean.20occ[which(sd.20occ==0)]) # 25 rows of matching 0's
@@ -373,7 +373,57 @@ summary(cv.20occ) # 25 NA's. So yes, looks like NA's are occurring due to poster
 cbind(sd.10occ[which(cv.10occ==100)], mean.10occ[which(cv.10occ==100)]) # So these occur when we have a v v small posterior mean (0.0001) and a sd of 0.01. Seems not crazy?
 cbind(sd.20occ[which(cv.20occ==100)], mean.20occ[which(cv.20occ==100)]) # Same thing here. Seems okay?
 
-# The fact that we only get v low posterior means/posterior means of 0 when we increase sampling occasions seems to be what we would expect. Looking at the RACDs for 10 occ and 20 occ, the nature of these maps means that as we get more information the surface becomes more 'spiky' around the detectors. We expect to get lower posterior means in this area than if we had fewer sampling occ (e.g. 3 samp occ). And otherwise, we don't expect density in the areas away from the detector to change. Our results seem to make sense so far! This means that we see a greater range of posterior means as we move from 3, to 10, to 20 occ and we also see a greater range of CV values as we move from 3 to 10 to 20 samp occ. So the values we have *seem* to make sense. We will continue with the uncertainty plots.
+# The fact that we only get v low posterior means/posterior means of 0 when we increase sampling occasions seems to be what we would expect. Looking at the RACDs for 10 occ and 20 occ, the nature of these maps means that as we get more information the surface becomes more 'spiky' around the detectors. We expect to get lower posterior means in this area than if we had fewer sampling occ (e.g. 3 samp occ). And otherwise, we don't expect density in the areas away from the detector to change. Our results seem to make sense so far! This means that we see a greater range of posterior means as we move from 3, to 10, to 20 occ and we also see a greater range of CV values as we move from 3 to 10 to 20 samp occ. So the values we have *seem* to make sense/have a reasonable explanation.
+
+# Maybe we can replace the NA's with 0's? Just to represent the fact that the posterior means are 0 when we see CV = NA?
+cv.10occ[which(is.na(cv.10occ))] = 0
+summary(cv.10occ) # Cool, have replaced the NA's with 0's here
+cv.20occ[which(is.na(cv.20occ))] = 0
+summary(cv.20occ)
+
+## ----------------------------------------------------------------------------------------
+
+## Summarising the simulated data (needed for column headings in plot)
+
+## ----------------------------------------------------------------------------------------
+
+## First, sourcing in capture histories to use
+load("../output/capthists.RData")
+
+# 3 sampling occasions (first column)
+first.col <- capthists_realised_and_expected_acd_few$capthist[[1]]
+# Summing capture histories over all of the 3 sampling occasions
+encounterdat.3occ <- matrix(0, nrow=nrow(first.col[,1,]), ncol=ncol(first.col[,1,]))
+for (i in 1:3) {
+  encounterdat.3occ <- encounterdat.3occ + first.col[,i,]
+}
+# Trap locations
+trap.loc <- attributes(first.col)$traps
+# xlim, ylim (we know these)
+xlim <- c(0.5, 50.5)
+ylim <- c(0.5, 50.5)
+# Creating the data object for Figure 9, 3 sampling occasions
+data.3occ <- list(encounter.data = encounterdat.3occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 3)
+
+## 10 sampling occasions (second column)
+second.col <- capthists_realised_and_expected_acd_few$capthist[[101]]
+# Summing the capture histories over all 10 sampling occasions
+encounterdat.10occ <- matrix(0, nrow=nrow(second.col[,1,]), ncol=ncol(second.col[,1,]))
+for (i in 1:10) {
+  encounterdat.10occ <- encounterdat.10occ + second.col[,i,]
+}
+# Creating the data object (uses same trap locs, xlim, ylim as above)
+data.10occ <- list(encounter.data = encounterdat.10occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 10)
+
+## 20 sampling occasions (third column)
+third.col <- capthists_realised_and_expected_acd_few$capthist[[201]]
+# Summing the capture histories over all 20 sampling occasions
+encounterdat.20occ <- matrix(0, nrow=nrow(third.col[,1,]), ncol=ncol(third.col[,1,]))
+for (i in 1:20) {
+  encounterdat.20occ <- encounterdat.20occ + third.col[,i,]
+}
+# Creating the data object
+data.20occ <- list(encounter.data = encounterdat.20occ, trap.loc = trap.loc, xlim = xlim, ylim = ylim, n.occasions = 20)
 
 ## ----------------------------------------------------------------------------------------
 
@@ -381,4 +431,72 @@ cbind(sd.20occ[which(cv.20occ==100)], mean.20occ[which(cv.20occ==100)]) # Same t
 
 ## ----------------------------------------------------------------------------------------
 
+# Libraries needed
+library(dplyr)
+library(ggplot2)
+library(viridis)
+library(patchwork)
+library(scales)
+library(purrr)
 
+# Loading RData object that we need
+load("../output/mona_raw_outputs.RData")
+
+# Coordinates of pixel centres we are working with
+source("RUDMaps_Functions.R")
+pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+
+# Process the outputs
+detectors_df_all <- res_realised_and_expected_acd_few %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)
+detectors_df_all <- detectors_df_all %>% distinct()
+
+# ---------------
+## Creating objects that contain the density values for each map, along with other required information
+# 3 sampling occasions
+df.3occ.all <- data.frame(pixel.centres, cv.3occ, as.factor(rep("D~1", 2500)), as.factor(rep("None", 2500)), as.factor(rep(3,2500)))
+names(df.3occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
+# 10 sampling occasions
+df.10occ.all <- data.frame(pixel.centres, cv.10occ, as.factor(rep("D~1", 2500)),  as.factor(rep("None", 2500)), as.factor(rep(10,2500)))
+names(df.10occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
+# 20 sampling occasions
+df.20occ.all <- data.frame(pixel.centres, cv.20occ, as.factor(rep("D~1", 2500)), as.factor(rep("None", 2500)), as.factor(rep(20,2500)))
+names(df.20occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
+## Combining these objects into one data frame
+ac_densities <- rbind.data.frame(df.3occ.all, df.10occ.all, df.20occ.all)
+# ---------------
+
+# Detectors are the same for all plots so just extract unique combos of (x,y)
+detectors <- detectors_df_all %>% group_by(x,y) %>% count()
+
+# Column labels for plots
+capthist_labels <-  paste(c(sum(encounterdat.3occ), sum(encounterdat.10occ), sum(encounterdat.20occ)), "detections\n", paste("(", c(nrow(encounterdat.3occ), nrow(encounterdat.10occ), nrow(encounterdat.20occ)), sep=""),  "individuals)")
+#capthist_labels <-  c("null", capthist_labels) # Adding this 'extra' level for Ian's code below to work
+
+# Relabel factor levels for occasion variable
+ac_densities$occasions <- factor(ac_densities$occasions,
+                                            levels = c(3,10,20),
+                                            labels = capthist_labels)
+
+p2a <- ac_densities %>%
+  #filter(occasions != capthist_labels[1], movetype == "None") %>%
+  filter(movetype == "None") %>%
+  ggplot(aes(x, y)) +
+  geom_raster(aes(fill = value)) +
+  #scale_fill_gradientn(colours = pal, limits = c(0,0.3), breaks = c(0,0.1,0.2,0.3)) +
+  scale_fill_viridis(direction = 1, option = "viridis", limits = c(0,100), breaks = seq(0, 100, by=20)) +
+  facet_grid(movetype ~ occasions) +
+  geom_point(data = detectors, aes(x,y),
+             colour = "black", pch = 4, size = 2) +
+  coord_equal() +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        legend.position="right", legend.key.height = unit(0.7,"cm"), legend.title = element_blank(),
+        panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank(),
+        strip.text.y=element_blank())
+
+p2a
+
+ggsave("Figure9_UncertaintyPlot.png", p2a, width=8, height=2.5, dpi = 600, bg="white")
