@@ -478,7 +478,6 @@ ac_densities$occasions <- factor(ac_densities$occasions,
                                             labels = capthist_labels)
 
 p2a <- ac_densities %>%
-  #filter(occasions != capthist_labels[1], movetype == "None") %>%
   filter(movetype == "None") %>%
   ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +

@@ -111,36 +111,10 @@ density.3occ.all <- no.movement.density.vector(results=results.3occ, M=300, xlim
 density.10occ.all <-  no.movement.density.vector(results=results.10occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 density.20occ.all <- no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
-## Row 2: RUD maps. Once again, creating vectors that contain the density values for each pixel (we use more steps/create more objects in the process to do so than above).
-
+# Coordinates of pixel centres we are working with
 source("RUDMaps_Functions.R")
 
-# Coordinates for all pixel centres -- whether we load in the RData files/create the density vector ourselves, we need to run this line
 pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
-
-
-# Creating activity centre matrices (for explanation, see 'RUDMaps_Functions.R')
-activity.centres.3occ <- activity.matrices(results=results.3occ, M=300)
-activity.centres.10occ <- activity.matrices(results=results.10occ, M=300)
-activity.centres.20occ <- activity.matrices(results=results.20occ, M=300)
-
-# Matrix containing z-values for each MCMC iteration (for each number of samp occ)
-z.values.3occ <- extract.z.values(results.3occ)
-z.values.10occ <- extract.z.values(results.10occ)
-z.values.20occ <- extract.z.values(results.20occ)
-
-# Creating the density vectors
-density.3occ.all.withmov <- density.vector(results=results.3occ, activity.centres=activity.centres.3occ, pixel.centres=pixel.centres, z.values=z.values.3occ)
-save(density.3occ.all.withmov, file="Figure 9/Fig9_3occ.RData")
-density.10occ.all.withmov <- density.vector(results=results.10occ, activity.centres=activity.centres.10occ, pixel.centres=pixel.centres, z.values=z.values.10occ)
-save(density.10occ.all.withmov, file="Figure 9/Fig9_10occ.RData")
-density.20occ.all.withmov <- density.vector(results=results.20occ, activity.centres=activity.centres.20occ, pixel.centres=pixel.centres, z.values=z.values.20occ)
-save(density.20occ.all.withmov, file="Figure 9/Fig9_20occ.RData")
-
-# Loading in density values for each pixel -- uncomment this if don't want to run activity.matrices(), extract.z.values() and density.vector()
-#load("Figure 9/Fig9_3occ.RData")
-#load("Figure 9/Fig9_10occ.RData")
-#load("Figure 9/Fig9_20occ.RData")
 
 ## ---------------------------------------------------------------------------------------
 
@@ -175,21 +149,7 @@ names(df.10occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 df.20occ.all <- data.frame(pixel.centres, density.20occ.all, as.factor(rep("D~1", 2500)), as.factor(rep("None", 2500)), as.factor(rep(20,2500)))
 names(df.20occ.all) <- c("x", "y", "value", "covtype", "movetype", "occasions")
 ## Combining these objects into one data frame
-ac_densities_without_movement <- rbind.data.frame(df.3occ.all, df.10occ.all, df.20occ.all)
-
-# 3 sampling occasions
-df.3occ.all.withmov <- data.frame(pixel.centres, density.3occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("With movement", 2500)), as.factor(rep(3,2500)))
-names(df.3occ.all.withmov) <- c("x", "y", "value", "covtype", "movetype", "occasions")
-# 10 sampling occasions
-df.10occ.all.withmov <- data.frame(pixel.centres, density.10occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("With movement", 2500)), as.factor(rep(10,2500)))
-names(df.10occ.all.withmov) <- c("x", "y", "value", "covtype", "movetype", "occasions")
-# 20 sampling occasions
-df.20occ.all.withmov <- data.frame(pixel.centres, density.20occ.all.withmov, as.factor(rep("D~1", 2500)), as.factor(rep("With movement", 2500)), as.factor(rep(20,2500)))
-names(df.20occ.all.withmov) <- c("x", "y", "value", "covtype", "movetype", "occasions")
-## Combining these objects into one data frame
-ac_densities_with_movement <- rbind.data.frame(df.3occ.all.withmov, df.10occ.all.withmov, df.20occ.all.withmov)
-## Combining both data frames now
-ac_densities_with_movement  <- rbind.data.frame(ac_densities_without_movement, ac_densities_with_movement)
+ac_densities <- rbind.data.frame(df.3occ.all, df.10occ.all, df.20occ.all)
 # ---------------
 
 # Detectors are the same for all plots so just extract unique combos of (x,y)
@@ -197,11 +157,11 @@ detectors <- detectors_df_all %>% group_by(x,y) %>% count()
 
 # Column labels for plots
 capthist_labels <-  paste(c(sum(encounterdat.3occ), sum(encounterdat.10occ), sum(encounterdat.20occ)), "detections\n", paste("(", c(nrow(encounterdat.3occ), nrow(encounterdat.10occ), nrow(encounterdat.20occ)), sep=""),  "individuals)")
-capthist_labels <-  c("null", capthist_labels) # Adding this 'extra' level for Ian's code below to work
+capthist_labels <-  c(capthist_labels) # Adding this 'extra' level for Ian's code below to work
 
 # Relabel factor levels for occasion variable
-ac_densities_with_movement$occasions <- factor(ac_densities_with_movement$occasions,
-                                            levels = c(1, 3,10,20),
+ac_densities$occasions <- factor(ac_densities$occasions,
+                                            levels = c(3,10,20),
                                             labels = capthist_labels)
 
 # Scale the plots to have min 0 and max 1
@@ -212,25 +172,9 @@ ac_densities_with_movement$occasions <- factor(ac_densities_with_movement$occasi
 #  ungroup()
 
 #pal <- wes_palette("Zissou1", 100, type = "continuous")
-p1 <- ac_densities_with_movement %>%
-  filter(occasions != capthist_labels[1]) %>%
-  ggplot(aes(x, y)) +
-  geom_raster(aes(fill = value)) +
-  scale_fill_viridis(direction = 1, option = "viridis") +
-  facet_grid(movetype ~ occasions) +
-  geom_point(data = detectors, aes(x,y),
-             colour = "black", pch = 4, size = 2) +
-  theme(axis.line=element_blank(),axis.text.x=element_blank(),
-        axis.text.y=element_blank(),axis.ticks=element_blank(),
-        axis.title.x=element_blank(),
-        axis.title.y=element_blank(),legend.position="none",
-        panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),plot.background=element_blank())
 
-p1
-
-p2a <- ac_densities_with_movement %>%
-  filter(occasions != capthist_labels[1], movetype == "None") %>%
+p2a <- ac_densities %>%
+  filter(movetype == "None") %>%
   ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
   #scale_fill_gradientn(colours = pal, limits = c(0,0.3), breaks = c(0,0.1,0.2,0.3)) +
@@ -245,30 +189,9 @@ p2a <- ac_densities_with_movement %>%
         axis.title.y=element_blank(),
         legend.position="right", legend.key.height = unit(0.7,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),plot.background=element_blank())
+        panel.grid.minor=element_blank(),plot.background=element_blank(),
+        strip.text.y=element_blank())
 
-p2b <- ac_densities_with_movement %>%
-  filter(occasions != capthist_labels[1], movetype == "With movement") %>%
-  ggplot(aes(x, y)) +
-  geom_raster(aes(fill = value)) +
-  #scale_fill_gradientn(colours = pal, limits = c(0,0.1), breaks = c(0,0.05,0.1)) +
-  #scale_fill_viridis(direction = 1, option = "viridis", trans = "log10", limits = c(1,103), oob = squish) +
-  scale_fill_viridis(direction = 1, option = "viridis", trans = "log10") +
-  facet_grid(movetype ~ occasions) +
-  geom_point(data = detectors, aes(x,y),
-             colour = "black", pch = 4, size = 2) +
-  coord_equal() +
-  theme(strip.text.x = element_blank(),
-        axis.line=element_blank(),axis.text.x=element_blank(),
-        axis.text.y=element_blank(),axis.ticks=element_blank(),
-        axis.title.x=element_blank(),
-        axis.title.y=element_blank(),
-        legend.position="right", legend.key.height = unit(0.7,"cm"), legend.title = element_blank(),
-        panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),plot.background=element_blank())
+p2a
 
-p2 <- p2a / p2b
-
-p2
-
-ggsave("Figure9.png", p2, width=8, height=5, dpi = 600)
+ggsave("Figure9.png", p2a, width=8, height=5, dpi = 600, bg="white")
