@@ -1,17 +1,16 @@
 ## Function to generate MCMC samples when fitting an inhomogeneous density model
 
 ## The arguments we need to provide (in order) are:
-# * The data object, created so that it is a list containing the elements: 'encounter.data' and 'trap.loc' (see the beginning of Figure9.R for the creation of such data objects)
-# * A data frame ('pixel.info')  with three columns: the first column gives the x-coordinates for pixel centres in the region of interest, the second column gives the y-coordinates of the pixel centres, and the third gives the associated covariate value for each pixel centre. NOTE we assume that: (1) these pixel centres are evenly-spaced, (2) the region of interest is a square, so the number of pixels in the x- and y-directions is the square root of the number of rows in this data frame and (3) there are no regions in the region where animals cannot go (so the mask would just be a matrix of 1's)
-# * The number of pixels in the x- and y-directions (so the region doesn't have to be a square)
-# * The size of the super-population, M
-# * A vector containing the starting values for lambda0, sigma and beta1 ('inits.vec'), where the order is: c(lambda0, sigma, beta1). Later, we calculate the starting values for 'log_coeff' and 'beta0' so that they 'make sense', so we won't provide them here
-# * The dmax value to use for the getLocalObjects() function
-# * The number of iterations to run the MCMC for
-# * The number of burn-in iterations we want to use
-# * A vector containing the labels of the parameters we want to monitor
+# * 'data': a data object, created so that it is a list containing the elements: 'encounter.data' (capture history matrix) and 'trap.loc' (trap coordinates) -- see the beginning of Figure9.R for an example of the creation of such data objects
+# * 'pixel.info': a data frame  with three columns. The first column gives the x-coordinates for pixel centres in the region of interest, the second column gives the y-coordinates of the pixel centres, and the third gives the associated covariate value for each pixel centre. NOTE we assume that: (1) these pixel centres are evenly-spaced, (2) the region of interest is a square, so the number of pixels in the x- and y-directions is the square root of the number of rows in this data frame and (3) there are no regions in the region where animals cannot go (so the mask would just be a matrix of 1's)
+# * 'M': the size of the super-population
+# * 'inits.vec': a vector containing the starting values for lambda0, sigma and beta1. The ordering is: c(lambda0, sigma, beta1). Later, we calculate sensible starting values for 'log_coeff' and 'beta0', so we won't provide them here
+# * 'dmax': the dmax value to use for the getLocalObjects() function
+# * 'n.iter': the number of iterations to run the MCMC for
+# * 'n.burn': the number of burn-in iterations we want to use
+# * 'parameters': a vector containing the labels of the parameters we want to monitor
 
-run.MCMC.inhom <- function(data, pixel.info, x.pixels, y.pixels, M, inits.vec, dmax = 56, n.iter, n.burn, parameters=c("lambda0", "sigma", "N", "D", "beta0", "beta1")) {
+run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.burn, parameters=c("lambda0", "sigma", "N", "D", "beta0", "beta1")) {
   ## Therefore, subsetting the data we'll use in our NIMBLE model:
   # Encounter data
   y <- data$encounter.data

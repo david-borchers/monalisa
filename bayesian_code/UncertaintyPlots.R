@@ -45,13 +45,13 @@ split <- split(dblur.df, dblur.df$y)
 dblur.df <- do.call("rbind", split)
 dblur <- dblur.df[,"Dblur_bigD"]
 
-# Finding the posterior distribution for the density of each pixel in plots (b), (c), (e) and (f), and saving the standard error of this distribution for each pixel:
+# Finding the coefficient of variation (CV) for each pixel in plots (b), (c), (e) and (f) -- this is calculated by finding the posterior standard deviation for the density value in each pixel, and dividing the result by the posterior mean for the density value in each pixel
 # ch7b
 ch7b.cv <- numeric()
 for (i in 1:2500) {
   # Posterior distribution for the density of the ith pixel
   density.vec <- exp(ch7b.sample[,'beta0'] + ch7b.sample[,'beta1']*(log(dgood)[i]))
-  # Saving density value for ith pixel. This should be the posterior sd for the density for the ith pixel
+  # Saving CV for each pixel
   ch7b.cv[i] <- sd(density.vec)/mean(density.vec)
 }
 
@@ -122,8 +122,8 @@ predicted_densities_all <- predicted_densities_all %>%
 # ---------------
 # Now, we replace predicted_densities_all so that it contains our density values
 # Matrix of pixel centres
-source("RUDMaps_Functions.R")
-pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+source("DensityVectorFunction_RACDMaps.R")
+pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 # ch7b
 # Here, covtype=Dgood, occasions=20, array_origin=27_31
@@ -306,6 +306,7 @@ ggsave("Figure7_UncertaintyPlot.png", pp, width=7.5, height=5.8, dpi = 600)
 # To create our uncertainty plots, we want to find the posterior standard deviation of the number of activity centres in each pixel, and divide this by the posterior mean of the number of activity centres in each pixel (therefore finding the CV for each pixel).
 
 # Function to find the posterior standard deviation for the number of activity centres in each pixel, modelled after no.movement.density.vector(). Posterior sd's will be in corresponding order to posterior means found using no.movement.density.vector().
+# Once again, with this function, we assume that each pixel we are working with has an area of 1 (just like with no.movement.density.vector()).
 sd.RACD <- function(xlim, ylim, results, M) {
 
   ## Pixel centres we are working with
@@ -347,6 +348,10 @@ sd.RACD <- function(xlim, ylim, results, M) {
 load("Figure 9/Fig9_MCMC_3occ.RData")
 load("Figure 9/Fig9_MCMC_10occ.RData")
 load("Figure 9/Fig9_MCMC_20occ.RData")
+# Burn-in
+results.3occ <- results.3occ[-c(1:500),]
+results.10occ <- results.10occ[-c(1:500),]
+results.20occ <- results.20occ[-c(1:500),]
 
 # Calculating CV for each pixel
 source("DensityVectorFunction_RACDMaps.R")
@@ -445,8 +450,8 @@ library(purrr)
 load("../output/mona_raw_outputs.RData")
 
 # Coordinates of pixel centres we are working with
-source("RUDMaps_Functions.R")
-pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+source("DensityVectorFunction_RACDMaps.R")
+pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 # Process the outputs
 detectors_df_all <- res_realised_and_expected_acd_few %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)

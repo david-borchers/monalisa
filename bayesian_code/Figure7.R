@@ -266,8 +266,8 @@ c(mean(ch7f.density), mean(ch7e.density), mean(ch7c.density), mean(ch7b.density)
 # ---------------
 # Now, we replace predicted_densities_all so that it contains our density values
 # Matrix of pixel centres
-source("RUDMaps_Functions.R")
-pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+source("DensityVectorFunction_RACDMaps.R")
+pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 # ch7b
 # Here, covtype=Dgood, occasions=20, array_origin=27_31

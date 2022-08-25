@@ -112,9 +112,7 @@ density.10occ.all <-  no.movement.density.vector(results=results.10occ, M=300, x
 density.20occ.all <- no.movement.density.vector(results=results.20occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
 # Coordinates of pixel centres we are working with
-source("RUDMaps_Functions.R")
-
-pixel.centres <- centres(xrange=c(0.5,50.5), yrange=c(0.5,50.5), x.pixels=50, y.pixels=50)
+pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 
 ## ---------------------------------------------------------------------------------------
 

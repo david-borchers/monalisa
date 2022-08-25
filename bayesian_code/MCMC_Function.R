@@ -1,15 +1,15 @@
 ## Function to generate MCMC samples when fitting a homogeneous density model
 
 ## The arguments we need to provide (in order) are:
-# * 'data', which refers to a data object created in a similar manner to the data objects from the beginning of 'Figure9.R'. This is a list that should include 'encounter.data', 'trap.loc', 'xlim', 'ylim' and 'n.occasions' elements
-# * The size of the superpopulation
-# * The number of MCMC iterations you want to run
-# * The number of adaptation iterations you want (different from burn-in)
-# * The number of burn-in iterations that we want to use (these will be discarded for us)
-# * The initial value for lambda0 for the MCMC sampling
-# * The initial value for 'log_coeff' for the MCMC sampling (see NIMBLE model below for an idea of what parameter this is)
-# * The value of the thinning parameter for the MCMC
-# * 'parameters', the vector of parameters we want to monitor
+# * 'data':  a data object created in a similar manner to the data objects from the beginning of 'Figure9.R'. This is a list that should include elements labelled: 'encounter.data' (capture history matrix), 'trap.loc' (trap coordinates), 'xlim' (x-range of pixel centres), 'ylim' (y-range of pixel centres) and 'n.occasions' (number of sampling occasions)
+# * 'M': the size of the superpopulation
+# * 'n.iter': the number of MCMC iterations you want to run
+# * 'n.adapt': the number of adaptation iterations you want (different from burn-in)
+# * 'n.burn': the number of burn-in iterations that we want to use (these will be discarded for us)
+# * 'lambda0.start': the initial value for lambda0 for the MCMC sampling
+# * 'log_coeff.start': the initial value for 'log_coeff' for the MCMC sampling (see NIMBLE model below for an idea of what parameter this is)
+# * 'thin': the value of the thinning parameter for the MCMC
+# * 'parameters': the vector of parameters we want to monitor
 
 
 run.MCMC <- function(data, M, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0.start = runif(1, 0, 50), log_coeff.start=runif(1, 0, 1), thin = 1, parameters) {
