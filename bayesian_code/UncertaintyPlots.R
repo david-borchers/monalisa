@@ -344,6 +344,11 @@ sd.RACD <- function(xlim, ylim, results, M) {
   density.vector <- apply(Dn.vals, 2, sd)
 }
 
+means = colMeans(Dn.vals)
+sort(means)
+sums = colSums(Dn.vals)
+sort(sums)
+
 # Loading in MCMC results
 load("Figure 9/Fig9_MCMC_3occ.RData")
 load("Figure 9/Fig9_MCMC_10occ.RData")
@@ -377,8 +382,8 @@ cbind(sd.20occ[which(sd.20occ==0)], mean.20occ[which(sd.20occ==0)]) # 25 rows of
 summary(cv.20occ) # 25 NA's. So yes, looks like NA's are occurring due to posterior means of 0. I think is okay...
 
 # Now, wanting to take a look at when we have CV values of 100 (which seems to also occur for 10 occ and 20 occ):
-cbind(sd.10occ[which(cv.10occ==100)], mean.10occ[which(cv.10occ==100)]) # So these occur when we have a v v small posterior mean (0.0001) and a sd of 0.01. Seems not crazy?
-cbind(sd.20occ[which(cv.20occ==100)], mean.20occ[which(cv.20occ==100)]) # Same thing here. Seems okay?
+cbind(sd.10occ[which(cv.10occ==max(cv.10occ, na.rm=T))], mean.10occ[which(cv.10occ==max(cv.10occ, na.rm=T))]) # So these occur when we have a v v small posterior mean (0.0001) and a sd of 0.01. Seems not crazy?
+cbind(sd.20occ[which(cv.20occ==max(cv.20occ, na.rm=T))], mean.20occ[which(cv.20occ==max(cv.20occ, na.rm=T))]) # Same thing here. Seems okay?
 
 # The fact that we only get v low posterior means/posterior means of 0 when we increase sampling occasions seems to be what we would expect. Looking at the RACDs for 10 occ and 20 occ, the nature of these maps means that as we get more information the surface becomes more 'spiky' around the detectors. We expect to get lower posterior means in this area than if we had fewer sampling occ (e.g. 3 samp occ). And otherwise, we don't expect density in the areas away from the detector to change. Our results seem to make sense so far! This means that we see a greater range of posterior means as we move from 3, to 10, to 20 occ and we also see a greater range of CV values as we move from 3 to 10 to 20 samp occ. So the values we have *seem* to make sense/have a reasonable explanation.
 
