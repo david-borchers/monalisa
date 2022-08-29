@@ -194,6 +194,7 @@ rm(capthists_few_alloccs)
 
 save(big_mona_df, small_mona_df, blurry_mona_df, small_blurry_mona_df,
      simulated_points, 
+     big_mona_mask, mona_mask,
      capthists_few_alloccs_7x7, capthists_few_alloccs_3x3, 
      file = "output/revision/mona-inputs.RData")
 
