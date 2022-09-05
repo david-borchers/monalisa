@@ -69,7 +69,8 @@ save(results.111occ, file="MCMC_Results/Figure5/HomPP_111occ.RData")
 #load("MCMC_Results/Figure5/HomPP_52occ.RData")
 #load("MCMC_Results/Figure5/HomPP_111occ.RData")
 
-## Checking trace plots
+## Note that the burn-in iterations for these samples are discarded automatically, so we don't need to worry about this.
+## Checking trace plots to make sure everything looks okay
 # 18 sampling occasions -- looks good
 check.trace.plots(results.18occ)
 # 52 sampling occasions -- looks good
@@ -122,6 +123,14 @@ save(inhom.results.18occ, file="MCMC_Results/Figure5/InhomPP_111occ.RData")
 #load("MCMC_Results/Figure5/InhomPP_18occ.RData")
 #load("MCMC_Results/Figure5/InhomPP_52occ.RData")
 #load("MCMC_Results/Figure5/InhomPP_111occ.RData")
+
+## Note that with these MCMC samples, the burn-in isn't discarded automatically. So, each object contains data from 101,000 MCMC iterations
+## Checking trace plots to decide how many iterations to discard as burn-in
+# 18 sampling occasions
+system.time(check.trace.plots(inhom.results.18occ))
+# 52 sampling occasions
+
+# 111 sampling occasions
 
 ## ---------------------------------------------------------------------------------------
 # Putting together Figure 5

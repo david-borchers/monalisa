@@ -302,10 +302,10 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 
 check.trace.plots <-  function(results) {
   par(mfrow=c(2, 2))
-  plot(results[,"lambda0"], type='l')
-  plot(results[,"sigma"], type='l')
-  plot(results[,"N"], type='l')
-  plot(results[,"D"], type='l')
+  plot(as.vector(results[,"lambda0"]), type='l', ylab=expression(lambda[0]))
+  plot(as.vector(results[,"sigma"]), type='l', ylab=expression(sigma))
+  plot(as.vector(results[,"N"]), type='l', ylab="N")
+  plot(as.vector(results[,"D"]), type='l', ylab="D")
 }
 
 # --------------------------------------------------------
