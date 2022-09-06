@@ -1,4 +1,4 @@
-## Code to produce Figure 5
+## Code to produce Figure 4
 # Working directory should be the 'bayesian_code' folder
 
 ## Libraries we need
@@ -66,18 +66,18 @@ data.111occ <- organise.data(3)
 ## Uncomment the lines below if want to run the MCMC 
 ## Running MCMC for simulated data from 18, 52 and 111 sampling occasions.
 #results.18occ <- run.MCMC(data=data.18occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.18occ, file="MCMC_Results/Figure5/HomPP_18occ.RData")
+#save(results.18occ, file="MCMC_Results/Figure4/HomPP_18occ.RData")
 
 #results.52occ <- run.MCMC(data=data.52occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.52occ, file="MCMC_Results/Figure5/HomPP_52occ.RData")
+#save(results.52occ, file="MCMC_Results/Figure4/HomPP_52occ.RData")
 
 #results.111occ <- run.MCMC(data=data.111occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
-#save(results.111occ, file="MCMC_Results/Figure5/HomPP_111occ.RData")
+#save(results.111occ, file="MCMC_Results/Figure4/HomPP_111occ.RData")
 
 ## Loading in the RData files containing the MCMC results 
-load("MCMC_Results/Figure5/HomPP_18occ.RData")
-load("MCMC_Results/Figure5/HomPP_52occ.RData")
-load("MCMC_Results/Figure5/HomPP_111occ.RData")
+load("MCMC_Results/Figure4/HomPP_18occ.RData")
+load("MCMC_Results/Figure4/HomPP_52occ.RData")
+load("MCMC_Results/Figure4/HomPP_111occ.RData")
 
 ## Note that the burn-in iterations for these samples are discarded automatically, so we don't need to worry about this.
 ## Checking trace plots to make sure everything looks okay
@@ -123,20 +123,20 @@ log.dblur <-  log(dblur)
 ## Uncomment the lines below if want to run the MCMC. Note that depending on the computer, all of the MCMC chains below can take below 5 or 10 minutes to run. 
 # 18 sampling occasions, saving the results 
 #inhom.results.18occ <- run.MCMC.inhom(data=data.18occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
-#save(inhom.results.18occ, file="MCMC_Results/Figure5/InhomPP_18occ.RData")
+#save(inhom.results.18occ, file="MCMC_Results/Figure4/InhomPP_18occ.RData")
 
 # 52 sampling occasions, saving the results
 #inhom.results.52occ <- run.MCMC.inhom(data=data.52occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
-#save(inhom.results.52occ, file="MCMC_Results/Figure5/InhomPP_52occ.RData")
+#save(inhom.results.52occ, file="MCMC_Results/Figure4/InhomPP_52occ.RData")
 
 # 111 sampling occasions, saving the results
 #inhom.results.111occ <- run.MCMC.inhom(data=data.111occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
-#save(inhom.results.111occ, file="MCMC_Results/Figure5/InhomPP_111occ.RData")
+#save(inhom.results.111occ, file="MCMC_Results/Figure4/InhomPP_111occ.RData")
 
 ## Loading in the RData files containing the MCMC results 
-load("MCMC_Results/Figure5/InhomPP_18occ.RData")
-load("MCMC_Results/Figure5/InhomPP_52occ.RData")
-load("MCMC_Results/Figure5/InhomPP_111occ.RData")
+load("MCMC_Results/Figure4/InhomPP_18occ.RData")
+load("MCMC_Results/Figure4/InhomPP_52occ.RData")
+load("MCMC_Results/Figure4/InhomPP_111occ.RData")
 
 ## Note that with these MCMC samples, the burn-in isn't discarded automatically. So, each object contains data from 101,000 MCMC iterations
 ## Checking trace plots to decide how many iterations to discard as burn-in -- if we don't discard any iterations, we clearly see some burn-in on the trace plots. If we discard 1000 iterations as burn-in, the trace plots look good (see below)
@@ -160,10 +160,10 @@ eacd.52occ <- eacd.density.vector(results=inhom.results.52occ, covariate=dblur, 
 eacd.111occ <- eacd.density.vector(results=inhom.results.111occ, covariate=dblur, nPix=2500)
 
 ## ---------------------------------------------------------------------------------------
-# Putting together Figure 5 (based on the code in 'code/revision/mona-plots.R')
+# Putting together Figure 4 (based on the code in 'code/revision/mona-plots.R')
 ## ---------------------------------------------------------------------------------------
 
-## Creating an object (labelled 'predicted_densities_all') that summarises all of the information that we will use to create the plots included in Figure 5
+## Creating an object (labelled 'predicted_densities_all') that summarises all of the information that we will use to create the plots included in Figure 4
 pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50) # Pixel centres that we are working with
 # Information we will use in Row 1
 row1.1 <- data.frame(x=pixel.centres[,1], y=pixel.centres[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=racd.18occ) # Plot 1 of row 1
@@ -181,7 +181,7 @@ detectors_df_all <- res_acd %>% purrr::map_depth(1, "detectors_df") %>% map_df(b
 detectors_df_all <- detectors_df_all %>% distinct()
 head(detectors_df_all)
 
-## Headings for the columns of Figure 5
+## Headings for the columns of Figure 4
 nn <- 3
 occ <- capthists_few_alloccs_3x3$noccasions
 asz <- c("3x3")
@@ -211,7 +211,7 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
 xx <- predicted_densities_all %>% filter(array_size == "3x3", occasions %in% capthists_few_alloccs_3x3$noccasions[1:nn])
 maxval <- max(xx$value)
 
-## Creating Figure 5
+## Creating Figure 4
 p2a <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
@@ -235,5 +235,5 @@ p2a <- predicted_densities_all %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-## Saving Figure 5
+## Saving Figure 4
 ggsave("mona_3x3.png", p2a, width=8, height=6, dpi=600)

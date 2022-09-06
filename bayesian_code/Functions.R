@@ -405,7 +405,7 @@ eacd.density.vector <- function(results, covariate, nPix) {
 # --------------------------------------------------------
 
 ## Function to compare the results we get from:
-# (1) Fitting an SCR model with an inhomogeneous Poisson process as the state process, using run.MCMC.inhom(). We assume that the covariate used is log(Dblur) (see 'bayesian_code/Figure5_code.R' for how one might extract the values of this covariate)
+# (1) Fitting an SCR model with an inhomogeneous Poisson process as the state process, using run.MCMC.inhom(). We assume that the covariate used is log(Dblur) (see 'bayesian_code/Figure4_code.R' for how one might extract the values of this covariate)
 # (2) Fitting the same model using secr.fit() from the 'secr' package
 ## The arugments are:
 # * 'results': the MCMC samples produced using run.MCMC.inhom(). We assume that the parameters: 'beta0', 'beta1', 'lambda0' and 'sigma' have been monitored

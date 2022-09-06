@@ -8,23 +8,19 @@ load("../output/revision/mona-inputs.RData")
 source("Functions.R")
 
 ## ---------------------------------------------------------------------------------------
-# Checking the results for Figure 5
+# Checking the results for Figure 4
 ## ---------------------------------------------------------------------------------------
 
 ##### Loading in the MCMC samples #####
 
-load("MCMC_Results/Figure5/InhomPP_18occ.RData")
-load("MCMC_Results/Figure5/InhomPP_52occ.RData")
-load("MCMC_Results/Figure5/InhomPP_111occ.RData")
+load("MCMC_Results/Figure4/InhomPP_18occ.RData")
+load("MCMC_Results/Figure4/InhomPP_52occ.RData")
+load("MCMC_Results/Figure4/InhomPP_111occ.RData")
 
 ## Discarding buring in (are discarding 1000 iterations as burn-in, see bayesian_code/Figure5_code.R to look at trace plots)
 inhom.results.18occ <- inhom.results.18occ[-c(1:1000),]
 inhom.results.52occ <- inhom.results.52occ[-c(1:1000),]
 inhom.results.111occ <- inhom.results.111occ[-c(1:1000),]
-
-inhom.results.18occ <- inhom.results.18occ[-c(1:2500),]
-inhom.results.52occ <- inhom.results.52occ[-c(1:2500),]
-inhom.results.111occ <- inhom.results.111occ[-c(1:2500),]
 
 ##### Comparing MCMC results to results from secr.fit() #####
 
