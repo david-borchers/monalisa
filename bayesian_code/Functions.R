@@ -205,7 +205,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
     coeff  <- exp(log_coeff)
     sigma <- sqrt(1/(2*coeff))
     # (The parameters below are unique to the inhomogeneous PP model)
-    beta0 ~ dunif(-25, 25)
+    beta0 ~ dunif(-50, 50)
     beta1 ~ dunif(-10, 10)
 
     # Specifying prior probabilities for each pixel
@@ -298,14 +298,25 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 # --------------------------------------------------------
 
 ## Function to check the trace plots resulting from our MCMC samples
-# There is only one argument, 'results', which represents an MCMC sample where the parameters 'lambda0', 'sigma', 'N' and 'D' are present
+# The 'results' argument represents an MCMC sample where the parameters 'lambda0', 'sigma', 'N' and 'D' are present
+# If 'inhom'=TRUE, then we will also check trace plots for parameters labelled beta0 and beta1
 
-check.trace.plots <-  function(results) {
-  par(mfrow=c(2, 2))
-  plot(as.vector(results[,"lambda0"]), type='l', ylab=expression(lambda[0]))
-  plot(as.vector(results[,"sigma"]), type='l', ylab=expression(sigma))
-  plot(as.vector(results[,"N"]), type='l', ylab="N")
-  plot(as.vector(results[,"D"]), type='l', ylab="D")
+check.trace.plots <-  function(results, inhom=FALSE) {
+  if (inhom) {
+    par(mfrow=c(3,2))
+    plot(as.vector(results[,"lambda0"]), type='l', ylab=expression(lambda[0]))
+    plot(as.vector(results[,"sigma"]), type='l', ylab=expression(sigma))
+    plot(as.vector(results[,"N"]), type='l', ylab="N")
+    plot(as.vector(results[,"D"]), type='l', ylab="D")
+    plot(as.vector(results[,"beta0"]), type='l', ylab=expression(beta[0]))
+    plot(as.vector(results[,"beta1"]), type='l', ylab=expression(beta[1]))
+  } else {
+    par(mfrow=c(2, 2))
+    plot(as.vector(results[,"lambda0"]), type='l', ylab=expression(lambda[0]))
+    plot(as.vector(results[,"sigma"]), type='l', ylab=expression(sigma))
+    plot(as.vector(results[,"N"]), type='l', ylab="N")
+    plot(as.vector(results[,"D"]), type='l', ylab="D")
+  }
 }
 
 # --------------------------------------------------------
@@ -369,4 +380,70 @@ centres <- function(xlim, ylim, x.pixels, y.pixels) {
   centres <- as.matrix(cbind(points$x, points$y))
   # Printing the result
   centres
+}
+
+# --------------------------------------------------------
+
+## Function to create vector of density values for the EACD maps we want to create. The arguments are:
+# * 'results': an MCMC object, which contains samples for the parameters 'beta0' and 'beta1'
+# * 'covariate': a vector containing the covariate values for each pixel (we are assuming the values are already logged)
+# * 'nPix': the number of pixels that we are working with
+eacd.density.vector <- function(results, covariate, nPix) {
+  density <- numeric() # Initialising object we will store density values in
+  # For loop to calculate density value for each pixel
+  for (i in 1:nPix) {
+    if(i%%100==0) print(i) # Track progress
+    # Posterior distribution for the density of the ith pixel
+    density.posterior <- exp(results[,'beta0'] + results[,'beta1'] * (covariate[i]))
+    # Posterior mean of this density -- gives the density value for the ith pixel we will use in an EACD map
+    density[i] <- mean(density.posterior)
+  }
+  # Returning the resulting vector
+  density
+}
+
+# --------------------------------------------------------
+
+## Function to compare the results we get from:
+# (1) Fitting an SCR model with an inhomogeneous Poisson process as the state process, using run.MCMC.inhom(). We assume that the covariate used is log(Dblur) (see 'bayesian_code/Figure5_code.R' for how one might extract the values of this covariate)
+# (2) Fitting the same model using secr.fit() from the 'secr' package
+## The arugments are:
+# * 'results': the MCMC samples produced using run.MCMC.inhom(). We assume that the parameters: 'beta0', 'beta1', 'lambda0' and 'sigma' have been monitored
+# * 'j': this will be a value in {1, 2, 3} and represents the index of the objects we want to work with from the RData objects we have loaded in. If want objects generated using 18, 52 or 111 sampling occasions, j=1,2,3 respectively
+# * 'mask': mask to use in secr.fit()
+# Note that the model we specify for secr.fit() is not an argument here -- we will be using "D~log(Dblur)" as the model every time we use this function. Same for the detection function. For our purposes, we will always use 'detectfn=HHN'
+check.inhom.mcmc <- function(results, j, mask) {
+  # Number of sampling occasions we are working with
+  nocc  <- capthists_few_alloccs_3x3$noccasions[j]
+  # Capture history we want to work with
+  capthist <- capthists_few_alloccs_3x3$capthist[[j]]
+  
+  # Fitting the SCR model using secr.fit()
+  fit <- secr.fit(capthist=capthist, model=D~log(Dblur), mask=mask, detectfn="HHN", trace=FALSE)
+
+  # Comparing estimates of beta0
+  mcmc.beta0 <- mean(results[,'beta0'])
+  secr.fit.beta0 <- log(exp(summary(fit)$coef["D","beta"])/10000)
+
+  # Comparing credible interval, confidence interval for beta1
+  mcmc.beta1 <- quantile(results[,'beta1'], probs=c(0.025, 0.5, 0.975)) # 95% credible interval
+  secr.fit.beta1 <- c(summary(fit)$coef["D.log(Dblur)","lcl"], summary(fit)$coef["D.log(Dblur)","ucl"]) # 95% confidence interval
+
+  # Comparing credible interval, confidence interval for lambda0
+  mcmc.lambda0 <- quantile(results[,'lambda0']/nocc, probs=c(0.025, 0.5, 0.975)) # 95% credible interval
+  secr.fit.lambda0 <- c(summary(fit)$predicted["lambda0","lcl"], summary(fit)$predicted["lambda0","ucl"]) # 95% confidence interval
+
+  # Comparing credible interval, confidence interval for sigma
+  mcmc.sigma <- quantile(results[,'sigma'], probs=c(0.025, 0.5, 0.975)) # 95% credible interval
+  secr.fit.sigma <- c(summary(fit)$predicted["sigma","lcl"], summary(fit)$predicted["sigma","ucl"]) # 95% confidence interval
+
+  # Printing the results
+  # Estimates of beta0
+  cat("Estimates of beta0 \n", "MCMC estimate: ", mcmc.beta0, "\n", "secr.fit() estimate: ", secr.fit.beta0, "\n", sep="")
+  # Intervals for beta1
+  cat("\n", "Intervals for beta1", "\n", "95% credible interval: (", mcmc.beta1[1], ", ", mcmc.beta1[3], ") ", "\n", "95% confidence interval: (", secr.fit.beta1[1], ", ", secr.fit.beta1[2], ")", "\n", sep="")
+  # Intervals for lambda0
+  cat("\n", "Intervals for lambda0", "\n", "95% credible interval: (", mcmc.lambda0[1], ", ", mcmc.lambda0[3], ") ", "\n", "95% confidence interval: (", secr.fit.lambda0[1], ", ", secr.fit.lambda0[2], ")", "\n", sep="")
+  # Intervals for sigma
+  cat("\n", "Intervals for sigma", "\n", "95% credible interval: (", mcmc.sigma[1], ", ", mcmc.sigma[3], ") ", "\n", "95% confidence interval: (", secr.fit.sigma[1], ", ", secr.fit.sigma[2], ")", "\n", sep="")
 }
