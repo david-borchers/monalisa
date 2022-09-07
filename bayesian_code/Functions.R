@@ -411,12 +411,22 @@ eacd.density.vector <- function(results, covariate, nPix) {
 # * 'results': the MCMC samples produced using run.MCMC.inhom(). We assume that the parameters: 'beta0', 'beta1', 'lambda0' and 'sigma' have been monitored
 # * 'j': this will be a value in {1, 2, 3} and represents the index of the objects we want to work with from the RData objects we have loaded in. If want objects generated using 18, 52 or 111 sampling occasions, j=1,2,3 respectively
 # * 'mask': mask to use in secr.fit()
+# * 'array': the name of the array we want to use. If Figure 4, array should be "3x3". If Figure 5, array should be "7x7". 
 # Note that the model we specify for secr.fit() is not an argument here -- we will be using "D~log(Dblur)" as the model every time we use this function. Same for the detection function. For our purposes, we will always use 'detectfn=HHN'
-check.inhom.mcmc <- function(results, j, mask) {
-  # Number of sampling occasions we are working with
-  nocc  <- capthists_few_alloccs_3x3$noccasions[j]
-  # Capture history we want to work with
-  capthist <- capthists_few_alloccs_3x3$capthist[[j]]
+check.inhom.mcmc <- function(results, j, mask, array) {
+  if (array=="3x3") {
+    # Number of sampling occasions we are working with
+    nocc  <- capthists_few_alloccs_3x3$noccasions[j]
+    # Capture history we want to work with
+    capthist <- capthists_few_alloccs_3x3$capthist[[j]]
+  } else {
+    if (array=="7x7") {
+      # Number of sampling occasions we are working with
+      nocc  <- capthists_few_alloccs_7x7$noccasions[j]
+      # Capture history we want to work with
+      capthist <- capthists_few_alloccs_7x7$capthist[[j]]
+    }
+  }
   
   # Fitting the SCR model using secr.fit()
   fit <- secr.fit(capthist=capthist, model=D~log(Dblur), mask=mask, detectfn="HHN", trace=FALSE)
@@ -443,7 +453,7 @@ check.inhom.mcmc <- function(results, j, mask) {
   # Intervals for beta1
   cat("\n", "Intervals for beta1", "\n", "95% credible interval: (", mcmc.beta1[1], ", ", mcmc.beta1[3], ") ", "\n", "95% confidence interval: (", secr.fit.beta1[1], ", ", secr.fit.beta1[2], ")", "\n", sep="")
   # Intervals for lambda0
-  cat("\n", "Intervals for lambda0", "\n", "95% credible interval: (", mcmc.lambda0[1], ", ", mcmc.lambda0[3], ") ", "\n", "95% confidence interval: (", secr.fit.lambda0[1], ", ", secr.fit.lambda0[2], ")", "\n", sep="")
+  cat("\n", "Intervals for lambda0", "\n", "95% credible interval: (", mcmc.lambda0[1], ", ", mcmc.lambda0[3], ") ", "\n", "95% confidence interval: (", secr.fit.lambda0[1], ", ", secr.fit.lambda0[2], ")", "\n", "True value of lambda0: 0.1", "\n", sep="")
   # Intervals for sigma
-  cat("\n", "Intervals for sigma", "\n", "95% credible interval: (", mcmc.sigma[1], ", ", mcmc.sigma[3], ") ", "\n", "95% confidence interval: (", secr.fit.sigma[1], ", ", secr.fit.sigma[2], ")", "\n", sep="")
+  cat("\n", "Intervals for sigma", "\n", "95% credible interval: (", mcmc.sigma[1], ", ", mcmc.sigma[3], ") ", "\n", "95% confidence interval: (", secr.fit.sigma[1], ", ", secr.fit.sigma[2], ")", "\n", "True value of sigma=4", "\n", sep="")
 }
