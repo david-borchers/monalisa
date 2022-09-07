@@ -1,6 +1,8 @@
 ## Code to produce Figure 4
 # Working directory should be the 'bayesian_code' folder
 
+## In this figure, the first column uses simulated data w/ 18 sampling occasions. The second column uses simulated data w/ 52 sampling occasions, and the third column uses simulated data w/ 111 sampling occasions. 
+
 ## Libraries we need
 library(nimble)
 library(coda)
@@ -51,7 +53,7 @@ organise.data = function(j) {
 # Data object for 18 sampling occasions
 data.18occ <- organise.data(1)
 
-# Data object for 52 sampling occasins
+# Data object for 52 sampling occasions
 data.52occ <- organise.data(2)
 
 # Data object for 111 sampling occasions
@@ -60,6 +62,8 @@ data.111occ <- organise.data(3)
 ## ---------------------------------------------------------------------------------------
 # Creating the objects we specifically need for the plots in Row 1
 ## ---------------------------------------------------------------------------------------
+
+## Row 1 consists of RACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is a homogeneous Poisson process. 
 
 ##### Running the MCMC #####
 
@@ -99,6 +103,8 @@ racd.111occ <- no.movement.density.vector(results=results.111occ, M=300, xlim=c(
 # Creating the objects we specifically need for the plots in Row 2
 ## ---------------------------------------------------------------------------------------
 
+## Row 2 consists of EACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is an inhomogeneous Poisson process.
+
 ##### Covariate value for each pixel #####
 
 # Subsetting the covariate values from the data we loaded in above
@@ -114,7 +120,7 @@ log.dblur <-  log(dblur)
 
 ##### 'pixel.info' object needed for MCMC #####
 
-## Uncomment if want to run M]CMC 
+## Uncomment if want to run MCMC 
 #pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 #pixel.info <- cbind(pixel.centres, log.dblur)
 
@@ -140,7 +146,7 @@ load("MCMC_Results/Figure4/InhomPP_111occ.RData")
 
 ## Note that with these MCMC samples, the burn-in isn't discarded automatically. So, each object contains data from 101,000 MCMC iterations
 ## Checking trace plots to decide how many iterations to discard as burn-in -- if we don't discard any iterations, we clearly see some burn-in on the trace plots. If we discard 1000 iterations as burn-in, the trace plots look good (see below)
-# 18 sampling occasions'
+# 18 sampling occasions
 check.trace.plots(inhom.results.18occ[-c(1:1000),], inhom=T)
 # 52 sampling occasions
 check.trace.plots(inhom.results.52occ[-c(1:1000),], inhom=T)
@@ -155,9 +161,9 @@ inhom.results.111occ <- inhom.results.111occ[-c(1:1000),]
 ##### Creating the objects we need for the EACD plots #####
 
 ## Creating vectors containing density values for each pixel when working with 18/52/111 sampling occasions
-eacd.18occ <- eacd.density.vector(results=inhom.results.18occ, covariate=dblur, nPix=2500)
-eacd.52occ <- eacd.density.vector(results=inhom.results.52occ, covariate=dblur, nPix=2500)
-eacd.111occ <- eacd.density.vector(results=inhom.results.111occ, covariate=dblur, nPix=2500)
+eacd.18occ <- eacd.density.vector(results=inhom.results.18occ, covariate=log.dblur, nPix=2500)
+eacd.52occ <- eacd.density.vector(results=inhom.results.52occ, covariate=log.dblur, nPix=2500)
+eacd.111occ <- eacd.density.vector(results=inhom.results.111occ, covariate=log.dblur, nPix=2500)
 
 ## ---------------------------------------------------------------------------------------
 # Putting together Figure 4 (based on the code in 'code/revision/mona-plots.R')
@@ -179,7 +185,6 @@ predicted_densities_all <- rbind(row1.1, row1.2, row1.3, row2.1, row2.2, row2.3)
 ## Object that contains information on detectors 
 detectors_df_all <- res_acd %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)
 detectors_df_all <- detectors_df_all %>% distinct()
-head(detectors_df_all)
 
 ## Headings for the columns of Figure 4
 nn <- 3

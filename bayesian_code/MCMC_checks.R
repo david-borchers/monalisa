@@ -33,5 +33,4 @@ check.inhom.mcmc(results=inhom.results.52occ, j=2, mask=mona_mask)
 ## Looking at the third plot in Row 2
 check.inhom.mcmc(results=inhom.results.111occ, j=3, mask=mona_mask)
 
-# There are some differences in both sets of results, in all instances. However, things generally look good. 
-
+# There are some differences in both sets of results, in all instances. However, things generally look good.
