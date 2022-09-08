@@ -5,7 +5,7 @@
 ## Function to generate MCMC samples when fitting a homogeneous density model
 
 ## The arguments we need to provide (in order) are:
-# * 'data':  a data object created in a similar manner to the data objects from the beginning of 'Figure9.R'. This is a list that should include elements labelled: 'encounter.data' (capture history matrix), 'trap.loc' (trap coordinates), 'xlim' (x-range of pixel centres), 'ylim' (y-range of pixel centres) and 'n.occasions' (number of sampling occasions)
+# * 'data':  a data object created in a similar manner to the data objects from the beginning of 'bayesian_code/Plots_Code.R'. This is a list that should include elements labelled: 'encounter.data' (capture history matrix), 'trap.loc' (trap coordinates), 'xlim' (x-range of pixel centres), 'ylim' (y-range of pixel centres) and 'n.occasions' (number of sampling occasions)
 # * 'M': the size of the superpopulation
 # * 'n.iter': the number of MCMC iterations you want to run
 # * 'n.adapt': the number of adaptation iterations you want (different from burn-in)
@@ -106,7 +106,7 @@ run.MCMC <- function(data, M, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0
 ## Function to generate MCMC samples when fitting an inhomogeneous density model
 
 ## The arguments we need to provide (in order) are:
-# * 'data': a data object, created so that it is a list containing the elements: 'encounter.data' (capture history matrix) and 'trap.loc' (trap coordinates) -- see the beginning of Figure9.R for an example of the creation of such data objects
+# * 'data': a data object, created so that it is a list containing the elements: 'encounter.data' (capture history matrix) and 'trap.loc' (trap coordinates) -- see the beginning of 'bayesian_code/Plots_Code.R' for an example of the creation of such data objects
 # * 'pixel.info': a data frame  with three columns. The first column gives the x-coordinates for pixel centres in the region of interest, the second column gives the y-coordinates of the pixel centres, and the third gives the associated covariate value for each pixel centre. NOTE we assume that: (1) these pixel centres are evenly-spaced, (2) the region of interest is a square, so the number of pixels in the x- and y-directions is the square root of the number of rows in this data frame and (3) there are no regions in the region where animals cannot go (so the mask would just be a matrix of 1's)
 # * 'M': the size of the super-population
 # * 'inits.vec': a vector containing the starting values for lambda0, sigma and beta1. The ordering is: c(lambda0, sigma, beta1). Later, we calculate sensible starting values for 'log_coeff' and 'beta0', so we won't provide them here
@@ -346,7 +346,7 @@ no.movement.density.vector <- function(xlim, ylim, results, M) {
   # y-coordinates of all activity centres
   Sy <- S[,-(1:M)]
 
-  ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell
+  ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell -- building up posterior distribution of number of activity centres in each pixel
   # Number of pixel centres
   npix <-  (length(xg) - 1) * (length(yg) - 1)
   Dn.vals <-  matrix(0, nrow=nrow(results), ncol=npix)
@@ -390,7 +390,7 @@ centres <- function(xlim, ylim, x.pixels, y.pixels) {
 # * 'nPix': the number of pixels that we are working with
 eacd.density.vector <- function(results, covariate, nPix) {
   density <- numeric() # Initialising object we will store density values in
-  # For loop to calculate density value for each pixel
+  # For loop to calculate posterior mean density value for each pixel
   for (i in 1:nPix) {
     if(i%%100==0) print(i) # Track progress
     # Posterior distribution for the density of the ith pixel
@@ -405,7 +405,7 @@ eacd.density.vector <- function(results, covariate, nPix) {
 # --------------------------------------------------------
 
 ## Function to compare the results we get from:
-# (1) Fitting an SCR model with an inhomogeneous Poisson process as the state process, using run.MCMC.inhom(). We assume that the covariate used is log(Dblur) (see 'bayesian_code/Figure4_code.R' for how one might extract the values of this covariate)
+# (1) Fitting an SCR model with an inhomogeneous Poisson process as the state process, using run.MCMC.inhom(). We assume that the covariate used is log(Dblur) (see 'bayesian_code/Plots_Code.R' for how one might extract the values of this covariate)
 # (2) Fitting the same model using secr.fit() from the 'secr' package
 ## The arugments are:
 # * 'results': the MCMC samples produced using run.MCMC.inhom(). We assume that the parameters: 'beta0', 'beta1', 'lambda0' and 'sigma' have been monitored

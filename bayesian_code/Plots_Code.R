@@ -268,17 +268,8 @@ racd.55occ <- no.movement.density.vector(results=results.55occ, M=300, xlim=c(0.
 
 ##### Covariate value for each pixel #####
 
-# Note that we use the same covariate as in 'bayesian_code/Figure4_code.R'
-# Subsetting the covariate values from the data we loaded in above
-mona.densities <-  small_blurry_mona_df[,c("x", "y", "Dblur")]
-# Re-ordering 'mona.densities', so order of pixels matches order of pixels in 'pixel.centres' object
-split <-  split(mona.densities, mona.densities$y)
-mona.densities <-  do.call("rbind", split)
-rownames(mona.densities) = NULL
-# Now, subsetting covariate vector only so is in corresponding order to centres in 'pixel.centres'
-dblur <-  mona.densities[,"Dblur"]
-# Logging the covariate, so we have the values of log(Dblur) (this is the covariate we will use to fit our SCR models)
-log.dblur <-  log(dblur)
+# Already found above when creating objects needed for row 2 of Figure 4 (same covariate is used!)
+log.dblur
 
 ##### 'pixel.info' object needed for MCMC #####
 
@@ -353,7 +344,6 @@ racd.summary <- function(nocc, fig) {
   }
   # Obtaining the values for the necessary RACD map
   racd.vals <- get(paste0("racd.", nocc, "occ")) 
-  
   # Data frame of information we want
   dat <- data.frame(x=pixel.centres[,1], y=pixel.centres[,2], covtype=rep("D~1", 2500), occasions=rep(nocc, 2500), array_size=rep(array, 2500), value=racd.vals)
   # Returning this data frame
@@ -371,7 +361,6 @@ eacd.summary <- function(nocc, fig) {
     }
   }
   eacd.vals <- get(paste0("eacd.", nocc, "occ")) 
-  
   dat <- data.frame(x=pixel.centres[,1], y=pixel.centres[,2], covtype=rep("D~log(Dblur)", 2500), occasions=rep(nocc, 2500), array_size=rep(array, 2500), value=eacd.vals)
   dat
 }
@@ -473,15 +462,15 @@ p2a <- predicted_densities_all %>%
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
         strip.background = element_rect(fill=NA, colour = NA), 
-        legend.position="none", legend.key.width = unit(3, "cm"),
-        legend.key.height = unit(0.7,"cm"), legend.title = element_blank(),
+        legend.position="right", legend.key.width = unit(0.5, "cm"),
+        legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
 p2a
 
 ## Saving Figure 4
-ggsave("mona_3x3.png", p2a, width=8, height=6, dpi=600)
+ggsave("mona_3x3.png", p2a, width=8, height=6, dpi=600, bg="white")
 
 
 
@@ -490,7 +479,7 @@ ggsave("mona_3x3.png", p2a, width=8, height=6, dpi=600)
 ################################### Creating Figure 5 ####################################
 ## ---------------------------------------------------------------------------------------
 
-##### Adding the column and row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
+##### Adding the column and row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects #####
 
 nn <- 3
 occ <-capthists_few_alloccs_7x7$noccasions
@@ -538,11 +527,12 @@ p2b <- predicted_densities_all %>%
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
         strip.background = element_rect(fill=NA, colour = NA), 
-        legend.position="none", legend.key.height = unit(0.7,"cm"), legend.title = element_blank(),
+        legend.position="right", legend.key.width = unit(0.5, "cm"),
+        legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
 p2b
 
 ## Saving Figure 5
-ggsave("mona_7x7.png", p2b, width=8, height=6, dpi=600)
+ggsave("mona_7x7.png", p2b, width=8, height=6, dpi=600, bg="white")
