@@ -19,8 +19,6 @@ load("../output/revision/mona-results.RData")
 ## Functions we need
 source("Functions.R")
 
-
-
 ## ---------------------------------------------------------------------------------------
 ######################## Creating the objects needed for Figure 4 ########################
 ## ---------------------------------------------------------------------------------------
@@ -100,7 +98,7 @@ check.trace.plots(results.111occ)
 
 ##### Creating the objects we need for the RACD plots #####
 
-## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps (created using MCMC).
+## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps that are based on MCMC results. 
 racd.18occ <- no.movement.density.vector(results=results.18occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.52occ <-  no.movement.density.vector(results=results.52occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.111occ <- no.movement.density.vector(results=results.111occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
@@ -111,24 +109,24 @@ racd.111occ <- no.movement.density.vector(results=results.111occ, M=300, xlim=c(
 
 ## Row 2 consists of EACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is an inhomogeneous Poisson process.
 
-##### Covariate value for each pixel #####
-
-# Subsetting the covariate values from the data we loaded in above
-mona.densities <-  small_blurry_mona_df[,c("x", "y", "Dblur")]
-# Re-ordering 'mona.densities', so order of pixels matches order of pixels in 'pixel.centres' object
-split <-  split(mona.densities, mona.densities$y)
-mona.densities <-  do.call("rbind", split)
-rownames(mona.densities) = NULL
-# Now, subsetting covariate vector only so is in corresponding order to centres in 'pixel.centres'
-dblur <-  mona.densities[,"Dblur"]
-# Logging the covariate, so we have the values of log(Dblur) (this is the covariate we will use to fit our SCR models)
-log.dblur <-  log(dblur)
-
 ##### 'pixel.info' object needed for MCMC #####
 
 ## Uncomment if want to run MCMC 
 #pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 #pixel.info <- cbind(pixel.centres, log.dblur)
+
+##### Covariate value for each pixel #####
+
+# Subsetting the covariate values from the data we loaded in above
+mona.densities <-  small_blurry_mona_df[,c("x", "y", "Dblur")]
+# Re-ordering 'mona.densities', so order of pixels matches order of pixels in 'pixel.centres' object (see above for creation of 'pixel.centres' object)
+split <-  split(mona.densities, mona.densities$y)
+mona.densities <-  do.call("rbind", split)
+rownames(mona.densities) = NULL
+# Now, subsetting "Dblur" vector only so is in corresponding order to centres in 'pixel.centres'
+dblur <-  mona.densities[,"Dblur"]
+# Logging the covariate, so we have the values of log(Dblur) (this is the covariate we will use to fit our SCR models)
+log.dblur <-  log(dblur)
 
 ##### Running the MCMC #####
 
@@ -170,8 +168,6 @@ inhom.results.111occ <- inhom.results.111occ[-c(1:1000),]
 eacd.18occ <- eacd.density.vector(results=inhom.results.18occ, covariate=log.dblur, nPix=2500)
 eacd.52occ <- eacd.density.vector(results=inhom.results.52occ, covariate=log.dblur, nPix=2500)
 eacd.111occ <- eacd.density.vector(results=inhom.results.111occ, covariate=log.dblur, nPix=2500)
-
-
 
 ## ---------------------------------------------------------------------------------------
 ######################## Creating the objects needed for Figure 5 ########################
@@ -255,7 +251,7 @@ check.trace.plots(results.55occ)
 
 ##### Creating the objects we need for the RACD plots #####
 
-## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps (created using MCMC).
+## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel
 racd.7occ <- no.movement.density.vector(results=results.7occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.25occ <-  no.movement.density.vector(results=results.25occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.55occ <- no.movement.density.vector(results=results.55occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
@@ -266,16 +262,16 @@ racd.55occ <- no.movement.density.vector(results=results.55occ, M=300, xlim=c(0.
 
 ## Row 2 consists of EACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is an inhomogeneous Poisson process.
 
-##### Covariate value for each pixel #####
-
-# Already found above when creating objects needed for row 2 of Figure 4 (same covariate is used!)
-log.dblur
-
 ##### 'pixel.info' object needed for MCMC #####
 
 ## Uncomment if want to run MCMC 
 #pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 #pixel.info <- cbind(pixel.centres, log.dblur)
+
+##### Covariate value for each pixel #####
+
+# Already found above when creating objects needed for row 2 of Figure 4 (same covariate is used!)
+log.dblur
 
 ##### Running the MCMC #####
 
@@ -318,8 +314,6 @@ inhom.results.55occ <- inhom.results.55occ[-c(1:1000),]
 eacd.7occ <- eacd.density.vector(results=inhom.results.7occ, covariate=log.dblur, nPix=2500)
 eacd.25occ <- eacd.density.vector(results=inhom.results.25occ, covariate=log.dblur, nPix=2500)
 eacd.55occ <- eacd.density.vector(results=inhom.results.55occ, covariate=log.dblur, nPix=2500)
-
-
 
 ## ---------------------------------------------------------------------------------------
 ########################### Objects needed for Figures 4 and 5  ##########################
@@ -409,8 +403,6 @@ xx <- predicted_densities_all %>% filter(array_size == "7x7", occasions %in% cap
 maxval2 <- max(xx$value) # Max density value found across all plots in Figure 5
 maxval <- max(maxval1, maxval2) # Using the higher of these two max values as the top value of the colour scale for plots in both figures
 
-
-
 ## ---------------------------------------------------------------------------------------
 ################################### Creating Figure 4 ####################################
 ## ---------------------------------------------------------------------------------------
@@ -426,7 +418,7 @@ paster <- function(nd,na){
 }
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist() # Column lables for Figure 4
 
-## Adding the column labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the column labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions, 
                                              levels = occ,
                                              labels = capthist_labels)
@@ -434,7 +426,7 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ,
                                       labels = capthist_labels)
 
-## Adding the row labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the row labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype, 
                                            levels = unique(predicted_densities_all$covtype),
                                            labels = c("Realised AC", "Expected AC"))
@@ -472,9 +464,6 @@ p2a
 ## Saving Figure 4
 ggsave("mona_3x3.png", p2a, width=8, height=6, dpi=600, bg="white")
 
-
-
-
 ## ---------------------------------------------------------------------------------------
 ################################### Creating Figure 5 ####################################
 ## ---------------------------------------------------------------------------------------
@@ -491,7 +480,7 @@ paster <- function(nd,na){
 }
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist()
 
-## Adding the column labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the column labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions, 
                                              levels = occ,
                                              labels = capthist_labels)
@@ -499,7 +488,7 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ,
                                       labels = capthist_labels)
 
-## Adding the row labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype, 
                                            levels = unique(predicted_densities_all$covtype),
                                            labels = c("Realised AC", "Expected AC"))

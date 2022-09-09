@@ -7,26 +7,25 @@
 ## The arguments we need to provide (in order) are:
 # * 'data':  a data object created in a similar manner to the data objects from the beginning of 'bayesian_code/Plots_Code.R'. This is a list that should include elements labelled: 'encounter.data' (capture history matrix), 'trap.loc' (trap coordinates), 'xlim' (x-range of pixel centres), 'ylim' (y-range of pixel centres) and 'n.occasions' (number of sampling occasions)
 # * 'M': the size of the superpopulation
-# * 'n.iter': the number of MCMC iterations you want to run
-# * 'n.adapt': the number of adaptation iterations you want (different from burn-in)
+# * 'n.iter': the number of MCMC iterations we want to run
+# * 'n.adapt': the number of adaptation iterations we want (different from burn-in)
 # * 'n.burn': the number of burn-in iterations that we want to use (these will be discarded for us)
 # * 'lambda0.start': the initial value for lambda0 for the MCMC sampling
 # * 'log_coeff.start': the initial value for 'log_coeff' for the MCMC sampling (see NIMBLE model below for an idea of what parameter this is)
 # * 'thin': the value of the thinning parameter for the MCMC
 # * 'parameters': the vector of parameters we want to monitor
 
-
 run.MCMC <- function(data, M, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0.start = runif(1, 0, 50), log_coeff.start=runif(1, 0, 1), thin = 1, parameters) {
   ## Subsetting the data we'll use in the NIMBLE model:
-  # Encounter matrix, no rows of zeroes
+  # Encounter matrix
   y <- data$encounter.data
-  # Removing rows of zeroes in encounter data
+  # Removing rows of zeroes in encounter data (in case they are there)
   y <- y[apply(y, 1, sum)>0, ]
   # Trap locations matrix
   traplocs <- data$trap.loc
   # Number of traps
   trap.no <- nrow(traplocs)
-  # Number of occasions over which data was collected
+  # Number of sampling occasions over which data was collected
   n.occ <- data$n.occasions
   # xlim
   xlim <- data$xlim
@@ -44,8 +43,8 @@ run.MCMC <- function(data, M, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0
   z <- c(rep(1, pop.size), rep(0, M-pop.size))
 
   ## Setting the starting values for s (activity centres for each animal)
-  # For observed animals, we want these initialised activity centres to be at or near the traps at which individuals were captured. So, we'll make the starting activity centre the 'mean' location for all of the traps at which they were caught.
-  # First, generating 'random' activity centres for ALL individuals in our supopulation
+  ## For observed animals, we want these initialised activity centres to be at or near the traps at which individuals were captured. So, for these inviduals, we'll make the starting activity centre the 'mean' location of the traps at which they were caught. We do this below
+  # First, generating 'random' activity centres for ALL individuals in the super-population
   sst <- cbind(runif(M, xlim[1], xlim[2]), runif(M, ylim[1], ylim[2]))
  # Now, for observed animals, making their initial activity centre the 'mean' of all of the traps at which they were detected
   for (i in 1:pop.size) {
@@ -55,7 +54,7 @@ run.MCMC <- function(data, M, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0
   }
 
   ## NIMBLE model
-  # We could monitor multiple things here: lambda0, psi, log_coeff, coeff, sigma, z-values and s-values (activity centres). Generally, we enter the argument: parameters = c("lambda0", "coeff", "sigma", "N", "D", "z", "s") - these are the parameters we tend to monitor!
+  # We could monitor multiple things here: lambda0, psi, log_coeff, coeff, sigma, z-values and s-values (activity centres). Generally, we enter the argument: parameters = c("lambda0", "coeff", "sigma", "N", "D", "z", "s") -- that is, these are the parameters we tend to monitor!
   x <- nimbleCode({
     lambda0~dgamma(0.001, 0.001)
     psi ~ dunif(0,1)
@@ -106,11 +105,11 @@ run.MCMC <- function(data, M, n.iter=1000, n.adapt = 1000, n.burn = 100, lambda0
 ## Function to generate MCMC samples when fitting an inhomogeneous density model
 
 ## The arguments we need to provide (in order) are:
-# * 'data': a data object, created so that it is a list containing the elements: 'encounter.data' (capture history matrix) and 'trap.loc' (trap coordinates) -- see the beginning of 'bayesian_code/Plots_Code.R' for an example of the creation of such data objects
-# * 'pixel.info': a data frame  with three columns. The first column gives the x-coordinates for pixel centres in the region of interest, the second column gives the y-coordinates of the pixel centres, and the third gives the associated covariate value for each pixel centre. NOTE we assume that: (1) these pixel centres are evenly-spaced, (2) the region of interest is a square, so the number of pixels in the x- and y-directions is the square root of the number of rows in this data frame and (3) there are no regions in the region where animals cannot go (so the mask would just be a matrix of 1's)
+# * 'data': a data object, created so that it is a list containing the elements: 'encounter.data' (capture history matrix) and 'trap.loc' (trap coordinates) -- see 'bayesian_code/Plots_Code.R' for an example of the creation of such data objects
+# * 'pixel.info': a data frame  with three columns. The first column gives the x-coordinates for pixel centres in the region of interest, the second column gives the y-coordinates of the pixel centres, and the third gives the associated covariate value for each pixel centre. NOTE we assume that: (1) these pixel centres are evenly-spaced, (2) the region of interest is square, so the number of pixels in the x- and y-directions is the square root of the number of rows in this data frame, (3) there are no areas in the region of interest where animals cannot go (so a mask of the study region will just be a matrix of 1's) and (4) the first two columns (of pixel centres) have been generated using the centres() function (which can be found below)
 # * 'M': the size of the super-population
 # * 'inits.vec': a vector containing the starting values for lambda0, sigma and beta1. The ordering is: c(lambda0, sigma, beta1). Later, we calculate sensible starting values for 'log_coeff' and 'beta0', so we won't provide them here
-# * 'dmax': the dmax value to use for the getLocalObjects() function
+# * 'dmax': the dmax value to use for the getLocalObjects() function (see below)
 # * 'n.iter': the number of iterations to run the MCMC for
 # * 'n.burn': the number of burn-in iterations we want to use
 # * 'parameters': a vector containing the labels of the parameters we want to monitor
@@ -126,7 +125,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
   traplocs <- data$trap.loc
   # Number of traps
   n.trap <- nrow(traplocs)
-  # xlim, ylim (based on centres in 'pixel.info' being evenly-spaced)
+  # xlim, ylim (found based on centres in 'pixel.info' being evenly-spaced)
   xlim <- c(min(pixel.info[,1])-(0.5*abs(pixel.info[1,1] - pixel.info[2,1])), max(pixel.info[,1])+(0.5*abs(pixel.info[1,1] - pixel.info[2,1])))
   ylim <- c(min(pixel.info[,2])-(0.5*abs(pixel.info[1,1] - pixel.info[2,1])), max(pixel.info[,2])+(0.5*abs(pixel.info[1,1] - pixel.info[2,1])))
   # Number of animals detected
@@ -135,9 +134,10 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
   # Number of pixels in the map region
   nPix <- nrow(pixel.info)
 
-  # Pixel centres we need
+  # Pixel centres for the study region
   pixel.centres <- pixel.info[,1:2]
-  # Matrix containing numbering for each pixel centre -- i.e. denotes number in which values in 'pixel.centres' occur in our survey area
+  # Creating a matrix that has an entry for each pixel centre in the survey region. Each entry will indicate the order in which that pixel occurs in the 'pixel.centres' object (which we assume is created by the centres() function found below) 
+  # Note that if we start at the bottom row and read each row from left to right, the indices increase in value
   pixel.centres.order <- matrix(1:nrow(pixel.info), ncol=sqrt(nPix), nrow=sqrt(nPix), byrow=T)
   pixel.centres.order <- pixel.centres.order[nrow(pixel.centres.order):1,]
 
@@ -146,7 +146,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 
 
   ## Data augmentation
-  # Setting the size of the superpopulation
+  # Setting the size of the super-population
   M <- M
   # Adding all-0 rows to our encounter data matrix (so that, in total, we have encounter data for M animals)
   y <- rbind(y, matrix(0, nrow=M-n.observed, ncol=ncol(y)))
@@ -155,8 +155,8 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 
 
   ## Setting the starting values for s (activity centres for each animal)
-  # For observed animals, we want these initialised activity centres to be at or near the traps at which individuals were captured. So, we'll make the starting activity centre the 'mean' location for all of the traps at which they were caught.
-  # First, generating 'random' activity centres for ALL individuals in our supopulation
+  ## For observed animals, we want these initialised activity centres to be at or near the traps at which individuals were captured. So, for these individuals, we'll make the starting activity centre the 'mean' location of the traps at which they were caught. We do this below
+  # First, generating 'random' activity centres for ALL individuals in the super-population
   sst <- cbind(runif(M, xlim[1], xlim[2]), runif(M, ylim[1], ylim[2]))
   # Now, for observed animals, making their initial activity centre the 'mean' of all of the traps at which they were detected
   for (j in 1:n.observed) {
@@ -166,15 +166,15 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
   }
   # And now, rounding these starting values so that they correspond to pixel centres
   sst <- round(sst)
-  # Finding the corresponding pixel index for each row of 'sst' - i.e. for each activity centre we have generated, we are finding the index of the corresponding pixel (where pixel '1' will be in the first row of the 'pixel.centres' object, and so on)
+  # Finding the corresponding pixel index for each row of 'sst' - i.e. for each pixel centre we have identified, we are finding the corresponding row index in the 'pixel.centres' object. This will be equal to the entry in 'pixel.centres.order' that represents the given pixel centre
   starting.pixel.indices <- vector("numeric", M)
   for (j in 1:M) {
     index <- which(sst[j,1]==pixel.centres[,1] & sst[j,2]==pixel.centres[,2])
     starting.pixel.indices[j] <- index
   }
-  # And now, making sst equal to the 'starting.pixel.indices' object we have just created - so what we end up providing to our NIMBLE model in the way of initial activity centres is the index of the pixel that each animals' initial activity centre falls into.
+  # And now, making sst equal to the 'starting.pixel.indices' object we have just created
   sst <- starting.pixel.indices
-  # Finding sx and sy -- these are the row/column indices for each entry in 'pixel.centres.order' that is stored in 'sst'
+  # Finding sx and sy -- these are the row/column indices for each entry in 'pixel.centres.order' that is stored in 'sst' 
   sx_sy_init <- matrix(0, ncol=2, nrow=length(sst))
   for (i in (1:length(sst))) {
     sx_sy_init[i,] <- which(pixel.centres.order==sst[i], arr.ind=T)
@@ -183,13 +183,15 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
   sx_init <- sx_sy_init[,1]
   # Initial values for sy
   sy_init <- sx_sy_init[,2]
+  # What we end up providing to our NIMBLE model in the way of initial activity centres is 'sst', 'sx' and 'sy'. So, we provide: the index of the pixel in which each animals' initial activity centre falls into (based on the 'pixel.centres' object), and the row/column indices that can be used to identify this pixel in the 'pixel.centres.order' object, respectively. 
 
   # Covariate values we want to use in our model
   mona.densities <- pixel.info[,3]
 
   # As we want to use dpoisLocal_normal() below, we  need to scale the trap coordinates using the scaleCoordsToHabitatGrid() function
-  # Before this, need to label columns in pixel.centres as 'x' and 'y'
+  # Before this, need to label the columns in 'pixel.centres' as 'x' and 'y'
   colnames(pixel.centres) <- c("x", "y")
+  # Scaling the trap coordinates
   scaledtrapcoords <- scaleCoordsToHabitatGrid(coordsData = traplocs, coordsHabitatGridCenter = pixel.centres)
   scaledtrapcoords <- scaledtrapcoords$coordsDataScaled
   # Scaling the pixel centres, as well
@@ -199,7 +201,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 
   ## Defining the NIMBLE model
     code <- nimbleCode({
-    # Priors -- same as for the homogeneous PP model (for the parameters that are common to both models)
+    # Priors -- will see that these are the same as for the homogeneous PP model (for the parameters that are common to both models)
     lambda0 ~ dgamma(0.001, 0.001)
     log_coeff ~ dunif(-10, 10)
     coeff  <- exp(log_coeff)
@@ -218,18 +220,18 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 
     for (k in 1:M) {
       z[k] ~ dbern(psi) # Whether or not the ith animal exists
-      sx[k] ~ dunif(1, 51) # Prior for column of matrix that represents where in 'pixel.centres.order' the activity centre lies
-      sy[k] ~ dunif(1, 51) # Prior for row of matrix that represents where in 'pixel.centres.order' the activity centre lies
+      sx[k] ~ dunif(1, 51) # Prior for column of matrix that represents where in 'pixel.centres.order' the animal's activity centre lies
+      sy[k] ~ dunif(1, 51) # Prior for row of matrix that represents where in 'pixel.centres.order' the animal's activity centre lies
       ind_x[k] <- trunc(sx[k]) # Finding the row of 'pixel.centres.order' that contains the sampled activity centre
       ind_y[k] <- trunc(sy[k]) # Finding the column of 'pixel.centres.order' that contains the sampled activity centre
-      s[k] <- pixel.centres.order[ind_x[k], ind_y[k]] # Finding the corresponding entry in 'pixel.centres.order', which represents the index of the pixel that contains the sampled activity centre
-      ones[k] ~ dbern(probs[s[k]]) # Adds to the likelihood the probability of our activity centre falling into the given pixel centre
+      s[k] <- pixel.centres.order[ind_x[k], ind_y[k]] # Finding the corresponding entry in 'pixel.centres.order'. This is the row index of the pixel that contains the sampled activity centre, relative to the 'pixel.centres' object (so if we extracted the row of the 'pixel.centres' object that corresponds to the given index, we would have the centre of the pixel that the sampled activity centre falls into)
+      ones[k] ~ dbern(probs[s[k]]) # Adds to the likelihood the probability of our sampled activity centre falling into the given pixel
 
-      # Likelihood, following Wolverine NIMBLE example found at: https://nimble-dev.github.io/nimbleSCR/wolverine_example.html
+      # Likelihood, based on the Wolverine NIMBLE example found at: https://nimble-dev.github.io/nimbleSCR/wolverine_example.html
       y[k, 1:nMaxDetectors] ~ dpoisLocal_normal(detNums = nbDetections[k],
                                                   detIndices = yDets[k, 1:nMaxDetectors],
                                                   lambda = lambda0,
-                                                  s = scaledpixelcentres[s[k],1:2], # s[k] is the index of the pixel centre into which the given activity centre falls -- so should index the row in 'scaledpixelcentres' that contains the chosen activity centre for the sampled animal
+                                                  s = scaledpixelcentres[s[k],1:2], # s[k] is the index of the pixel centre corresponding to the sampled activity centre -- so here, we are extracting the row of 'scaledpixelcentres' that gives us the scaled version of this pixel centre
                                                   sigma = sigma,
                                                   trapCoords = scaledtrapcoords[1:n.trap, 1:2],
                                                   localTrapsIndices = detectorIndex[1:n.cells,1:maxNBDets],
@@ -253,11 +255,11 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
   # Constants
   constants <- list(nPix=nPix, M=M, n.trap=n.trap, xlim=xlim, ylim=ylim,
                     pixel.area=pixel.area)
-  # Initial values. We are setting the starting value for 'log_coeff' based on the starting value of sigma, and try to set a sensible starting value for beta0
+  # Initial values. We are setting the starting value for 'log_coeff' based on the starting value of sigma, and here we try to set a sensible starting value for beta0
   inits <- list (lambda0=inits.vec[1], log_coeff=log(1/(2*(inits.vec[2])^2)), z=z, beta0=log(n.observed/(nPix*pixel.area*10000)), beta1=inits.vec[3], s=sst, sx=sx_init, sy=sy_init)
 
   ## More constants that we want to provide to the NIMBLE model
-  # And since we assume we have no unsuitable habitat, we are defining the 'habitatMask' argument as a matrix full of 1's. Note that we are using the largest value of dmax possible
+  # And since we assume we have no unsuitable habitat, we are defining the 'habitatMask' argument as a matrix full of 1's. Note that we are using the largest value of dmax possible (see documentation of getLocalObjects() for more info)
   DetectorIndex <- getLocalObjects(habitatMask = matrix(1, ncol=50, nrow=50), coords = scaledtrapcoords, dmax = 52, resizeFactor = 1, plot.check=FALSE)
   # Generating the values of more constants that we want to provide to our NIMBLE model
   constants$y.maxDet <- dim(DetectorIndex$habitatGrid)[1]
@@ -298,7 +300,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 # --------------------------------------------------------
 
 ## Function to check the trace plots resulting from our MCMC samples
-# The 'results' argument represents an MCMC sample where the parameters 'lambda0', 'sigma', 'N' and 'D' are present
+# The 'results' argument represents an MCMC sample where the parameters 'lambda0', 'sigma', 'N' and 'D' have been monitored
 # If 'inhom'=TRUE, then we will also check trace plots for parameters labelled beta0 and beta1
 
 check.trace.plots <-  function(results, inhom=FALSE) {
@@ -323,8 +325,8 @@ check.trace.plots <-  function(results, inhom=FALSE) {
 
 ## Function to create the density values for an RACD map
 
-# Here, 'xlim' and 'ylim' give the range of x- and y-coordinates for the pixel centres in the map area. Also, 'results' refers to a set of MCMC samples generated using run.MCMC() and 'M' is the size of the superpopulation.
-# We are assuming that each pixel has an area of 1, so that 'xg' and 'yg' below contain the pixel centres. Then, '(length(xg) - 1) * (length(yg) - 1)' below gives the number of pixels we are using in the map area.
+# Here, 'xlim' and 'ylim' give the range of x- and y-coordinates for the pixel centres in the map area. Also, 'results' refers to a set of MCMC samples generated using run.MCMC() and 'M' is the size of the super-population
+# We are assuming that each pixel has an area of 1, so that 'xg' and 'yg' below contain the pixel centres. Then, we have that '(length(xg) - 1) * (length(yg) - 1)' below gives the number of pixels we are using in the map area
 
 no.movement.density.vector <- function(xlim, ylim, results, M) {
 
@@ -346,10 +348,11 @@ no.movement.density.vector <- function(xlim, ylim, results, M) {
   # y-coordinates of all activity centres
   Sy <- S[,-(1:M)]
 
-  ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell -- building up posterior distribution of number of activity centres in each pixel
-  # Number of pixel centres
+  ## For each MCMC iteration, storing the number of animals that 'exist' and have a sampled activity centre in each pixel -- so, we are building up the posterior distribution of the number of activity centres in each pixel
+  # Number of pixel centres we are working with
   npix <-  (length(xg) - 1) * (length(yg) - 1)
   Dn.vals <-  matrix(0, nrow=nrow(results), ncol=npix)
+  # For loop to find the posterior distributions mentioned above
   for (i in 1:nrow(results)) {
     if ((i %% 100) == 0) print(i) # Track progress
     Sxout <-  Sx[i,][Z[i,] == 1]
@@ -361,14 +364,14 @@ no.movement.density.vector <- function(xlim, ylim, results, M) {
 
   ## Posterior mean for number of activity centres in each pixel
   density.vector <- apply(Dn.vals, 2, mean)
+  # Note that if our pixel area were not one, we would need to divide the posterior means here by the area of each pixel if we want an estimate of the number of activity centres per unit for each pixel
 }
 
 # --------------------------------------------------------
 
 ## Function to generate pixel centres across map area
 
-# 'xlim' and 'ylim' are described as above. In addition, x.pixels and y.pixels give the number of pixels being used in the x- and y-direction.
-# This function won't necessarily produce pixel centres representing pixels with an area of 1 (depending on arguments provided).
+# 'xlim' and 'ylim' are described as above. In addition, 'x.pixels' and 'y.pixels' give the number of pixels being used in the x- and y-direction.
 
 library("spatstat")
 centres <- function(xlim, ylim, x.pixels, y.pixels) {
@@ -389,13 +392,13 @@ centres <- function(xlim, ylim, x.pixels, y.pixels) {
 # * 'covariate': a vector containing the covariate values for each pixel (we are assuming the values are already logged)
 # * 'nPix': the number of pixels that we are working with
 eacd.density.vector <- function(results, covariate, nPix) {
-  density <- numeric() # Initialising object we will store density values in
+  density <- numeric() # Initialising the object we will store density values in
   # For loop to calculate posterior mean density value for each pixel
   for (i in 1:nPix) {
     if(i%%100==0) print(i) # Track progress
     # Posterior distribution for the density of the ith pixel
     density.posterior <- exp(results[,'beta0'] + results[,'beta1'] * (covariate[i]))
-    # Posterior mean of this density -- gives the density value for the ith pixel we will use in an EACD map
+    # Posterior mean of this density -- gives the density value for the ith pixel we will use in an EACD map 
     density[i] <- mean(density.posterior)
   }
   # Returning the resulting vector
@@ -404,15 +407,17 @@ eacd.density.vector <- function(results, covariate, nPix) {
 
 # --------------------------------------------------------
 
+## Note that this function was written explicitly to work with the simulated data used in the paper
+
 ## Function to compare the results we get from:
-# (1) Fitting an SCR model with an inhomogeneous Poisson process as the state process, using run.MCMC.inhom(). We assume that the covariate used is log(Dblur) (see 'bayesian_code/Plots_Code.R' for how one might extract the values of this covariate)
+# (1) Fitting an SCR model with an inhomogeneous Poisson process as the state process, using run.MCMC.inhom(). We assume that the covariate used is log(Dblur) (see 'bayesian_code/Plots_Code.R' for info on this covariate)
 # (2) Fitting the same model using secr.fit() from the 'secr' package
 ## The arugments are:
 # * 'results': the MCMC samples produced using run.MCMC.inhom(). We assume that the parameters: 'beta0', 'beta1', 'lambda0' and 'sigma' have been monitored
-# * 'j': this will be a value in {1, 2, 3} and represents the index of the objects we want to work with from the RData objects we have loaded in. If want objects generated using 18, 52 or 111 sampling occasions, j=1,2,3 respectively
 # * 'mask': mask to use in secr.fit()
-# * 'array': the name of the array we want to use. If Figure 4, array should be "3x3". If Figure 5, array should be "7x7". 
-# Note that the model we specify for secr.fit() is not an argument here -- we will be using "D~log(Dblur)" as the model every time we use this function. Same for the detection function. For our purposes, we will always use 'detectfn=HHN'
+# * 'array': the name of the array we want to use. If working with Figure 4, array should be "3x3". If working with Figure 5, array should be "7x7".
+# * 'j': this will be a value in {1, 2, 3} and represents the index of the objects we want to work with from the RData objects we need to have loaded in (to load in, use load("../output/revision/mona-inputs.RData')). If array="3x3" and we want objects generated using 18, 52 or 111 sampling occasions, use j=1,2,3, respectively. If array="7x7" and we want objects generated using 7, 25 or 55 sampling occasions, use j=1,2,3, respectively. 
+# Note that the model we specify for secr.fit() is not an argument here -- we will be using "D~log(Dblur)" as the model every time we use this function. Same for the detection function -- for our purposes, we will always use 'detectfn=HHN'
 check.inhom.mcmc <- function(results, j, mask, array) {
   if (array=="3x3") {
     # Number of sampling occasions we are working with

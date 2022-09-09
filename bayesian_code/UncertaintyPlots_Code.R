@@ -128,7 +128,7 @@ test.plot
 # So, it might be better to instead create a map using the CV values where if we have a count of 0 activity centres of 0 99.9% of the time, we just colour the corresponding pixels with a CV of 0, as we are fairly certain of our estimate. CV is used to quantify uncertainty in our estimates, so this seems reasonable to do? 
 
 ## ---------------------------------------------------------------------------------------
-####################### Uncertainty plots for Figure 4 (attempt 2) #######################
+############################# Uncertainty plots for Figure 4 #### ########################
 ## ---------------------------------------------------------------------------------------
 
 ## ---------------------------------------------------------------------------------------
@@ -144,9 +144,9 @@ load("MCMC_Results/Figure4/HomPP_18occ.RData")
 load("MCMC_Results/Figure4/HomPP_52occ.RData")
 load("MCMC_Results/Figure4/HomPP_111occ.RData")
 
-## Function to calculate CV for each pixel in an RACD map.
-# Where 99% or more of the sampled number of activity centres in a cell is 0, we will set the CV to 0. This seems reasonable -- we are fairly certain that 0 activity centres lie in that pixel, the CV here is measuring the uncertainty in the number of activity centres in a pixel.
-# This function is very similar to no.movement.density.vector() (so uses the same arguments). 
+## Function to calculate CV for each pixel in an RACD map
+# Where 99% or more of the sampled number of activity centres in a pixel is 0, we will set the CV for the pixel to 0. This seems reasonable -- the CV measures the uncertainty in our estimate of the number of activity centres in a pixel, and we are fairly certain that 0 activity centres lie in such a pixel (since we have 10,000 sampled values for the number of activity centres in each pixel)
+# This function is very similar to no.movement.density.vector() (uses the same arguments)
 cv.values.racd <- function(xlim, ylim, results, M) {
 
   ## Points at which local density will be estimated
@@ -197,7 +197,7 @@ cv.values.racd <- function(xlim, ylim, results, M) {
   cv.values
 }
 
-## Finding CV values for each plot in the first row of Figure 4
+## Finding the CV values for the pixels in each plot in the first row of Figure 4
 cv.18occ.racd <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300)
 cv.52occ.racd <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.52occ, M=300)
 cv.111occ.racd <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.111occ, M=300)
@@ -223,7 +223,7 @@ dblur <-  mona.densities[,"Dblur"]
 log.dblur <-  log(dblur)
 
 ## Function to calculate CV for each pixel in an EACD map. 
-# This function is very similar to eacd.density.vector() (so uses the same arguments). 
+# This function is very similar to eacd.density.vector() (uses the same arguments). 
 cv.values.eacd <- function(results, covariate, nPix) {
   posterior.mean <- numeric() # Initialising object that will contain posterior mean values for density in each pixel
   posterior.sd <- numeric() # Initialising object that will contain posterior standard deviation values 
@@ -242,7 +242,7 @@ cv.values.eacd <- function(results, covariate, nPix) {
   cv.values <- posterior.sd/posterior.mean
 }
 
-## Finding CV values for each plot in the first row of Figure 4
+## Finding the CV values for the pixels in each plot in the second row of Figure 4
 cv.18occ.eacd <- cv.values.eacd(results=inhom.results.18occ, covariate=log.dblur, nPix=2500)
 cv.52occ.eacd <- cv.values.eacd(results=inhom.results.52occ, covariate=log.dblur, nPix=2500)
 cv.111occ.eacd <- cv.values.eacd(results=inhom.results.111occ, covariate=log.dblur, nPix=2500)
@@ -260,7 +260,7 @@ load("MCMC_Results/Figure5/HomPP_7occ.RData")
 load("MCMC_Results/Figure5/HomPP_25occ.RData")
 load("MCMC_Results/Figure5/HomPP_55occ.RData")
 
-## Finding CV values for each plot in the first row of Figure 5 (where, once again, any pixels where 99% or more of the sampled number of activity centres is equal to 0 will be given a CV value of 0)
+## Finding the CV values for each plot in the first row of Figure 5 (where once again, if at least 99% of the sampled number of activity centres for a pixel is 0, the CV for that pixel is set to 0)
 cv.7occ.racd <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.7occ, M=300)
 cv.25occ.racd <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.25occ, M=300)
 cv.55occ.racd <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.55occ, M=300)
@@ -278,9 +278,9 @@ inhom.results.25occ <- inhom.results.25occ[-c(1:1000),]
 inhom.results.55occ <- inhom.results.55occ[-c(1:1000),]
 
 ## Covariate used in plots for row 2 of Figure 5 is same as the covariate used for row 2 of Figure 4, so is given by:
-log.dblur # Found above!
+log.dblur # As seen above!
 
-## Finding CV values for each plot in the second row of Figure 5
+## Finding the CV values for each plot in the second row of Figure 5
 cv.7occ.eacd <- cv.values.eacd(results=inhom.results.7occ, covariate=log.dblur, nPix=2500)
 cv.25occ.eacd <- cv.values.eacd(results=inhom.results.25occ, covariate=log.dblur, nPix=2500)
 cv.55occ.eacd <- cv.values.eacd(results=inhom.results.55occ, covariate=log.dblur, nPix=2500)
@@ -294,7 +294,7 @@ cv.55occ.eacd <- cv.values.eacd(results=inhom.results.55occ, covariate=log.dblur
 ## Creating a data frame, labelled 'cv_values_all' that summarises the information we use to create all of the uncertainty plots (for Figures 4 and 5)
 
 ## Function to summarise the info for the uncertainty plots for the RACD maps
-# The 'nocc' argument is the number of sampling occasions, and 'fig' is the number of the figure which we are working with
+# The 'nocc' argument is the number of sampling occasions, and 'fig' is the number of the figure we are working with
 cv.racd.summary <- function(nocc, fig) {
   # Pixel centres that we are working with
   pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
@@ -388,7 +388,7 @@ paster <- function(nd,na){
 }
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist() # Column lables for Figure 4 -- we'll use these for the uncertainty plots, too!
 
-## Adding the column labels to the 'cv_values_all' and 'detectors_df_all' objects
+## Adding the column labels from Figure 4 to the 'cv_values_all' and 'detectors_df_all' objects
 cv_values_all$occasions2 <- factor(cv_values_all$occasions, 
                                    levels = occ,
                                    labels = capthist_labels)
@@ -396,7 +396,7 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ,
                                       labels = capthist_labels)
 
-## Adding the row labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the row labels from Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
 cv_values_all$covtype2 <- factor(cv_values_all$covtype, 
                                  levels = unique(cv_values_all$covtype),
                                  labels = c("Realised AC", "Expected AC"))
@@ -451,7 +451,7 @@ paster <- function(nd,na){
 }
 capthist_labels2 <- map2(.x = chs2$Detections, .y = chs2$Animals, .f = paster) %>% unlist()
 
-## Adding the column labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the column labels from Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
 cv_values_all$occasions2 <- factor(cv_values_all$occasions, 
                                   levels = occ2,
                                   labels = capthist_labels2)
@@ -459,7 +459,7 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ2,
                                       labels = capthist_labels2)
 
-## Adding the row labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the row labels from Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
 cv_values_all$covtype2 <- factor(cv_values_all$covtype, 
                                  levels = unique(cv_values_all$covtype),
                                  labels = c("Realised AC", "Expected AC"))
@@ -498,4 +498,4 @@ p2b
 ## Saving the uncertainty plots for Figure 5
 ggsave("mona_7x7_uncertainty.png", p2b, width=8, height=6, dpi=600, bg="white")
 
-## Note that in some of our uncertainty plots, we see an inversion of colours -- we see bright colours in areas that correspond to low density in the RACD/EACD maps. This is likely because in these pixels, the posterior mean that we work with is quite low (close to 0). So, even though the associated posterior standard deviation is likely to be fairly small, the fact that it isn't as close to 0 as the posterior mean we are working with means that the CV becomes inflated, relative to other pixels. Therefore, in these cases, the CV may be slightly misleading as the 'hotspots' we see are likely to be due to the fact that the posterior mean in those cells is close to 0, rather than due to the fact that the uncertainty associated with these cells is especially high compared to other cells in the plot (which is what we interpret the CV as showing -- the CV tries to help us understnd where uncertainty is high). 
+## Note that in some of our uncertainty plots, we see an inversion of colours -- we see bright colours in areas that correspond to low density in the RACD/EACD maps. This is likely because in these pixels, the posterior mean that we work with is quite low (close to 0). So, even though the associated posterior standard deviation is likely to be fairly small, the fact that it isn't as close to 0 as the posterior mean we are working with means that the CV becomes inflated. Therefore, the CV may be slightly misleading as this means that at least some of the 'hotspots' we see are likely to be due to the fact that the posterior mean in those cells is close to 0, rather than due to the fact that the uncertainty associated with the estimated number of activity centres in these cells is especially high compared to other cells in the plot (which is what we interpret the CV as showing -- the CV tries to help us understand where uncertainty in estimates is high). 
