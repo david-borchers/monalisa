@@ -75,7 +75,8 @@ maxval <- max(maxval1, maxval2)
 
 i1 <- big_mona_df %>% 
   ggplot(aes(x, y)) + geom_raster(aes(fill = D/10000)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) + coord_equal() +
+  #scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) + coord_equal() +
+  scale_fill_distiller(limits = c(0,maxval)) + coord_equal() +
   theme_classic(base_size = 14) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
@@ -87,7 +88,8 @@ i1 <- big_mona_df %>%
 
 i2 <- small_mona_df %>% 
   ggplot(aes(x, y)) + geom_raster(aes(fill = D/10000)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) + coord_equal() +
+  #scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) + coord_equal() +
+  scale_fill_distiller(limits = c(0,maxval)) + coord_equal() +
   theme_classic(base_size = 14) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
@@ -113,7 +115,8 @@ i3 <- small_mona_df %>%
 
 i4 <- small_blurry_mona_df %>% 
   ggplot(aes(x, y)) + geom_raster(aes(fill = Dblur/10000)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) + coord_equal() +
+  #scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) + coord_equal() +
+  scale_fill_distiller(limits = c(0,maxval)) + coord_equal() +
   theme_classic(base_size = 14) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
@@ -123,13 +126,13 @@ i4 <- small_blurry_mona_df %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-i5 <- ggarrange(i1,i2,i3,i4, labels = c("(a)", "(b)", "(c)", "(d)"), ncol = 4, nrow = 1, 
+i5 <- ggarrange(i1,i3,i2,i4, labels = c("(a)", "(b)", "(c)", "(d)"), ncol = 4, nrow = 1, 
                 label.x = 0.5, label.y = 0, vjust = -0.2, hjust = 0.5,
                 font.label = list(size = 14, color = "black", face = "plain", family = NULL)) 
 
 i5
 
-ggsave("paper/revision/mona_inputdata.png", i5, width=10, height=2.5, dpi = 600)
+ggsave("paper/mona_inputdata.png", i5, width=10, height=2.5, dpi = 600)
 
 ### Density surfaces with 3x3 grid
 
@@ -137,7 +140,8 @@ p2a <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  #scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  scale_fill_distiller(limits = c(0,maxval)) + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -190,7 +194,8 @@ p2b <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  #scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  scale_fill_distiller(limits = c(0,maxval)) + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -210,7 +215,7 @@ p2b <- predicted_densities_all %>%
 
 p2b
 
-ggsave("paper/revision/mona_3x3.png", p2a, width=8, height=6, dpi = 600)
-ggsave("paper/revision/mona_7x7.png", p2b, width=8, height=6, dpi = 600)
+ggsave("paper/mona_3x3.png", p2a, width=8, height=6, dpi = 600)
+ggsave("paper/mona_7x7.png", p2b, width=8, height=6, dpi = 600)
 
 
