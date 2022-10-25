@@ -100,9 +100,11 @@ an observed point pattern by maximum likleihood is that the estimated expected n
 points is equal to $N$, the observed number of points, so that
 $\int_{\mathcal{S}} \widehat{D}(\bm{s}) \, d\bm{s} = N$\todo[inline]{DLB: This sentence is a bit misleading becuase we don't observe $N$, and I don't think that it necessarily integrates to $N$ when you only obsreve $n<N$ of the points? And the sentence comes out of the blue and its relevance is not clear. Seems like nothing would be lost by removing it?}
 
-\subsubsection{Realised AC density surface}
+\subsubsection{Realised AC density surface} 
+fdsfds
 
-\todo[inline]{dlb: After reading this subsection and suggesting some wording changes (shown below), I now think they should be ignored because I think it might be simpler/clearer if we don't talk about measurement error at all (although I know that this was my idea in the first place!). How about the text below as alternative text for this whole section (with changes to the figure caption, and to the wording of the next section, to remove all mention of measurement error, as per caption and text below)?:\\ 
+\todo[inline]{dlb: After reading this subsection and suggesting some wording changes (shown below), I now think they should be ignored because I think it might be simpler/clearer if we don't talk about measurement error at all (although I know that this was my idea in the first place!). How about the text below as alternative text for this whole section (with changes to the figure caption, and to the wording of the next section, to remove all mention of measurement error, as per caption and text below)?}
+ 
 The second kind of density we call the ``realised AC density''. Suppose that we divide $\mathcal{S}$ into a grid of cells, the $j$th of which comprises the points in the set $\mathcal{C}_j$, and has area $a_j$. Suppose also that although we don't observe the ACs $\bm{x}_1,\ldots,\bm{x}_N$, we  have probability density functions (PDFs) for each AC: $f_1(\bm{s}),\ldots,f_N(\bm{s})$. We define random variables $\delta_{1j},\ldots,\delta_{N_j}$ ($j=1,\ldots,N$), such that the $\delta_{ij}=1$ if $\bm{x}_i\in\mathcal{C}_j$ and $\delta_{ij}=0$ otherwise. The expected value of $\delta_{ij}$ is then 
 \begin{equation}
 E_r(\delta_{ij})=\int_{\mathcal{C}_j} f_i(\bm{s}) \, d\bm{s}. \label{eq:realised-p_ij}
@@ -123,7 +125,8 @@ D_r(\bm{s})=\sum_{i=1}^N f_i(\bm{s}) \label{eq:realised-D}
 Given estimates of the PDFs $\hat{f}_i(\bm{s}),\ldots,\hat{f}_N(\bm{s})$, we can estimate the realised AC density surface by $\hat{D}_r(\bm{s})=\sum_{i = 1}^N\hat{f}_i(\bm{s})$ and estimate the expected number of ACs in the $j$th cell as $\hat{E_r}(\delta_{\cdot j})=\int_{\mathcal{C}_j}\hat{D}_r(\bm{s}) \, d\bm{s}$.
 
 Figure~\ref{fig:densities} shows examples of both types of density, together with realised AC locations.
-}
+
+\todo[inline]{Suggest replacing rest of section starting here}
 
 The second kind of density we call the ``realised AC density''. It is not calculated based on $\bm{\beta} = (\beta_0, \cdots, \beta_k)$, the parameters of the point process, but instead on a single realisation of points from the process, $\bm{X} = (\bm{x}_1, \cdots, \bm{x}_N)$. When space is discretised into ``pixels'' of ``cells'', as is standard with SCR methods, the number of realised points in a pixel divided by the pixel area can be though of as a realised AC density. One can also smooth these realised densities across pixels in some way to produce a smooth realised AC density (and this is often done). There are various ways of doing this, including the use of spatial kernels.
 
