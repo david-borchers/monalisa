@@ -387,6 +387,8 @@ centres <- function(xlim, ylim, x.pixels, y.pixels) {
 
 # --------------------------------------------------------
 
+## See the paper for more information on the equation we use to calculate animal density in each pixel here 
+
 ## Function to create vector of density values for the EACD maps we want to create. The arguments are:
 # * 'results': an MCMC object, which contains samples for the parameters 'beta0' and 'beta1'
 # * 'covariate': a vector containing the covariate values for each pixel (we are assuming the values are already logged)

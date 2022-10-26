@@ -128,7 +128,7 @@ test.plot
 # So, it might be better to instead create a map using the CV values where if we have a count of 0 activity centres of 0 99.9% of the time, we just colour the corresponding pixels with a CV of 0, as we are fairly certain of our estimate. CV is used to quantify uncertainty in our estimates, so this seems reasonable to do? 
 
 ## ---------------------------------------------------------------------------------------
-############################# Uncertainty plots for Figure 4 #### ########################
+########################### Uncertainty plots for Figures 4 and 5 ########################
 ## ---------------------------------------------------------------------------------------
 
 ## ---------------------------------------------------------------------------------------
@@ -181,20 +181,23 @@ cv.values.racd <- function(xlim, ylim, results, M) {
   }
 
   ## Posterior mean for number of activity centres in each pixel
-  posterior.mean <- apply(Dn.vals, 2, mean)
+  #posterior.mean <- apply(Dn.vals, 2, mean)
   ## Posterior standard deviation
   standard.deviation <- apply(Dn.vals, 2, sd)
 
   #browser()
   ## Calculating CV. If 99% or more of a posterior sample for one cell is equal to 0, setting the CV to 0
-  cv.values <- standard.deviation/posterior.mean
-  for (i in 1:ncol(Dn.vals)) {
-    if (mean(Dn.vals[,i]==0) >= 0.99)  {
-      cv.values[i] <- 0
-    }
-  }
+  #cv.values <- standard.deviation/posterior.mean
+  #for (i in 1:ncol(Dn.vals)) {
+  #  if (mean(Dn.vals[,i]==0) >= 0.99)  {
+  #    cv.values[i] <- 0
+  #  }
+  #}
   # Returning the CV values
-  cv.values
+  #cv.values
+
+  # Returning the standard deviation values
+  standard.deviation
 }
 
 ## Finding the CV values for the pixels in each plot in the first row of Figure 4
@@ -239,7 +242,10 @@ cv.values.eacd <- function(results, covariate, nPix) {
   }
 
   # Vector of CV values for the EACD map
-  cv.values <- posterior.sd/posterior.mean
+  #cv.values <- posterior.sd/posterior.mean
+
+  # Returning the standard deviation values
+  posterior.sd
 }
 
 ## Finding the CV values for the pixels in each plot in the second row of Figure 4
@@ -386,7 +392,7 @@ chs <- data.frame(do.call(rbind, lapply(capthists_few_alloccs_3x3$capthist, summ
 paster <- function(nd,na){
   paste0(nd," detections\n(",na, " individuals)")
 }
-capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist() # Column lables for Figure 4 -- we'll use these for the uncertainty plots, too!
+capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist() # Column labels for Figure 4 -- we'll use these for the uncertainty plots, too!
 
 ## Adding the column labels from Figure 4 to the 'cv_values_all' and 'detectors_df_all' objects
 cv_values_all$occasions2 <- factor(cv_values_all$occasions, 
@@ -499,3 +505,4 @@ p2b
 ggsave("mona_7x7_uncertainty.png", p2b, width=8, height=6, dpi=600, bg="white")
 
 ## Note that in some of our uncertainty plots, we see an inversion of colours -- we see bright colours in areas that correspond to low density in the RACD/EACD maps. This is likely because in these pixels, the posterior mean that we work with is quite low (close to 0). So, even though the associated posterior standard deviation is likely to be fairly small, the fact that it isn't as close to 0 as the posterior mean we are working with means that the CV becomes inflated. Therefore, the CV may be slightly misleading as this means that at least some of the 'hotspots' we see are likely to be due to the fact that the posterior mean in those cells is close to 0, rather than due to the fact that the uncertainty associated with the estimated number of activity centres in these cells is especially high compared to other cells in the plot (which is what we interpret the CV as showing -- the CV tries to help us understand where uncertainty in estimates is high). 
+# That is, the hotspots that we are seeing aren't necessarily due to us being especially uncertaint about estimates in those regions. Rather, they are due to our posterior means in those areas being close to 0. 

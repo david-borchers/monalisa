@@ -45,7 +45,7 @@ organise.data = function(j) {
   # Trap locations
   trap.loc <- attributes(all.dat)$traps
 
-  # xlim, ylim (for our map area)
+4  # xlim, ylim (for our map area)
   xlim <- c(0.5, 50.5)
   ylim <- c(0.5, 50.5)
 
@@ -440,7 +440,7 @@ p2a <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  scale_fill_distiller() + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -460,6 +460,13 @@ p2a <- predicted_densities_all %>%
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
 p2a
+
+## Playing around with colour scales, creating a pdf to send to Ian
+#pdf("TestColours.pdf", height=6, width=12)
+##install.packages('colorBlindness')
+##library('colorBlindness')
+#cvdPlot(p2a, layout=c("origin", "desaturate"))
+#dev.off()
 
 ## Saving Figure 4
 ggsave("mona_3x3.png", p2a, width=8, height=6, dpi=600, bg="white")
@@ -502,7 +509,7 @@ p2b <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  scale_fill_distiller() + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
