@@ -135,8 +135,6 @@ potential explanation for subtle differences is that our Bayesian
 plots are constructed based on entire posterior distributions, whereas
 the maximum likelihood alternatives only use point estimates.
 
-
-
 <<fig7, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 4 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE, results=hide, fig=TRUE>>=
 ## Libraries we need
 library(nimble)
@@ -159,6 +157,9 @@ source("../../bayesian_code/Functions.R")
 ## ---------------------------------------------------------------------------------------
 ######################## Creating the objects needed for Figure 4 ########################
 ## ---------------------------------------------------------------------------------------
+
+## In this figure, the first column uses simulated data w/ 18 sampling occasions. The second column uses simulated data w/ 52 sampling occasions, and the third column uses simulated data w/ 111 sampling occasions.
+
 ## ---------------------------------------------------------------------------------------
 # Creating the data objects we need for all MCMC samples for Figure 4
 ## ---------------------------------------------------------------------------------------
@@ -179,7 +180,7 @@ organise.data = function(j) {
   # Trap locations
   trap.loc <- attributes(all.dat)$traps
 
-  # xlim, ylim (for our map area)
+4  # xlim, ylim (for our map area)
   xlim <- c(0.5, 50.5)
   ylim <- c(0.5, 50.5)
 
@@ -190,8 +191,10 @@ organise.data = function(j) {
 
 # Data object for 18 sampling occasions
 data.18occ <- organise.data(1)
+
 # Data object for 52 sampling occasions
 data.52occ <- organise.data(2)
+
 # Data object for 111 sampling occasions
 data.111occ <- organise.data(3)
 
@@ -199,12 +202,29 @@ data.111occ <- organise.data(3)
 # Creating the objects we specifically need for the plots in Row 1 of Figure 4
 ## ---------------------------------------------------------------------------------------
 
+## Row 1 consists of RACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is a homogeneous Poisson process. 
+
+##### Running the MCMC #####
+
+## Uncomment the lines below if want to run the MCMC 
+## Running MCMC for simulated data from 18, 52 and 111 sampling occasions.
+#results.18occ <- run.MCMC(data=data.18occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#save(results.18occ, file="MCMC_Results/Figure4/HomPP_18occ.RData")
+
+#results.52occ <- run.MCMC(data=data.52occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#save(results.52occ, file="MCMC_Results/Figure4/HomPP_52occ.RData")
+
+#results.111occ <- run.MCMC(data=data.111occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#save(results.111occ, file="MCMC_Results/Figure4/HomPP_111occ.RData")
+
 ## Loading in the RData files containing the MCMC results 
 load("../../bayesian_code/MCMC_Results/Figure4/HomPP_18occ.RData")
 load("../../bayesian_code/MCMC_Results/Figure4/HomPP_52occ.RData")
 load("../../bayesian_code/MCMC_Results/Figure4/HomPP_111occ.RData")
 
-## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps (created using MCMC).
+##### Creating the objects we need for the RACD plots #####
+
+## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps that are based on MCMC results. 
 racd.18occ <- no.movement.density.vector(results=results.18occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.52occ <-  no.movement.density.vector(results=results.52occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.111occ <- no.movement.density.vector(results=results.111occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
@@ -213,17 +233,41 @@ racd.111occ <- no.movement.density.vector(results=results.111occ, M=300, xlim=c(
 # Creating the objects we specifically need for the plots in Row 2 of Figure 4
 ## ---------------------------------------------------------------------------------------
 
+## Row 2 consists of EACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is an inhomogeneous Poisson process.
+
+##### 'pixel.info' object needed for MCMC #####
+
+## Uncomment if want to run MCMC 
+#pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+#pixel.info <- cbind(pixel.centres, log.dblur)
+
 ##### Covariate value for each pixel #####
+
 # Subsetting the covariate values from the data we loaded in above
 mona.densities <-  small_blurry_mona_df[,c("x", "y", "Dblur")]
-# Re-ordering 'mona.densities', so order of pixels matches order of pixels in 'pixel.centres' object
+# Re-ordering 'mona.densities', so order of pixels matches order of pixels in 'pixel.centres' object (see above for creation of 'pixel.centres' object)
 split <-  split(mona.densities, mona.densities$y)
 mona.densities <-  do.call("rbind", split)
 rownames(mona.densities) = NULL
-# Now, subsetting covariate vector only so is in corresponding order to centres in 'pixel.centres'
+# Now, subsetting "Dblur" vector only so is in corresponding order to centres in 'pixel.centres'
 dblur <-  mona.densities[,"Dblur"]
 # Logging the covariate, so we have the values of log(Dblur) (this is the covariate we will use to fit our SCR models)
 log.dblur <-  log(dblur)
+
+##### Running the MCMC #####
+
+## Uncomment the lines below if want to run the MCMC. Note that depending on the computer, all of the MCMC chains below can take below 5 or 10 minutes to run. 
+# 18 sampling occasions, saving the results 
+#inhom.results.18occ <- run.MCMC.inhom(data=data.18occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
+#save(inhom.results.18occ, file="MCMC_Results/Figure4/InhomPP_18occ.RData")
+
+# 52 sampling occasions, saving the results
+#inhom.results.52occ <- run.MCMC.inhom(data=data.52occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
+#save(inhom.results.52occ, file="MCMC_Results/Figure4/InhomPP_52occ.RData")
+
+# 111 sampling occasions, saving the results
+#inhom.results.111occ <- run.MCMC.inhom(data=data.111occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
+#save(inhom.results.111occ, file="MCMC_Results/Figure4/InhomPP_111occ.RData")
 
 ## Loading in the RData files containing the MCMC results 
 load("../../bayesian_code/MCMC_Results/Figure4/InhomPP_18occ.RData")
@@ -235,6 +279,8 @@ inhom.results.18occ <- inhom.results.18occ[-c(1:1000),]
 inhom.results.52occ <- inhom.results.52occ[-c(1:1000),]
 inhom.results.111occ <- inhom.results.111occ[-c(1:1000),]
 
+##### Creating the objects we need for the EACD plots #####
+
 ## Creating vectors containing density values for each pixel when working with 18/52/111 sampling occasions
 eacd.18occ <- eacd.density.vector(results=inhom.results.18occ, covariate=log.dblur, nPix=2500)
 eacd.52occ <- eacd.density.vector(results=inhom.results.52occ, covariate=log.dblur, nPix=2500)
@@ -244,7 +290,7 @@ eacd.111occ <- eacd.density.vector(results=inhom.results.111occ, covariate=log.d
 ######################## Creating the objects needed for Figure 5 ########################
 ## ---------------------------------------------------------------------------------------
 
-## We are creating the objects needed for Figure 5 here because we need to set the max value for the colour scale for Figure 4 by finding the max density value across all plots in Figures 4 and 5
+## In this figure, the first column uses simulated data w/ 7 sampling occasions. The second column uses simulated data w/ 25 sampling occasions, and the third column uses simulated data w/ 55 sampling occasions. 
 
 ## ---------------------------------------------------------------------------------------
 # Creating the data objects we need for all MCMC samples for Figure 5
@@ -277,8 +323,10 @@ organise.data = function(j) {
 
 # Data object for 7 sampling occasions
 data.7occ <- organise.data(1)
+
 # Data object for 25 sampling occasions
 data.25occ <- organise.data(2)
+
 # Data object for 55 sampling occasions
 data.55occ <- organise.data(3)
 
@@ -286,12 +334,29 @@ data.55occ <- organise.data(3)
 # Creating the objects we specifically need for the plots in Row 1 of Figure 5
 ## ---------------------------------------------------------------------------------------
 
+## Row 1 consists of RACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is a homogeneous Poisson process.
+
+##### Running the MCMC #####
+
+## Uncomment the lines below if want to run the MCMC 
+## Running MCMC for simulated data from 7, 25 and 55 sampling occasions.
+#results.7occ <- run.MCMC(data=data.7occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#save(results.7occ, file="MCMC_Results/Figure5/HomPP_7occ.RData")
+
+#results.25occ <- run.MCMC(data=data.25occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#save(results.25occ, file="MCMC_Results/Figure5/HomPP_25occ.RData")
+
+#results.55occ <- run.MCMC(data=data.55occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
+#save(results.55occ, file="MCMC_Results/Figure5/HomPP_55occ.RData")
+
 ## Loading in the RData files containing the MCMC results 
 load("../../bayesian_code/MCMC_Results/Figure5/HomPP_7occ.RData")
 load("../../bayesian_code/MCMC_Results/Figure5/HomPP_25occ.RData")
 load("../../bayesian_code/MCMC_Results/Figure5/HomPP_55occ.RData")
 
-## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps (created using MCMC).
+##### Creating the objects we need for the RACD plots #####
+
+## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel
 racd.7occ <- no.movement.density.vector(results=results.7occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.25occ <-  no.movement.density.vector(results=results.25occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.55occ <- no.movement.density.vector(results=results.55occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
@@ -300,7 +365,31 @@ racd.55occ <- no.movement.density.vector(results=results.55occ, M=300, xlim=c(0.
 # Creating the objects we specifically need for the plots in Row 2 of Figure 5
 ## ---------------------------------------------------------------------------------------
 
-## Will use the covariate 'log.dblur', created above
+## Row 2 consists of EACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is an inhomogeneous Poisson process.
+
+##### 'pixel.info' object needed for MCMC #####
+
+## Uncomment if want to run MCMC 
+#pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+#pixel.info <- cbind(pixel.centres, log.dblur)
+
+##### Covariate value for each pixel #####
+# Is 'log.dblur' object
+
+##### Running the MCMC #####
+
+## Uncomment the lines below if want to run the MCMC. Note that all of the MCMC chains below take below 10 minutes to run. 
+# 7 sampling occasions, saving the results 
+#inhom.results.7occ <- run.MCMC.inhom(data=data.7occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
+#save(inhom.results.7occ, file="MCMC_Results/Figure5/InhomPP_7occ.RData")
+
+# 25 sampling occasions, saving the results
+#inhom.results.25occ <- run.MCMC.inhom(data=data.25occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
+#save(inhom.results.25occ, file="MCMC_Results/Figure5/InhomPP_25occ.RData")
+
+# 55 sampling occasions, saving the results
+#inhom.results.55occ <- run.MCMC.inhom(data=data.55occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
+#save(inhom.results.55occ, file="MCMC_Results/Figure5/InhomPP_55occ.RData")
 
 ## Loading in the RData files containing the MCMC results 
 load("../../bayesian_code/MCMC_Results/Figure5/InhomPP_7occ.RData")
@@ -311,6 +400,8 @@ load("../../bayesian_code/MCMC_Results/Figure5/InhomPP_55occ.RData")
 inhom.results.7occ <- inhom.results.7occ[-c(1:1000),]
 inhom.results.25occ <- inhom.results.25occ[-c(1:1000),]
 inhom.results.55occ <- inhom.results.55occ[-c(1:1000),]
+
+##### Creating the objects we need for the EACD plots #####
 
 ## Creating vectors containing density values for each pixel when working with 7/25/55 sampling occasions
 eacd.7occ <- eacd.density.vector(results=inhom.results.7occ, covariate=log.dblur, nPix=2500)
@@ -420,7 +511,7 @@ paster <- function(nd,na){
 }
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist() # Column lables for Figure 4
 
-## Adding the column labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the column labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions, 
                                              levels = occ,
                                              labels = capthist_labels)
@@ -428,7 +519,7 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ,
                                       labels = capthist_labels)
 
-## Adding the row labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the row labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype, 
                                            levels = unique(predicted_densities_all$covtype),
                                            labels = c("Realised AC", "Expected AC"))
@@ -436,13 +527,13 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
                                     labels = c("Realised AC", "Expected AC"))
 
-##### Creating Figure 4 #####
+##### Creating and saving Figure 4 #####
 
 p2a <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  scale_fill_distiller() + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -469,8 +560,6 @@ p2a
 ################################### Creating Figure 5 ####################################
 ## ---------------------------------------------------------------------------------------
 
-## Will be using the objects created above when plotting Figure 4
-
 ##### Adding the column and row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects #####
 
 nn <- 3
@@ -483,7 +572,7 @@ paster <- function(nd,na){
 }
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist()
 
-## Adding the column labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the column labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions, 
                                              levels = occ,
                                              labels = capthist_labels)
@@ -491,7 +580,7 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ,
                                       labels = capthist_labels)
 
-## Adding the row labels to the 'predicted_densities_all' and 'detectors_df_all' objects
+## Adding the row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype, 
                                            levels = unique(predicted_densities_all$covtype),
                                            labels = c("Realised AC", "Expected AC"))
@@ -505,7 +594,7 @@ p2b <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_gradientn(colours = hcl.colors(16, palette = "Light grays"), limits = c(0,maxval)) +
+  scale_fill_distiller() + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
