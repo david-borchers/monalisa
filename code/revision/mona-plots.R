@@ -126,13 +126,13 @@ i4 <- small_blurry_mona_df %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-i5 <- ggarrange(i1,i3,i2,i4, labels = c("(a)", "(b)", "(c)", "(d)"), ncol = 4, nrow = 1, 
+i5 <- ggarrange(i1,i3,i4,labels = c("(a)", "(b)", "(c)"), ncol = 3, nrow = 1, 
                 label.x = 0.5, label.y = 0, vjust = -0.2, hjust = 0.5,
                 font.label = list(size = 14, color = "black", face = "plain", family = NULL)) 
 
 i5
 
-ggsave("paper/mona_inputdata.png", i5, width=10, height=2.5, dpi = 600)
+ggsave("paper/mona_inputdata.png", i5, width=7.5, height=2.5, dpi = 600)
 
 ### Density surfaces with 3x3 grid
 
