@@ -323,6 +323,25 @@ check.trace.plots <-  function(results, inhom=FALSE) {
 
 # --------------------------------------------------------
 
+## Note that this function was written explicitly to work with the covariate used in the paper
+
+## Function to generate the covariate values that we use when putting together the EACD plots. When running the function, the 'mona-inputs.RData' file must already be loaded into R. 
+eacd.covariate <- function() {
+  # Subsetting the covariate values from the data loaded in from the 'mona-inputs.RData' file
+  mona.densities <-  small_blurry_mona_df[,c("x", "y", "Dblur")]
+  # Re-ordering 'mona.densities', so order of pixels matches order of pixels in 'pixel.centres' object (see above for creation of 'pixel.centres' object)
+  split <-  split(mona.densities, mona.densities$y)
+  mona.densities <-  do.call("rbind", split)
+  rownames(mona.densities) = NULL
+  # Now, subsetting "Dblur" vector only so is in corresponding order to centres in 'pixel.centres'
+  dblur <-  mona.densities[,"Dblur"]
+  # Logging the covariate, so we have the values of log(Dblur) (this is the covariate we will use to fit our SCR models)
+  log.dblur <-  log(dblur)
+  log.dblur
+}
+
+# --------------------------------------------------------
+
 ## Function to create the density values for an RACD map
 
 # Here, 'xlim' and 'ylim' give the range of x- and y-coordinates for the pixel centres in the map area. Also, 'results' refers to a set of MCMC samples generated using run.MCMC() and 'M' is the size of the super-population
@@ -463,4 +482,66 @@ check.inhom.mcmc <- function(results, j, mask, array) {
   cat("\n", "Intervals for lambda0", "\n", "95% credible interval: (", mcmc.lambda0[1], ", ", mcmc.lambda0[3], ") ", "\n", "95% confidence interval: (", secr.fit.lambda0[1], ", ", secr.fit.lambda0[2], ")", "\n", "True value of lambda0: 0.1", "\n", sep="")
   # Intervals for sigma
   cat("\n", "Intervals for sigma", "\n", "95% credible interval: (", mcmc.sigma[1], ", ", mcmc.sigma[3], ") ", "\n", "95% confidence interval: (", secr.fit.sigma[1], ", ", secr.fit.sigma[2], ")", "\n", "True value of sigma=4", "\n", sep="")
+}
+
+# --------------------------------------------------------
+
+## Note that the functions below were written explicitly to work with the MCMC results, covariate, etc. used in the paper
+
+## Functions used to create the data objects that are used to put together the uncertainty figures in the Appendix
+
+## Function to find values we will use in quantile plots
+## Arguments are:
+# * 'results': object containing MCMC results
+# * 'covariate': vector containing covariate values for each pixel
+# * 'nPix': number of pixels in survey area
+# * 'quantile': scalar giving the quantile that we wish to calculate when looking at the posterior distn of the density for each pixel
+eacd.quantile.plots <- function(results, covariate, nPix, quantile) {
+  # Initialising vector we will store values in
+  quantile.vals <- numeric()
+  # For loop to calculate quantile value for posterior distribution for each pixel
+  for (i in 1:nPix) {
+    if(i%%100==0) print(i) # Track progress
+    # Posterior distribution for the activity centre density in the ith pixel
+    density.posterior <- exp(results[,'beta0'] + results[,'beta1'] * (covariate[i]))
+    # Finding specified quantile for the posterior distribution for this pixel
+    quantile.vals[i] <- quantile(density.posterior, probs=quantile)
+  }
+  # Returning this vector of values
+  quantile.vals
+}
+
+
+## Function to calculate the 0.05 quantile values, EACD values and 0.95 quantile values for each pixel in our survey area, for a specified number of sampling occasions. The result will be returned as a data frame, which will also include additional information we require for our uncertainty figure (including pixel centres, array size, number of sampling occasions, etc.)
+## When running this function, we assume that the MCMC results for the given number of sampling occasions are already loaded into R (with burn-in already discarded).
+## Arguments are:
+# * 'results', 'covariate', 'nPix': same as above
+# * 'nocc': a scalar indicating the number of sampling occasions that we want to work with
+eacd.quantile.info <- function(results, covariate, nPix, nocc) {
+  # Retrieving object containing MCMC results we wish to use
+  mcmc.results <- get(paste0("inhom.results.", nocc, "occ"))
+  # Finding 5% quantile values for each pixel
+  lowerq <- eacd.quantile.plots(results=mcmc.results, covariate=covariate, nPix=nPix, quantile=0.05)
+  # EACD values for each pixel
+  eacd <- eacd.density.vector(results=mcmc.results, covariate=covariate, nPix=nPix)
+  # 95% quantile values for each pixel
+  upperq <- eacd.quantile.plots(results=mcmc.results, covariate=covariate, nPix=nPix, quantile=0.95)
+
+  ## Additional values we will add to the final data frame
+  # Pixel centres
+  pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+  # Array size
+  if (nocc %in% c(18, 52, 111)) {
+    array <- "3x3"
+  } else {
+    array <- "7x7"
+  }
+
+  # Putting together and returning the final data frame
+  dat <- data.frame(x=rep(pixel.centres[,1], 3), y=rep(pixel.centres[,2], 3),
+                    covtype=rep("D~log(Dblur)", 7500),
+                    occasions=rep(nocc, 7500),
+                    array_size=rep(array, 7500),
+                    value=c(lowerq, eacd, upperq))
+  dat
 }

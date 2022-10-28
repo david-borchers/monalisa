@@ -117,16 +117,8 @@ racd.111occ <- no.movement.density.vector(results=results.111occ, M=300, xlim=c(
 
 ##### Covariate value for each pixel #####
 
-# Subsetting the covariate values from the data we loaded in above
-mona.densities <-  small_blurry_mona_df[,c("x", "y", "Dblur")]
-# Re-ordering 'mona.densities', so order of pixels matches order of pixels in 'pixel.centres' object (see above for creation of 'pixel.centres' object)
-split <-  split(mona.densities, mona.densities$y)
-mona.densities <-  do.call("rbind", split)
-rownames(mona.densities) = NULL
-# Now, subsetting "Dblur" vector only so is in corresponding order to centres in 'pixel.centres'
-dblur <-  mona.densities[,"Dblur"]
-# Logging the covariate, so we have the values of log(Dblur) (this is the covariate we will use to fit our SCR models)
-log.dblur <-  log(dblur)
+# Note, see 'Functions.R' for an explanation of this function. It basically just working with the data objects we have loaded into R by this point to extract the covariate values for each pixel. 
+log.dblur <- eacd.covariate()
 
 ##### Running the MCMC #####
 
@@ -436,11 +428,11 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
 
 ##### Creating and saving Figure 4 #####
 
-p2a <- predicted_densities_all %>%
+fig4 <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller() + 
+  scale_fill_distiller(limits=c(0, maxval)) + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -459,17 +451,10 @@ p2a <- predicted_densities_all %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-p2a
-
-## Playing around with colour scales, creating a pdf to send to Ian
-#pdf("TestColours.pdf", height=6, width=12)
-##install.packages('colorBlindness')
-##library('colorBlindness')
-#cvdPlot(p2a, layout=c("origin", "desaturate"))
-#dev.off()
+fig4
 
 ## Saving Figure 4
-ggsave("mona_3x3.png", p2a, width=8, height=6, dpi=600, bg="white")
+ggsave("mona_3x3.png", fig4, width=8, height=6, dpi=600, bg="white")
 
 ## ---------------------------------------------------------------------------------------
 ################################### Creating Figure 5 ####################################
@@ -505,11 +490,11 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
 
 ##### Creating and saving Figure 5 #####
 
-p2b <- predicted_densities_all %>%
+fig5 <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller() + 
+  scale_fill_distiller(limits=c(0, maxval)) + 
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -528,7 +513,7 @@ p2b <- predicted_densities_all %>%
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-p2b
+fig5
 
 ## Saving Figure 5
-ggsave("mona_7x7.png", p2b, width=8, height=6, dpi=600, bg="white")
+ggsave("mona_7x7.png", fig5, width=8, height=6, dpi=600, bg="white")
