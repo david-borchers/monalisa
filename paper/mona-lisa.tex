@@ -71,11 +71,9 @@ function. We denote this estimated surface as $\widehat{D}(\bm{s})$.
 %One property of a Poisson process fitted to an observed point pattern by maximum likleihood is that the estimated expected number of points is equal to $N$, the observed number of points, so that $\int_{\mathcal{S}} \widehat{D}(\bm{s}) \, d\bm{s} = N$\todo[inline]{DLB: This sentence is a bit misleading becuase we don't observe $N$, and I don't think that it necessarily integrates to $N$ when you only obsreve $n<N$ of the points? And the sentence comes out of the blue and its relevance is not clear. Seems like nothing would be lost by removing it?}
 
 \subsubsection{Realised AC density surface} \label{s:racd}
-fdsfds
-
-\todo[inline]{dlb: After reading this subsection and suggesting some wording changes (shown below), I now think they should be ignored because I think it might be simpler/clearer if we don't talk about measurement error at all (although I know that this was my idea in the first place!). How about the text below as alternative text for this whole section (with changes to the figure caption, and to the wording of the next section, to remove all mention of measurement error, as per caption and text below)?}
  
-The second kind of density we call the ``realised AC density''. Suppose that we divide $\mathcal{S}$ into a grid of cells, the $j$th of which comprises the points in the set $\mathcal{C}_j$, and has area $a_j$. Suppose also that although we don't observe the ACs $\bm{x}_1,\ldots,\bm{x}_N$, we  have probability density functions (PDFs) for each AC: $f_1(\bm{s}),\ldots,f_N(\bm{s})$. We define random variables $\delta_{1j},\ldots,\delta_{N_j}$ ($j=1,\ldots,N$), such that the $\delta_{ij}=1$ if $\bm{x}_i\in\mathcal{C}_j$ and $\delta_{ij}=0$ otherwise. The expected value of $\delta_{ij}$ is then 
+The second kind of density we call the ``realised AC density''. Suppose that we divide $\mathcal{S}$ into a grid of cells, the $j$th of which comprises the points in the set $\mathcal{C}_j$, and each has area $a$.
+Suppose also that we don't observe the ACs, but we treat them as random variables, each with its own distribution. Say we a probability density functions (PDFs) for each AC's distribution: $f_1(\bm{s}),\ldots,f_N(\bm{s})$. We define random variables $\delta_{1j},\ldots,\delta_{N_j}$ ($j=1,\ldots,N$), such that the $\delta_{ij}=1$ if the $i$th AC is in $\mathcal{C}_j$ and $\delta_{ij}=0$ otherwise. The expected value of $\delta_{ij}$ is then 
 \begin{equation}
 E_r(\delta_{ij})=\int_{\mathcal{C}_j} f_i(\bm{s}) \, d\bm{s}. \label{eq:realised-p_ij}
 \end{equation}
@@ -84,7 +82,7 @@ where integration is over the points in $\mathcal{C}_j$.
 
 The expected value of $\delta_{\cdot j}=\sum_{i=1}^N\delta_{ij}$ is $\sum_{i=1}^N E(\delta_{ij})$. This can be interpreted as the expected number of ACs that are in cell $j$. With this interpretation, we define 
 \begin{equation}
-  D_{rj} = \sum_{i = 1}^N E(\delta_{ij})/a_j. \label{eq:realised-D_rj}
+  D_{rj} = \sum_{i = 1}^N E(\delta_{ij})/a. \label{eq:realised-D_rj}
 \end{equation}
 \noindent 
 to be the ``realised AC density'' in cell $j$, and the limit of this function as $\mathcal{C}_j$ shrinks to the point $\bm{s}$, to be the realised AC density surface at $\bm{s}$:
@@ -93,30 +91,6 @@ D_r(\bm{s})=\sum_{i=1}^N f_i(\bm{s}) \label{eq:realised-D}
 \end{equation}
 \noindent
 Given estimates of the PDFs $\hat{f}_i(\bm{s}),\ldots,\hat{f}_N(\bm{s})$, we can estimate the realised AC density surface by $\hat{D}_r(\bm{s})=\sum_{i = 1}^N\hat{f}_i(\bm{s})$ and estimate the expected number of ACs in the $j$th cell as $\hat{E_r}(\delta_{\cdot j})=\int_{\mathcal{C}_j}\hat{D}_r(\bm{s}) \, d\bm{s}$.
-
-%Figure~\ref{fig:densities} shows examples of both types of density, together with realised AC locations.
-
-\todo[inline]{Suggest replacing rest of section starting here}
-
-The second kind of density we call the ``realised AC density''. It is not calculated based on $\bm{\beta} = (\beta_0, \cdots, \beta_k)$, the parameters of the point process, but instead on a single realisation of points from the process, $\bm{X} = (\bm{x}_1, \cdots, \bm{x}_N)$. When space is discretised into ``pixels'' or ``cells'', as is standard with SCR methods, the number of realised points in a pixel divided by the pixel area can be though of as a realised AC density. One can also smooth these realised densities across pixels in some way to produce a smooth realised AC density (and this is often done). There are various ways of doing this, including the use of spatial kernels.
-
-Here we consider a histogram-like method: we split $\mathcal{S}$ into a grid of equally sized cells, each with area $a$, where $\mathcal{C}_j$ is the $j$th such cell. Our realised AC density is given by
-\begin{equation}
-\widehat{D}_r(\bm{s}) = \sum_{i = 1}^N I(\bm{x}_i \in \mathcal{C}_{\{j: \bm{s} \in \mathcal{C}_j\}})/a,
-\end{equation}
-where $I(\bm{x}_i \in \mathcal{C}_{\{j: \bm{s} \in \mathcal{C}_j\}})$ is equal to $1$ if the $i$th of the $N$ activity centres is in the same cell as the location $\bm{s}$, and is equal to $0$ otherwise\todo[inline]{Not sure how clear this is?\\ dlb: clear enough.}. One property of the realised AC density surface is that it integrates to $N$. Thus, when we have an observed point pattern, integrals of $D_r(\bm{s})$ and $\widehat{D}(\bm{s})$ over $\mathcal{S}$ both evaluate to $N$.\todo[inline]{dlb: but see comment in previous paragraph. Remove this last sentence too?}
-
-Both kernel and histogram methods can provide a realised density surface that is a suitable estimator\todo[inline]{dlb: I think we have to be more specific than ``suitable'' for Biometrics. For example, we might say ``unbiased'', but are we sure that both of these are unbiased?} for the expected density surface, given large enough sample sizes and that user-specified settings such as kernel bandwidth and cell sizes are chosen appropriately. However, both methods rely on observing all of the points in the point pattern, and indeed their locations.\todo[inline]{dlb: OK, now i see where you are coming from with ``observed $N$'', but if you go this route, you must say up front something like ``Consider first the case in which we observe the locations of all $N$ realised ACs.'' But this seems like a bit of a diversion from the thrust of the paper. Do we need it?}
-
-If locations are observed with error, then a possible modification of the histogram approach is to spread the contribution of a single point across multiple cells in a way that is commensurate with the magnitude of observation error, rather than attributing the point to a single cell, using
-\begin{equation}
-  \widehat{D}_r(\bm{s}) = \sum_{i = 1}^N \int_{\mathcal{C}_{\{j: \bm{s} \in \mathcal{C}_j\}}}  f(\bm{s} \mid \bm{x}_i) \, d\bm{s}. \label{eq:realised-D-error}
-\end{equation}
-\todo[inline]{Now that we have measurement error, we can actually define this function in continuous space rather than having to discretise in to the cells, and have to worry about which cell $\mathcal{C}_j$ the location $\bm{s}$ falls into. I think the set notation that organises all of this is a bit clunky? So instead, we could forget about cells, and just have $\widehat{D}_r(\bm{s}) = \sum_{i = 1}^N f(\bm{s} \mid \bm{x}_i)$, which is a bit tidier... Any opinions?}
-
-Here, $f(\bm{s} \mid \bm{x}_i)$ is a probability density function for the true location of the $i$th point, given some observed location, $\bm{x}_i$, which is subject to measurement error. Note that some PDFs may correspond to random variables with more variance than others, which is the case if measurement error variance is not the same for all observations. We discuss this approach in more detail in the context of SCR in Section \ref{secrmethods}.
-
-Figure~\ref{fig:densities} shows examples of both types of density, with realised AC locations rather than realised AC densities in sub-regions of space. Realised AC densities can only be plotted when space has been cut into cells; in continuous space the density is zero everywhere except at AC locations, where it approaches infinity.\todo[inline]{The reviewer had an issue with this sentence.}
 
 \begin{figure}[htbp]
 \centering
@@ -158,7 +132,7 @@ Suppose that we estimate from an SCR survey that there are $\hat{N}$ animals wit
 \begin{equation}
 \widehat{D}_r(\bm{s}) = \sum_{i = 1}^n \hat{f}_i(\bm{s}) + (\widehat{N} - n)\hat{f}_u(\bm{s})
 \end{equation}
-with $f_i(\bm{s})$, $f_u(\bm{s})$ and $N$ estimated by SCR. This function is usually plotted after discretising the survey region into cells, with the estimated density in cell $j$ being $\widehat{D}_{rj}=\int_{\mathcal{C}_j}\widehat{D}_r(\bm{s})\, d\bm{s}/a_j$. It is this surface that many publications (including those listed in the Introduction) interpret as a density surface for AC or animal locations. While perhaps done for brevity, referring to the realised AC density surface as an estimated density of {\it animals} makes the additional error of ignoring animal movement around ACs. An AC PDF captures only uncertainty about where the AC is located. It is not equivalent to an estimate of the animal's home range. 
+with $f_i(\bm{s})$, $f_u(\bm{s})$ and $N$ estimated by SCR. This function is usually plotted after discretising the survey region into cells, with the estimated density in cell $j$ being $\widehat{D}_{rj}=\int_{\mathcal{C}_j}\widehat{D}_r(\bm{s})\, d\bm{s}/a$. It is this surface that many publications (including those listed in the Introduction) interpret as a density surface for AC or animal locations. While perhaps done for brevity, referring to the realised AC density surface as an estimated density of {\it animals} makes the additional error of ignoring animal movement around ACs. An AC PDF captures only uncertainty about where the AC is located. It is not equivalent to an estimate of the animal's home range. 
 
 %This is an estimate of the realised AC density. It has been referred to as the estimated distribution, or density of \textit{animals}. However, animals distribute themselves around their ACs, so that AC density and animal density are not the same thing. Suppose for example, that we are certain that there is exactly one AC in a region that has area 1 (so that AC density in this region is 1). Suppose also that the animal with an AC in this region ranges wider than this region, and spends exactly half its time in this region. It is not certain that there is an animal in the region at any time, so that animal density will be less than 1. In this example, it would be fair to say that the \textit{animal} or \textit{usage} density in the region is 0.5. In this paper we focus only on the estimated AC density surfaces described in Sections \ref{s:eacd} and \ref{s:racd}.
 
