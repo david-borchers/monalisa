@@ -135,7 +135,7 @@ potential explanation for any subtle differences is that our Bayesian
 plots are constructed based on entire posterior distributions, whereas
 the maximum likelihood alternatives only use point estimates.
 
-<<fig4, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 4 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE, results=hide, fig=TRUE>>=
+<<fig4, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 4 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE, results='hide'>>=
 ## Libraries we need
 library(ggplot2)
 library(dplyr)
@@ -220,7 +220,7 @@ fig4 <- predicted_densities_all %>%
 fig4
 @
 
-<<fig5, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 5 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE, results=hide, fig=TRUE>>=
+<<fig5, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 5 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE, results='hide'>>=
 ## ---------------------------------------------------------------------------------------
 ################################### Creating Figure 5 ####################################
 ## ---------------------------------------------------------------------------------------
@@ -309,7 +309,7 @@ plots  would not be as effective as
 \ref{fig:fig4-uncertainty} and \ref{fig:fig5-uncertainty} at conveying
 the magnitude of uncertainty in each pixel.  
 
-<<fig4-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity centre surfaces from Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results=hide, fig=TRUE>>=
+<<fig4-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity centre surfaces from Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
 ## For each EACD plot in Figures 4 and 5, we will create two uncertainty plots: one showing the lower 5% quantile for the posterior distribution of the density for each pixel, the other will show the upper 95% quantile.
 
 ## Loading in the data that we need
@@ -370,7 +370,7 @@ uncertainty.fig4 <- values_all %>%
 uncertainty.fig4
 @
 
-<<fig5-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity centre surfaces from Figure 5.", message=FALSE, fig.width=8, warning=FALSE, results=hide, fig=TRUE>>=
+<<fig5-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity centre surfaces from Figure 5.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
 ## ---------------------------------------------------------------------------------------
 ######################## Creating uncertainty figure for Figure 5 ########################
 ## ---------------------------------------------------------------------------------------
