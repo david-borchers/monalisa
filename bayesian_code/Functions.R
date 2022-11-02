@@ -545,3 +545,56 @@ eacd.quantile.info <- function(results, covariate, nPix, nocc) {
                     value=c(lowerq, eacd, upperq))
   dat
 }
+
+# --------------------------------------------------------
+
+## Function we use to calculate the CV values in the CV plots shown in the Appendix. Arguments are:
+# * xlim, ylim: range of x- and y-coordinates in map area
+# * results: MCMC results, created using run.MCMC()
+# * M: superpopulation size
+# * pixel.index: if 1 we are working with 1x1 pixels; if 2 we are working with 2x2 pixels, if 5 we are working with 5x5 pixels
+cv.values.racd <- function(xlim, ylim, results, M, pixel.index) {
+  ## Range of x- and y-coordinates in map area
+  xg <- seq(xlim[1], xlim[2], by=pixel.index)
+  yg <- seq(ylim[1], ylim[2], by=pixel.index)
+
+  ## Extracting z-values
+  # Names of variables that have been monitored
+  names <- names(results[1,])
+  # Extracting "z" values from MCMC results
+  Z <- results[,grep("z", names)]
+
+  ## Extracting activity centres
+  # Extracting "s" values from MCMC results (i.e. extracting sampled activity centres)
+  S <- results[,grep("s[^i]", names)]
+  # x-coordinates of all activity centres
+  Sx <- S[,1:M]
+  # y-coordinates of all activity centres
+  Sy <- S[,-(1:M)]
+
+  ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell -- building up posterior distribution of number of activity centres in each pixel
+  # Number of pixels we are working with 
+  npix <- 2500/(pixel.index^2)
+  Dn.vals <-  matrix(0, nrow=nrow(results), ncol=npix)
+  for (i in 1:nrow(results)) {
+    if ((i %% 100) == 0) print(i) # Track progress
+    Sxout <-  Sx[i,][Z[i,] == 1]
+    Sxout <-  cut(Sxout, breaks=xg, include.lowest=TRUE)
+    Syout <-  Sy[i,][Z[i,] == 1]
+    Syout <-  cut(Syout, breaks=yg, include.lowest=TRUE)
+    Dn.vals[i,] <-  as.vector(table(Sxout, Syout))
+  }
+
+  # Dividing total number of act cent in each aggreggated pixel by new pixel area, which is 4 -- this gives us the posterior we want to work with! 
+  Dn.vals <- Dn.vals/(pixel.index^2)
+
+  ## Posterior mean for number of activity centres in each pixel
+  posterior.mean <- apply(Dn.vals, 2, mean)
+  ## Posterior standard deviation
+  standard.deviation <- apply(Dn.vals, 2, sd)
+
+  ## CV values
+  cv.values <- standard.deviation/posterior.mean
+  # Returning the CV values
+  cv.values
+}
