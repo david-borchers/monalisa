@@ -5,7 +5,7 @@
 ## Function to generate MCMC samples when fitting a homogeneous density model
 
 ## The arguments we need to provide (in order) are:
-# * 'data':  a data object created in a similar manner to the data objects from the beginning of 'bayesian_code/Plots_Code.R'. This is a list that should include elements labelled: 'encounter.data' (capture history matrix), 'trap.loc' (trap coordinates), 'xlim' (x-range of pixel centres), 'ylim' (y-range of pixel centres) and 'n.occasions' (number of sampling occasions)
+# * 'data':  a data object created in a similar manner to the data objects from the beginning of 'bayesian_code/Plots_Code.R'. This is a list that should include elements labelled: 'encounter.data' (capture history matrix), 'trap.loc' (trap coordinates), 'xlim' (x-range of coordinates in map area), 'ylim' (y-range of coordinates in map area) and 'n.occasions' (number of sampling occasions)
 # * 'M': the size of the superpopulation
 # * 'n.iter': the number of MCMC iterations we want to run
 # * 'n.adapt': the number of adaptation iterations we want (different from burn-in)
@@ -344,12 +344,12 @@ eacd.covariate <- function() {
 
 ## Function to create the density values for an RACD map
 
-# Here, 'xlim' and 'ylim' give the range of x- and y-coordinates for the pixel centres in the map area. Also, 'results' refers to a set of MCMC samples generated using run.MCMC() and 'M' is the size of the super-population
+# Here, 'xlim' and 'ylim' give the range of x- and y-coordinates for the map area. Also, 'results' refers to a set of MCMC samples generated using run.MCMC() and 'M' is the size of the super-population
 # We are assuming that each pixel has an area of 1, so that 'xg' and 'yg' below contain the pixel centres. Then, we have that '(length(xg) - 1) * (length(yg) - 1)' below gives the number of pixels we are using in the map area
 
 no.movement.density.vector <- function(xlim, ylim, results, M) {
 
-  ## Points at which local density will be estimated
+  ## x- and y-range of coordinates in map area
   xg <- seq(xlim[1], xlim[2], by=1)
   yg <- seq(ylim[1], ylim[2], by=1)
 

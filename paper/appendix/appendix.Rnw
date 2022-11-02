@@ -143,6 +143,8 @@ library(stringr)
 library(purrr)
 library(patchwork)
 library(ggpubr)
+load("../../output/revision/mona-inputs.RData")
+load("../../output/revision/mona-results.RData")
 
 ## Loading in the data frame that we'll be using
 load("fig4_fig5.RData")
@@ -165,7 +167,7 @@ maxval <- max(maxval1, maxval2) # Using the higher of these two max values as th
 ################################### Creating Figure 4 ####################################
 ## ---------------------------------------------------------------------------------------
 
-##### Adding the column and row labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects #####
+##### Adding the column and row labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects ####
 
 nn <- 3 # Number of different simulated datasets used in Figure 4
 occ <- capthists_few_alloccs_3x3$noccasions # Number of sampling occasions for each dataset
