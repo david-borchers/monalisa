@@ -384,6 +384,10 @@ predicted_densities_all <- overall.summary(nocc=nocc, fig=fig, type=type)
 detectors_df_all <- res_acd %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)
 detectors_df_all <- detectors_df_all %>% distinct()
 
+# Saving objects we have created, for use in appendix.Rnw
+save(predicted_densities_all, file="fig4_fig5.RData")
+save(detectors_df_all, file="detectors.RData")
+
 ##### Defining the max value of the colour scale #####
 
 ## We want this value to be the same for both Figures 4 and 5.

@@ -144,6 +144,7 @@ library(purrr)
 library(patchwork)
 library(ggpubr)
 library(secr)
+library(scales)
 load("../../output/revision/mona-inputs.RData")
 load("../../output/revision/mona-results.RData")
 
@@ -153,10 +154,8 @@ load("fig4_fig5.RData")
 ## Loading in data on the detectors
 load("detectors.RData")
 
-##### Defining the max value of the colour scale #####
-
-## We want this value to be the same for both Figures 4 and 5.
-
+## Defining the max value of the colour scale
+## We want this value to be the same for both Figures 4 and 5
 nn <- 3 # Number of simulated datasets we use in each figure
 xx <- predicted_densities_all %>% filter(array_size == "3x3", occasions %in% capthists_few_alloccs_3x3$noccasions[1:nn])
 maxval1 <- max(xx$value) # Max density value found across all plots in Figure 4
@@ -164,11 +163,7 @@ xx <- predicted_densities_all %>% filter(array_size == "7x7", occasions %in% cap
 maxval2 <- max(xx$value) # Max density value found across all plots in Figure 5
 maxval <- max(maxval1, maxval2) # Using the higher of these two max values as the top value of the colour scale for plots in both figures
 
-## ---------------------------------------------------------------------------------------
-################################### Creating Figure 4 ####################################
-## ---------------------------------------------------------------------------------------
-
-##### Adding the column and row labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects ####
+## Creating Figure 4 ##
 
 nn <- 3 # Number of different simulated datasets used in Figure 4
 occ <- capthists_few_alloccs_3x3$noccasions # Number of sampling occasions for each dataset
@@ -195,7 +190,7 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
                                     labels = c("Realised AC", "Expected AC"))
 
-##### Creating and saving Figure 4 #####
+## Plotting Figure 4
 
 fig4 <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
@@ -224,11 +219,7 @@ fig4
 @
 
 <<fig5, echo = FALSE, include = TRUE, fig.cap = "A version of Figure 5 from the manuscript based on our Bayesian models fitted via MCMC.", message=FALSE, fig.width=10, warning=FALSE, results='hide'>>=
-## ---------------------------------------------------------------------------------------
-################################### Creating Figure 5 ####################################
-## ---------------------------------------------------------------------------------------
-
-##### Adding the column and row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects #####
+## Creating Figure 5 ##
 
 nn <- 3
 occ <-capthists_few_alloccs_7x7$noccasions
@@ -256,7 +247,7 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
                                     labels = c("Realised AC", "Expected AC"))
 
-##### Creating and saving Figure 5 #####
+## Plotting Figure 5
 
 fig5 <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
@@ -324,9 +315,7 @@ load("detectors.RData")
 ## Maximum value for colour scale for *all* plots
 maxval <- max(values_all$value)
 
-## ---------------------------------------------------------------------------------------
-######################## Creating uncertainty figure for Figure 4 ########################
-## ---------------------------------------------------------------------------------------
+## Creating the uncertainty figure for Figure 4 ##
 
 nn <- 3 # Number of different simulated datasets used in Figure 4
 occ <- capthists_few_alloccs_3x3$noccasions # Number of sampling occasions for each dataset
@@ -346,7 +335,7 @@ values_all$occasions2 <- factor(values_all$occasions,
                                 levels = occ,
                                 labels = capthist_labels)
 
-## Creating and saving the uncertainty figure
+## Plotting the uncertainty figure
 uncertainty.fig4 <- values_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) +
@@ -374,9 +363,7 @@ uncertainty.fig4
 @
 
 <<fig5-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity centre surfaces from Figure 5.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
-## ---------------------------------------------------------------------------------------
-######################## Creating uncertainty figure for Figure 5 ########################
-## ---------------------------------------------------------------------------------------
+## Creating the uncertainty figure for Figure 5 ##
 
 nn <- 3
 occ <-capthists_few_alloccs_7x7$noccasions
@@ -393,7 +380,7 @@ values_all$occasions2 <- factor(values_all$occasions,
                                 levels = occ,
                                 labels = capthist_labels)
 
-## Creating and saving the uncertainty figure
+## Plotting the uncertainty figure
 uncertainty.fig5 <- values_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
   ggplot(aes(x, y)) +
@@ -419,6 +406,44 @@ uncertainty.fig5 <- values_all %>%
 
 uncertainty.fig5
 @
+
+<<fig4-plot1-cv, echo = FALSE, include = TRUE, fig.cap = "Plots visualising how the CV values change as pixel size changes, using the the leftmost RACD surface in Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
+## Loading in the data that we need
+load("cv_plots.RData")
+load("detectors_cv_plots.RData")
+
+## Max CV value across all 3 plots
+maxval <- max(cv_values_all$value)
+
+## Creating the CV Figure ##
+cv_values_all$valtype <- factor(rep("Realised AC CV", nrow(cv_values_all)))
+nn <- 3
+asz <- c("3x3")
+occ <- 18
+racd.cv.fig  <-  cv_values_all %>%
+  ggplot(aes(x, y)) + 
+  geom_raster(aes(fill = value)) +
+  scale_fill_distiller(limits=c(0,maxval), labels=percent) + 
+  facet_grid(valtype ~ pixel.size) +
+  geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
+             colour = "gray80", pch = 4, size = 2) +
+  geom_point(data = simulated_points, inherit.aes = F, aes(x=x,y=y),
+             colour = "darkorange", pch = 16, size = 1, alpha = 0.5) +
+  coord_equal() +
+  theme_classic(base_size = 14) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.spacing=unit(-1, "lines"),
+        strip.background = element_rect(fill=NA, colour = NA), 
+        legend.position="right", legend.key.width = unit(0.5, "cm"),
+        legend.key.height = unit(1.0,"cm"), legend.title = element_blank(),
+        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
+        panel.grid.minor=element_blank(),plot.background=element_blank())
+
+racd.cv.fig
+@ 
 
 %% \section{Realised usage density}
 

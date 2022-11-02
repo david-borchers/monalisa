@@ -13,6 +13,7 @@ library(secr)
 library(patchwork)
 library(ggpubr)
 library(viridis)
+library(scales)
 ## Objects we need
 load("../output/revision/mona-inputs.RData")
 load("../output/revision/mona-results.RData")
@@ -84,6 +85,10 @@ values_all <- rbind(info.18occ, info.52occ, info.111occ, info.7occ, info.25occ, 
 ## Detectors
 detectors_df_all <- res_acd %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)
 detectors_df_all <- detectors_df_all %>% distinct()
+
+# Saving the objects we have created, for us in appendix.Rnw
+save(values_all, file="uncertainty_plots.RData")
+save(detectors_df_all, file="detectors.RData")
 
 ## Maximum value for colour scale for *all* plots
 maxval <- max(values_all$value)
@@ -236,14 +241,14 @@ detectors_df_all <- detectors_df_all %>% filter(covtype %in% c("D~1"), array_siz
 maxval <- max(cv_values_all$value)
 
 ## Creating the figure!
-cv_values_all$valtype <- factor(rep("Realised AC CV", nrow(cv_values_all))) 
+cv_values_all$valtype <- factor(rep("Realised AC CV", nrow(cv_values_all)))
 nn <- 3
 asz <- c("3x3")
 occ <- 18
 racd.cv.fig  <-  cv_values_all %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0,maxval)) + 
+  scale_fill_distiller(limits=c(0,maxval), labels=percent) + 
   facet_grid(valtype ~ pixel.size) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -265,3 +270,7 @@ racd.cv.fig  <-  cv_values_all %>%
 racd.cv.fig
 
 ggsave(filename="cvfigure.png", plot=racd.cv.fig, bg="white")
+
+# Saving the objects that we used, for use in appendix.Rnw
+save(cv_values_all, file="cv_plots.RData")
+save(detectors_df_all, file="detectors_cv_plots.RData")
