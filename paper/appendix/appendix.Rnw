@@ -523,6 +523,6 @@ uncertainty.fig5
 % and landscape connectivity \citep[see][for a review]{Drake+al:ip}.
 
 
-\bibliographystyle{../mee} \bibliography{../monalisa}
+\bibliographystyle{../biom} \bibliography{../monalisa}
 
 \end{document}
