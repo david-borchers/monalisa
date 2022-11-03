@@ -594,7 +594,7 @@ cv.values.racd <- function(xlim, ylim, results, M, pixel.index) {
   standard.deviation <- apply(Dn.vals, 2, sd)
 
   ## CV values
-  cv.values <- (standard.deviation/posterior.mean)
+  cv.values <- (standard.deviation/posterior.mean) * 100
   # Returning the CV values
   cv.values
 }

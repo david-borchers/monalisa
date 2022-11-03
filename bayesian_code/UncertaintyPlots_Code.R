@@ -13,7 +13,6 @@ library(secr)
 library(patchwork)
 library(ggpubr)
 library(viridis)
-library(scales)
 ## Objects we need
 load("../output/revision/mona-inputs.RData")
 load("../output/revision/mona-results.RData")
@@ -248,7 +247,7 @@ occ <- 18
 racd.cv.fig  <-  cv_values_all %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0,maxval), labels=percent) + 
+  scale_fill_distiller(limits=c(0,maxval)) + 
   facet_grid(valtype ~ pixel.size) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
