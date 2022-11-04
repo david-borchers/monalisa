@@ -283,27 +283,45 @@ lower- and upper-limits of 90\% credible intervals, using the 5\% and
 95\% quantiles of the posterior distribution for the expected AC
 density in each pixel. The middle column shows the expected AC density
 surface estimates from \ref{fig:fig4} and \ref{fig:fig5}, using the
-posterior mean for each pixel.
+posterior mean for each pixel. For a frequentist analysis, calculating
+measures of uncertainty (standard errors and confidence intervals) can
+be achieved using the delta method or a bootstrap, for example.
 
-We also calculated uncertainty for realised AC density surface
-estimates. We can approximate the posterior distribution of a pixel's
-realised AC density by counting the number of ACs within the pixel on
-each MCMC iteration, and dividing by the area of the pixel. Here we
-use the coefficient of variation (CV) as a relative measure of uncertainty,
+We also considered uncertainty in realised AC density surface
+estimates. For a Bayesian analysis, we can approximate the posterior
+distribution of a pixel's realised AC density by counting the number
+of ACs within the pixel on each MCMC iteration, and dividing by the
+area of the pixel. For a frequentist analysis, defining and
+calculating uncertainty is more complicated: both the delta method and
+the bootstrap are designed to calculate variance of estimates across
+multiple realisations of the AC point process, but realised AC density
+surfaces are specific a single realisation.
+
+Here we consider both the posterior standard deviation the coefficient
+of variation (CV) as a relative measures of uncertainty. The CV is
 calculated by dividing the standard deviation of the posterior
-distribution by the mean.
+distribution by the mean. In Figure \ref{fig:fig4-plot1-cv}, we
+display posterior standard deviations and CVs for the realised AC
+density surface estimate shown in the top-left panel of Figure
+\ref{fig:fig4}. We calculated these measures of uncertainty for three
+different pixel sizes: squares with edges of 1 distance unit, 2 units,
+and 5 units, respectively.
 
-In Figure \ref{fig:fig4-plot1-cv}, we display CVs for realised AC
-density surface estimates shown in the top-left panel of Figure
-\ref{fig:fig4}. We calculated CVs for three different pixel sizes:
-squares with edges of 1 distance unit, 2 units, and 5 units,
-respectively. Although the spatial patterns were similar regardless of
-pixel size, with highest CVs in similar locations, we found that
-relative uncertainty in realised AC density was sensitive to pixel
-size. Using smaller pixels results in larger relative uncertainty due to
+Spatial patterns in posterior standard deviation reflected the
+estimated surface, because pixels that tend to have higher counts of
+ACs in pixels inherently have more variation across iterations. The CV
+measures relative rather than absolute uncertainty, thus correcting
+for differences in uncertainty across pixels caused by variation in
+the posterior mean. The spatial patterns in CV were the opposite of
+those for the posterior standard deviation, with highest levels of
+relative uncertainty in the pixels with the smallest estimates of
+realised AC density.
+
+We found that uncertainty in realised AC density was sensitive to
+pixel size. Using smaller pixels results in larger uncertainty due to
 smaller samples of ACs within the pixel across the MCMC iterations,
 while for larger pixels the relative number of ACs per unit area
-within a pixel is more stable. 
+within a pixel is more stable.
 
 We do not get the same result for uncertainty in expected AC density
 surface estimates, because these deal with the expected (rather than
