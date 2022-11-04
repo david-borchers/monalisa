@@ -420,15 +420,16 @@ uncertainty.fig5 <- values_all %>%
 uncertainty.fig5
 @
 
-<<fig4-plot1-cv, echo = FALSE, include = TRUE, fig.cap = "Plots visualising how the CV values change as pixel size changes, using the the leftmost RACD surface in Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
-## Loading in the data that we need
+<<fig4-plot1-cv, echo = FALSE, include = TRUE, fig.cap = "Plots visualising how the CV and posterior standard deviation values change as pixel size changes, using the the leftmost RACD surface in Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
+## FIRST, working on the plots that show the CV values
+# Loading in the data that we need
 load("cv_plots.RData")
 load("detectors_cv_plots.RData")
 
-## Max CV value across all 3 plots
+# Max CV value across all 3 plots
 maxval <- max(cv_values_all$value)
 
-## Creating the CV Figure ##
+# Creating the CV Figure
 cv_values_all$valtype <- factor(rep("Realised AC CV", nrow(cv_values_all)))
 nn <- 3
 asz <- c("3x3")
@@ -455,7 +456,78 @@ racd.cv.fig  <-  cv_values_all %>%
         panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
         panel.grid.minor=element_blank(),plot.background=element_blank()) + labs(fill = "(%)")
 
-racd.cv.fig 
+## NEXT, working on the plots that show the SD values
+# Loading in the data
+load("sd_plots.RData")
+
+# Max SD value across all 3 plots
+sdmaxval <- max(sd_values_all$value)
+
+# Creating the SD figure
+nn <- 3
+asz <- c("3x3")
+occ <- 18
+racd.sd.fig  <-  sd_values_all %>%
+  ggplot(aes(x, y)) + 
+  geom_raster(aes(fill = value)) +
+  scale_fill_distiller(limits=c(0,sdmaxval)) + 
+  facet_grid(valtype ~ pixel.size) +
+  geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
+             colour = "gray80", pch = 4, size = 2) +
+  geom_point(data = simulated_points, inherit.aes = F, aes(x=x,y=y),
+             colour = "darkorange", pch = 16, size = 1, alpha = 0.5) +
+  coord_equal() +
+  theme_classic(base_size = 14) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.spacing=unit(-1, "lines"),
+        strip.background = element_rect(fill=NA, colour = NA), 
+        legend.position="right", legend.key.width = unit(0.56, "cm"),
+        legend.key.height = unit(0.9,"cm"), legend.title = element_blank(),
+        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
+        panel.grid.minor=element_blank(),plot.background=element_blank())
+        
+## NEXT, creating corresponding RACD
+# Loading in the data we need
+load("racd_18occ.RData")
+
+# Max density value, setting it to be the same as Figures 4 and 5
+maxval <- 0.2301
+
+# Creating the RACD plot
+nn <- 3
+occ <- 18
+asz <- c("3x3")
+fig4.18occ <- predicted_densities_all %>%
+  filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
+  ggplot(aes(x, y)) + 
+  geom_raster(aes(fill = value)) +
+  scale_fill_distiller(limits=c(0, maxval)) + 
+  facet_grid(covtype2 ~ occasions2) +
+  geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
+             colour = "gray80", pch = 4, size = 2) +
+  geom_point(data = simulated_points, inherit.aes = F, aes(x=x,y=y),
+             colour = "darkorange", pch = 16, size = 1, alpha = 0.5) +
+  coord_equal() +
+  theme_classic(base_size = 14) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.spacing=unit(-1, "lines"),
+        strip.background = element_rect(fill=NA, colour = NA), 
+        legend.position="right", legend.key.width = unit(0.56, "cm"),
+        legend.key.height = unit(0.9,"cm"), legend.title = element_blank(),
+        panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank())
+        
+## Putting together the whole figure
+# One possible configuration
+ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heights=c(1.2, 2))
+# Another
+#ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), ncol=2, widths=c(1, 2))
 @ 
 
 %% \section{Realised usage density}

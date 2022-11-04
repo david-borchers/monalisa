@@ -347,7 +347,7 @@ eacd.covariate <- function() {
 # Here, 'xlim' and 'ylim' give the range of x- and y-coordinates for the map area. Also, 'results' refers to a set of MCMC samples generated using run.MCMC() and 'M' is the size of the super-population
 # We are assuming that each pixel has an area of 1, so that 'xg' and 'yg' below contain the pixel centres. Then, we have that '(length(xg) - 1) * (length(yg) - 1)' below gives the number of pixels we are using in the map area
 
-no.movement.density.vector <- function(xlim, ylim, results, M) {
+racd.density.vector <- function(xlim, ylim, results, M) {
 
   ## x- and y-range of coordinates in map area
   xg <- seq(xlim[1], xlim[2], by=1)
@@ -548,12 +548,13 @@ eacd.quantile.info <- function(results, covariate, nPix, nocc) {
 
 # --------------------------------------------------------
 
-## Function we use to calculate the CV values in the CV plots shown in the Appendix. Arguments are:
+## Function we use to calculate the CV values in the CV plots shown in the Appendix OR standard deviation values in the standard deviation plots in the Appendix. Arguments are:
 # * xlim, ylim: range of x- and y-coordinates in map area
 # * results: MCMC results, created using run.MCMC()
 # * M: superpopulation size
 # * pixel.index: if 1 we are working with 1x1 pixels; if 2 we are working with 2x2 pixels, if 5 we are working with 5x5 pixels
-cv.values.racd <- function(xlim, ylim, results, M, pixel.index) {
+# * cv: if TRUE, will return CV values (posterior standard deviation/posterior mean) for each pixel, if FALSE will return posterior standard deviation for each pixel
+uncertainty.values.racd <- function(xlim, ylim, results, M, pixel.index, cv) {
   ## Range of x- and y-coordinates in map area
   xg <- seq(xlim[1], xlim[2], by=pixel.index)
   yg <- seq(ylim[1], ylim[2], by=pixel.index)
@@ -593,8 +594,14 @@ cv.values.racd <- function(xlim, ylim, results, M, pixel.index) {
   ## Posterior standard deviation
   standard.deviation <- apply(Dn.vals, 2, sd)
 
-  ## CV values
-  cv.values <- (standard.deviation/posterior.mean) * 100
-  # Returning the CV values
-  cv.values
+  if (cv) {
+    ## CV values
+    cv.values <- (standard.deviation/posterior.mean) * 100
+    # Returning the CV values
+    cv.values
+  } else {
+    ## Returning posterior standard deviation values
+    standard.deviation
+  }
 }
+

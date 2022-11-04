@@ -193,22 +193,22 @@ ggsave("mona_7x7_uncertainty.png", uncertainty.fig5, width=8, height=8, dpi=600,
 load("MCMC_Results/Figure4/HomPP_18occ.RData")
 
 ## Calculating the CV values
-cv.1by1 <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=1)
-cv.2by2 <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=2)
-cv.5by5 <- cv.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=5)
+cv.1by1 <- uncertainty.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=1, cv=TRUE)
+cv.2by2 <- uncertainty.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=2, cv=TRUE)
+cv.5by5 <- uncertainty.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=5, cv=TRUE)
 
 ## Creating a data frame containing all of the information we will use
 # 1x1 pixels
 pixels.1by1 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50) - 0.5 # Editing pixel info so we are storing pixel edges instead of pixel centers
-info.1by1 <- data.frame(x=pixels.1by1[,1], y=pixels.1by1[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=cv.1by1, pixel.size=rep("1x1 pixels", 2500))
+cvinfo.1by1 <- data.frame(x=pixels.1by1[,1], y=pixels.1by1[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=cv.1by1, pixel.size=rep("1x1 pixels", 2500))
 # 2x2 pixels
 pixels.2by2 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=25, y.pixels=25) - 1 # Storing pixel edges
-info.2by2 <- data.frame(x=pixels.2by2[,1], y=pixels.2by2[,2], covtype=rep("D~1", 625), occasions=rep(18, 625), array_size=rep("3x3", 625), value=cv.2by2, pixel.size=rep("2x2 pixels", 625))
+cvinfo.2by2 <- data.frame(x=pixels.2by2[,1], y=pixels.2by2[,2], covtype=rep("D~1", 625), occasions=rep(18, 625), array_size=rep("3x3", 625), value=cv.2by2, pixel.size=rep("2x2 pixels", 625))
 # 5x5 pixels
 pixels.5by5 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=10, y.pixels=10) - 2.5 # Storing pixel edges
-info.5by5 <- data.frame(x=pixels.5by5[,1], y=pixels.5by5[,2], covtype=rep("D~1", 100), occasions=rep(18, 100), array_size=rep("3x3", 100), value=cv.5by5, pixel.size=rep("5x5 pixels", 100))
+cvinfo.5by5 <- data.frame(x=pixels.5by5[,1], y=pixels.5by5[,2], covtype=rep("D~1", 100), occasions=rep(18, 100), array_size=rep("3x3", 100), value=cv.5by5, pixel.size=rep("5x5 pixels", 100))
 # Overall data frame
-cv_values_all = rbind(info.1by1, info.2by2, info.5by5)
+cv_values_all = rbind(cvinfo.1by1, cvinfo.2by2, cvinfo.5by5)
 ## Extracting and editing entries from this data frame -- specifically, taking the rightmost and topmost pixels on each map, and duplicating and editing the entries so that our data frame contains pixel edges along the top and rightmost edges. We do this so that we colour the pixels across our whole map area correctly
 # 1x1 pixels
 dup1 <- cv_values_all[(cv_values_all$pixel.size=="1x1 pixels" & cv_values_all$y==49.5 | cv_values_all$pixel.size=="1x1 pixels" & cv_values_all$x==49.5),]
@@ -230,6 +230,7 @@ dup3$x[dup3$x==45.5] = 50.5; dup3$y[dup3$y==45.5] = 50.5
 dup3 <- rbind(dup3, save1, save2)
 # Adding this extra information to 'cv_values_all'
 cv_values_all  <- rbind(cv_values_all, dup1, dup2, dup3)
+cv_values_all$valtype <- factor(rep("Realised AC CV", nrow(cv_values_all))) # Adding column for faceting in final plot
 
 ## Detectors
 detectors_df_all <- res_acd %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)
@@ -237,18 +238,163 @@ detectors_df_all <- detectors_df_all %>% distinct()
 detectors_df_all <- detectors_df_all %>% filter(covtype %in% c("D~1"), array_size %in% c("3x3"))
 
 ## Max CV value across all 3 plots
-maxval <- max(cv_values_all$value)
+cvmaxval <- max(cv_values_all$value)
 
 ## Creating the figure!
-cv_values_all$valtype <- factor(rep("Realised AC CV", nrow(cv_values_all)))
 nn <- 3
 asz <- c("3x3")
 occ <- 18
 racd.cv.fig  <-  cv_values_all %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0,maxval)) + 
+  scale_fill_distiller(limits=c(0,cvmaxval)) + 
   facet_grid(valtype ~ pixel.size) +
+  geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
+             colour = "gray80", pch = 4, size = 2) +
+  geom_point(data = simulated_points, inherit.aes = F, aes(x=x,y=y),
+             colour = "darkorange", pch = 16, size = 1, alpha = 0.5) +
+  coord_equal() +
+  theme_classic(base_size = 14) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.spacing=unit(-1, "lines"),
+        strip.background = element_rect(fill=NA, colour = NA), 
+        legend.position="right", legend.key.width = unit(0.56, "cm"),
+        legend.key.height = unit(0.9,"cm"), 
+        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
+        panel.grid.minor=element_blank(),plot.background=element_blank()) + labs(fill = "(%)")
+
+racd.cv.fig
+
+# Saving the objects that we used, for use in appendix.Rnw
+#save(cv_values_all, file="cv_plots.RData")
+#save(detectors_df_all, file="detectors_cv_plots.RData") # Will also use these detectors for the plots below :)
+
+#ggsave(filename="cvfigure.png", plot=racd.cv.fig, bg="white")
+
+# ------------------------------------------------------------
+
+## Adding plots that show surfaces showing the posterior standard deviation also vary depending on pixel size:
+
+load("MCMC_Results/Figure4/HomPP_18occ.RData") # Just in case anything changed with this object (v unlikely)
+
+## Calculating the CV values
+sd.1by1 <- uncertainty.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=1, cv=FALSE)
+sd.2by2 <- uncertainty.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=2, cv=FALSE)
+sd.5by5 <- uncertainty.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results=results.18occ, M=300, pixel.index=5, cv=FALSE)
+
+## Creating a data frame containing all of the information we will use
+# 1x1 pixels
+pixels.1by1 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50) - 0.5 # Editing pixel info so we are storing pixel edges instead of pixel centers
+sdinfo.1by1 <- data.frame(x=pixels.1by1[,1], y=pixels.1by1[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=sd.1by1, pixel.size=rep("1x1 pixels", 2500))
+# 2x2 pixels
+pixels.2by2 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=25, y.pixels=25) - 1 # Storing pixel edges
+sdinfo.2by2 <- data.frame(x=pixels.2by2[,1], y=pixels.2by2[,2], covtype=rep("D~1", 625), occasions=rep(18, 625), array_size=rep("3x3", 625), value=sd.2by2, pixel.size=rep("2x2 pixels", 625))
+# 5x5 pixels
+pixels.5by5 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=10, y.pixels=10) - 2.5 # Storing pixel edges
+sdinfo.5by5 <- data.frame(x=pixels.5by5[,1], y=pixels.5by5[,2], covtype=rep("D~1", 100), occasions=rep(18, 100), array_size=rep("3x3", 100), value=sd.5by5, pixel.size=rep("5x5 pixels", 100))
+# Overall data frame
+sd_values_all = rbind(sdinfo.1by1, sdinfo.2by2, sdinfo.5by5)
+## Extracting and editing entries from this data frame -- specifically, taking the rightmost and topmost pixels on each map, and duplicating and editing the entries so that our data frame contains pixel edges along the top and rightmost edges. We do this so that we colour the pixels across our whole map area correctly
+# 1x1 pixels
+dup1 <- sd_values_all[(sd_values_all$pixel.size=="1x1 pixels" & sd_values_all$y==49.5 | sd_values_all$pixel.size=="1x1 pixels" & sd_values_all$x==49.5),]
+save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
+save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5 # If we don't run these two lines, then we'll miss these two sets of pixel edges in our data frame
+dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5 # Editing all of the entries in dup1, so that they represent pixel edges along the right and top edges of the map area
+dup1 <- rbind(dup1, save1, save2)
+# 2x2 pixels
+dup2 <- sd_values_all[(sd_values_all$pixel.size=="2x2 pixels" & sd_values_all$y==48.5 | sd_values_all$pixel.size=="2x2 pixels" & sd_values_all$x==48.5),]
+save1 <- dup2[(dup2$x==48.5 & dup2$y==48.5),]; save1$x=50.5
+save2 <- dup2[(dup2$x==48.5 & dup2$y==48.5),]; save2$y=50.5
+dup2$x[dup2$x==48.5] = 50.5; dup2$y[dup2$y==48.5] = 50.5
+dup2 <- rbind(dup2, save1, save2)
+# 5x5 pixels
+dup3 <- sd_values_all[(sd_values_all$pixel.size=="5x5 pixels" & sd_values_all$y==45.5 | sd_values_all$pixel.size=="5x5 pixels" & sd_values_all$x==45.5),]
+save1 <- dup3[(dup3$x==45.5 & dup3$y==45.5),]; save1$x=50.5
+save2 <- dup3[nrow(dup3),]; save2$y=50.5
+dup3$x[dup3$x==45.5] = 50.5; dup3$y[dup3$y==45.5] = 50.5
+dup3 <- rbind(dup3, save1, save2)
+# Adding this extra information to 'cv_values_all'
+sd_values_all  <- rbind(sd_values_all, dup1, dup2, dup3)
+sd_values_all$valtype <- factor(rep("Realised AC SD", nrow(sd_values_all))) # Adding column for faceting in final plot
+
+## Saving object to use in Appendix.Rnw
+#save(sd_values_all, file='sd_plots.RData')
+
+## Max SD value across all 3 plots
+sdmaxval <- max(sd_values_all$value)
+
+## Creating the figure!
+nn <- 3
+asz <- c("3x3")
+occ <- 18
+racd.sd.fig  <-  sd_values_all %>%
+  ggplot(aes(x, y)) + 
+  geom_raster(aes(fill = value)) +
+  scale_fill_distiller(limits=c(0,sdmaxval)) + 
+  facet_grid(valtype ~ pixel.size) +
+  geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
+             colour = "gray80", pch = 4, size = 2) +
+  geom_point(data = simulated_points, inherit.aes = F, aes(x=x,y=y),
+             colour = "darkorange", pch = 16, size = 1, alpha = 0.5) +
+  coord_equal() +
+  theme_classic(base_size = 14) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.spacing=unit(-1, "lines"),
+        strip.background = element_rect(fill=NA, colour = NA), 
+        legend.position="right", legend.key.width = unit(0.56, "cm"),
+        legend.key.height = unit(0.9,"cm"), legend.title = element_blank(),
+        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
+        panel.grid.minor=element_blank(),plot.background=element_blank())
+
+racd.sd.fig
+
+## Combining CV and SD plots to build up figure
+
+racd.cv.fig/racd.sd.fig
+
+# ------------------------------------------------------------
+
+## Want to add corresponding RACD plot onto left, generating this RACD plot and attaching it to create the final figure:
+
+load("MCMC_Results/Figure4/HomPP_18occ.RData") # Just to be sure is good
+
+## Vector we need to create the map:
+racd.18occ <- racd.density.vector(results=results.18occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+
+## Summarising plot info
+pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+predicted_densities_all <- data.frame(x=pixel.centres[,1], y=pixel.centres[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=racd.18occ)
+# Faceting variables we will use
+chs <- data.frame(do.call(rbind, lapply(capthists_few_alloccs_3x3$capthist, summary, terse = TRUE)))
+paster <- function(nd,na){
+  paste0(nd," detections\n(",na, " individuals)")
+}
+capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist()
+predicted_densities_all$occasions2 <- rep(capthist_labels[1], 2500)
+predicted_densities_all$covtype2 <- rep("Realised AC", 2500)
+
+## Saving values to use in Appendix.Rnw
+#save(predicted_densities_all, file="racd_18occ.RData")
+
+## Max val for plot
+maxval <- 0.2301 # Is 'maxval' in 'Plots_Code.R'. Are using it again here as want to use the same colour scale as in Figures 4 and 5 
+
+## Creating the RACD plot
+nn <- 3
+occ <- 18
+asz <- c("3x3")
+fig4.18occ <- predicted_densities_all %>%
+  filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
+  ggplot(aes(x, y)) + 
+  geom_raster(aes(fill = value)) +
+  scale_fill_distiller(limits=c(0, maxval)) + 
+  facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
   geom_point(data = simulated_points, inherit.aes = F, aes(x=x,y=y),
@@ -263,13 +409,14 @@ racd.cv.fig  <-  cv_values_all %>%
         strip.background = element_rect(fill=NA, colour = NA), 
         legend.position="right", legend.key.width = unit(0.5, "cm"),
         legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
-        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
+        panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
-racd.cv.fig
+fig4.18occ
 
-ggsave(filename="cvfigure.png", plot=racd.cv.fig, bg="white")
-
-# Saving the objects that we used, for use in appendix.Rnw
-save(cv_values_all, file="cv_plots.RData")
-save(detectors_df_all, file="detectors_cv_plots.RData")
+## Okay, now trying to put all three pieces together to create the final figure :)
+library(ggpubr)
+# One possible configuration
+ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heights=c(1, 2))
+# Another
+ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), ncol=2, widths=c(1, 2))
