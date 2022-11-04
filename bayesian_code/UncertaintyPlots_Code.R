@@ -264,7 +264,7 @@ racd.cv.fig  <-  cv_values_all %>%
         legend.position="right", legend.key.width = unit(0.56, "cm"),
         legend.key.height = unit(0.9,"cm"), 
         panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
-        panel.grid.minor=element_blank(),plot.background=element_blank()) + labs(fill = "(%)")
+        panel.grid.minor=element_blank(),plot.background=element_blank())
 
 racd.cv.fig
 
@@ -333,7 +333,7 @@ occ <- 18
 racd.sd.fig  <-  sd_values_all %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0,sdmaxval)) + 
+  scale_fill_distiller(limits=c(0,sdmaxval), breaks=c(0, 0.1, 0.2), labels=c("0", "0.100", "0.200")) + 
   facet_grid(valtype ~ pixel.size) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
