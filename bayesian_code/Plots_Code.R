@@ -99,9 +99,9 @@ check.trace.plots(results.111occ)
 ##### Creating the objects we need for the RACD plots #####
 
 ## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps that are based on MCMC results. 
-racd.18occ <- no.movement.density.vector(results=results.18occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-racd.52occ <-  no.movement.density.vector(results=results.52occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-racd.111occ <- no.movement.density.vector(results=results.111occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+racd.18occ <- racd.density.vector(results=results.18occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+racd.52occ <-  racd.density.vector(results=results.52occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+racd.111occ <- racd.density.vector(results=results.111occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
 ## ---------------------------------------------------------------------------------------
 # Creating the objects we specifically need for the plots in Row 2 of Figure 4
@@ -244,9 +244,9 @@ check.trace.plots(results.55occ)
 ##### Creating the objects we need for the RACD plots #####
 
 ## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel
-racd.7occ <- no.movement.density.vector(results=results.7occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-racd.25occ <-  no.movement.density.vector(results=results.25occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
-racd.55occ <- no.movement.density.vector(results=results.55occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+racd.7occ <- racd.density.vector(results=results.7occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+racd.25occ <-  racd.density.vector(results=results.25occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
+racd.55occ <- racd.density.vector(results=results.55occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
 ## ---------------------------------------------------------------------------------------
 # Creating the objects we specifically need for the plots in Row 2 of Figure 5
