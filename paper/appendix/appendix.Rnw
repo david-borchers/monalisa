@@ -307,14 +307,9 @@ within a pixel is more stable.
 
 We do not get the same result for uncertainty in expected AC density
 surface estimates, because these deal with the expected (rather than
-observed) number of ACs per unit area in the pixel. The CV for a
-pixel's expected AC density estimate therefore only depends on
-uncertainty in estimating the $\beta$ parameters, and is not directly
-affected by the observed number of ACs within the pixel on each MCMC
-iteration.
-
-The CVs for expected AC density estimates are substantially lower than
-for realised AC density estimates, because estimating the mean of a
+observed) number of ACs per unit area in the pixel. The CVs for
+expected AC density estimates are substantially lower than for
+realised AC density estimates, because estimating the mean of a
 distribution can be achieved more accurately than predicting a
 realisation from that distribution. Predicting outcomes of random
 variables requires that we account for the variance of the
