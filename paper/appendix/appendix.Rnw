@@ -448,7 +448,7 @@ load("detectors_cv_plots.RData")
 maxval <- max(cv_values_all$value)
 
 # Creating the CV Figure
-cv_values_all$valtype <- factor(rep("Realised AC CV", nrow(cv_values_all)))
+cv_values_all$valtype <- factor(rep("Realised AC CV (%)", nrow(cv_values_all)))
 nn <- 3
 asz <- c("3x3")
 occ <- 18
@@ -470,9 +470,9 @@ racd.cv.fig  <-  cv_values_all %>%
         panel.spacing=unit(-1, "lines"),
         strip.background = element_rect(fill=NA, colour = NA), 
         legend.position="right", legend.key.width = unit(0.56, "cm"),
-        legend.key.height = unit(0.9,"cm"), 
+        legend.key.height = unit(0.9,"cm"), legend.title = element_blank(),
         panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
-        panel.grid.minor=element_blank(),plot.background=element_blank()) + labs(fill = "(%)")
+        panel.grid.minor=element_blank(),plot.background=element_blank())
 
 ## NEXT, working on the plots that show the SD values
 # Loading in the data
@@ -488,7 +488,7 @@ occ <- 18
 racd.sd.fig  <-  sd_values_all %>%
   ggplot(aes(x, y)) + 
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0,sdmaxval)) + 
+  scale_fill_distiller(limits=c(0,sdmaxval), breaks=c(0, 0.1, 0.2), labels=c("0.00", "0.10", "0.20")) + 
   facet_grid(valtype ~ pixel.size) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -543,7 +543,7 @@ fig4.18occ <- predicted_densities_all %>%
         
 ## Putting together the whole figure
 # One possible configuration
-ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heights=c(1.2, 2))
+ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heights=c(1.1, 2))
 # Another
 #ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), ncol=2, widths=c(1, 2))
 @ 
