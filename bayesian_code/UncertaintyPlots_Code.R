@@ -22,7 +22,7 @@ source("Functions.R")
 #####################################################################################################
 
 ## For each EACD plot in Figures 4 and 5, we will create two uncertainty plots: one showing the lower 5% quantile for the posterior distribution of the density for each pixel, the other will show the upper 95% quantile.
-## We will create two figures. One will show the uncertainty plots from Figure 4, along with the corresponding EACD plots. The other figure will show the same thing, but for Figure 5. We will refer to these figures as 'uncertainty figures' in the code below. 
+## We will create two figures. One will show the uncertainty plots from Figure 4, along with the corresponding EACD plots. The other figure will show the same thing, but for Figure 5. We will refer to these figures as 'uncertainty figures' in the code below.
 
 ## First, we will create the objects needed to create both figures. We will then put together both figures at the end. This is because we want the same maximum value to be used when colouring both figures.
 
@@ -85,9 +85,9 @@ values_all <- rbind(info.18occ, info.52occ, info.111occ, info.7occ, info.25occ, 
 detectors_df_all <- res_acd %>% purrr::map_depth(1, "detectors_df") %>% map_df(bind_rows)
 detectors_df_all <- detectors_df_all %>% distinct()
 
-# Saving the objects we have created, for us in appendix.Rnw
-save(values_all, file="uncertainty_plots.RData")
-save(detectors_df_all, file="detectors.RData")
+# Saving the objects we have created, for us to use in appendix.Rnw -- if have already saved 'detectors.RData' from 'Plots_Code.R', then don't need to save 'detectors.RData' here, as both objects are the same!
+#save(values_all, file="uncertainty_plots.RData")
+#save(detectors_df_all, file="detectors.RData")
 
 ## Maximum value for colour scale for *all* plots
 maxval <- max(values_all$value)
@@ -108,8 +108,8 @@ capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% 
 ## Adding faceting info to 'values_all' for rows that we will use in this uncertainty figure
 values_all$covtype2 <- factor(values_all$covtype, levels=unique(values_all$covtype),
                               labels=c("Expected AC"))
-values_all$quantile <- factor(rep(c(rep("0.05 quantile", 2500), rep("Mean", 2500), rep("0.95 quantile", 2500)), 3),
-                              levels=c("0.05 quantile", "Mean", "0.95 quantile"))
+values_all$quantile <- factor(rep(c(rep("0.05 quantile", 2601), rep("Mean", 2601), rep("0.95 quantile", 2601)), 3),
+                              levels=c("0.05 quantile", "Mean", "0.95 quantile")) # (We use 2601 as the data frames we work with to create each individual plot contain 2601 entries)
 values_all$occasions2 <- factor(values_all$occasions,
                                 levels = occ,
                                 labels = capthist_labels)
@@ -117,9 +117,9 @@ values_all$occasions2 <- factor(values_all$occasions,
 ## Creating and saving the uncertainty figure
 uncertainty.fig4 <- values_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
-  ggplot(aes(x, y)) + 
+  ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0, maxval)) + 
+  scale_fill_distiller(limits=c(0, maxval)) +
   facet_grid(occasions2 ~ quantile) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -132,7 +132,7 @@ uncertainty.fig4 <- values_all %>%
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
-        strip.background = element_rect(fill=NA, colour = NA), 
+        strip.background = element_rect(fill=NA, colour = NA),
         legend.position="right", legend.key.width = unit(0.5, "cm"),
         legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
@@ -154,7 +154,7 @@ paster <- function(nd,na){
 }
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist()
 
-## Adding faceting info for rows that we will use to create this uncertainty figure  
+## Adding faceting info for rows that we will use to create this uncertainty figure
 values_all$occasions2 <- factor(values_all$occasions,
                                 levels = occ,
                                 labels = capthist_labels)
@@ -162,9 +162,9 @@ values_all$occasions2 <- factor(values_all$occasions,
 ## Creating and saving the uncertainty figure
 uncertainty.fig5 <- values_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
-  ggplot(aes(x, y)) + 
+  ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0, maxval)) + 
+  scale_fill_distiller(limits=c(0, maxval)) +
   facet_grid(occasions2 ~ quantile) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -177,7 +177,7 @@ uncertainty.fig5 <- values_all %>%
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
-        strip.background = element_rect(fill=NA, colour = NA), 
+        strip.background = element_rect(fill=NA, colour = NA),
         legend.position="right", legend.key.width = unit(0.5, "cm"),
         legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
@@ -199,7 +199,7 @@ cv.5by5 <- uncertainty.values.racd(xlim=c(0.5, 50.5), ylim=c(0.5, 50.5), results
 
 ## Creating a data frame containing all of the information we will use
 # 1x1 pixels
-pixels.1by1 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50) - 0.5 # Editing pixel info so we are storing pixel edges instead of pixel centers
+pixels.1by1 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50) - 0.5 # Editing pixel info so we are storing pixel edges instead of pixel centers. We want to colour pixels using pixel edges rather than pixel centres, so our maps will be filled in correctly.
 cvinfo.1by1 <- data.frame(x=pixels.1by1[,1], y=pixels.1by1[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=cv.1by1, pixel.size=rep("1x1 pixels", 2500))
 # 2x2 pixels
 pixels.2by2 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=25, y.pixels=25) - 1 # Storing pixel edges
@@ -209,7 +209,7 @@ pixels.5by5 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=10, y.pixels
 cvinfo.5by5 <- data.frame(x=pixels.5by5[,1], y=pixels.5by5[,2], covtype=rep("D~1", 100), occasions=rep(18, 100), array_size=rep("3x3", 100), value=cv.5by5, pixel.size=rep("5x5 pixels", 100))
 # Overall data frame
 cv_values_all = rbind(cvinfo.1by1, cvinfo.2by2, cvinfo.5by5)
-## Extracting and editing entries from this data frame -- specifically, taking the rightmost and topmost pixels on each map, and duplicating and editing the entries so that our data frame contains pixel edges along the top and rightmost edges. We do this so that we colour the pixels across our whole map area correctly
+## Extracting and editing entries from this data frame, so it contains pixel edges for our whole map area (right now, are missing pixel edges for rightmost and topmost edge), along with their corresponding CV value. Doing this means that we will colour our whole map area correctly.
 # 1x1 pixels
 dup1 <- cv_values_all[(cv_values_all$pixel.size=="1x1 pixels" & cv_values_all$y==49.5 | cv_values_all$pixel.size=="1x1 pixels" & cv_values_all$x==49.5),]
 save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
@@ -245,9 +245,9 @@ nn <- 3
 asz <- c("3x3")
 occ <- 18
 racd.cv.fig  <-  cv_values_all %>%
-  ggplot(aes(x, y)) + 
+  ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0,cvmaxval)) + 
+  scale_fill_distiller(limits=c(0,cvmaxval)) +
   facet_grid(valtype ~ pixel.size) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -260,10 +260,10 @@ racd.cv.fig  <-  cv_values_all %>%
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
-        strip.background = element_rect(fill=NA, colour = NA), 
+        strip.background = element_rect(fill=NA, colour = NA),
         legend.position="right", legend.key.width = unit(0.56, "cm"),
-        legend.key.height = unit(0.9,"cm"), 
-        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
+        legend.key.height = unit(0.9,"cm"),
+        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
 racd.cv.fig
@@ -297,12 +297,11 @@ pixels.5by5 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=10, y.pixels
 sdinfo.5by5 <- data.frame(x=pixels.5by5[,1], y=pixels.5by5[,2], covtype=rep("D~1", 100), occasions=rep(18, 100), array_size=rep("3x3", 100), value=sd.5by5, pixel.size=rep("5x5 pixels", 100))
 # Overall data frame
 sd_values_all = rbind(sdinfo.1by1, sdinfo.2by2, sdinfo.5by5)
-## Extracting and editing entries from this data frame -- specifically, taking the rightmost and topmost pixels on each map, and duplicating and editing the entries so that our data frame contains pixel edges along the top and rightmost edges. We do this so that we colour the pixels across our whole map area correctly
-# 1x1 pixels
+## Extracting and editing entries from this data frame as we did above. Recall, we want to colour our map using pixel edges rather than pixel centres, so the whole map will be filled in correctly. Our manipulation below allows for this.
 dup1 <- sd_values_all[(sd_values_all$pixel.size=="1x1 pixels" & sd_values_all$y==49.5 | sd_values_all$pixel.size=="1x1 pixels" & sd_values_all$x==49.5),]
 save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
-save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5 # If we don't run these two lines, then we'll miss these two sets of pixel edges in our data frame
-dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5 # Editing all of the entries in dup1, so that they represent pixel edges along the right and top edges of the map area
+save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5
+dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5
 dup1 <- rbind(dup1, save1, save2)
 # 2x2 pixels
 dup2 <- sd_values_all[(sd_values_all$pixel.size=="2x2 pixels" & sd_values_all$y==48.5 | sd_values_all$pixel.size=="2x2 pixels" & sd_values_all$x==48.5),]
@@ -331,9 +330,9 @@ nn <- 3
 asz <- c("3x3")
 occ <- 18
 racd.sd.fig  <-  sd_values_all %>%
-  ggplot(aes(x, y)) + 
+  ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0,sdmaxval), breaks=c(0, 0.1, 0.2), labels=c("0", "0.100", "0.200")) + 
+  scale_fill_distiller(limits=c(0,sdmaxval), breaks=c(0, 0.1, 0.2), labels=c("0", "0.100", "0.200")) +
   facet_grid(valtype ~ pixel.size) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -346,10 +345,10 @@ racd.sd.fig  <-  sd_values_all %>%
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
-        strip.background = element_rect(fill=NA, colour = NA), 
+        strip.background = element_rect(fill=NA, colour = NA),
         legend.position="right", legend.key.width = unit(0.56, "cm"),
         legend.key.height = unit(0.9,"cm"), legend.title = element_blank(),
-        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(), 
+        panel.background=element_blank(), panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
 
 racd.sd.fig
@@ -383,7 +382,7 @@ predicted_densities_all$covtype2 <- rep("Realised AC", 2500)
 #save(predicted_densities_all, file="racd_18occ.RData")
 
 ## Max val for plot
-maxval <- 0.2301 # Is 'maxval' in 'Plots_Code.R'. Are using it again here as want to use the same colour scale as in Figures 4 and 5 
+maxval <- 0.2301 # Is 'maxval' in 'Plots_Code.R'. Are using it again here as want to use the same colour scale as in Figures 4 and 5
 
 ## Creating the RACD plot
 nn <- 3
@@ -391,9 +390,9 @@ occ <- 18
 asz <- c("3x3")
 fig4.18occ <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
-  ggplot(aes(x, y)) + 
+  ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0, maxval)) + 
+  scale_fill_distiller(limits=c(0, maxval)) +
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -406,7 +405,7 @@ fig4.18occ <- predicted_densities_all %>%
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
-        strip.background = element_rect(fill=NA, colour = NA), 
+        strip.background = element_rect(fill=NA, colour = NA),
         legend.position="right", legend.key.width = unit(0.5, "cm"),
         legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),

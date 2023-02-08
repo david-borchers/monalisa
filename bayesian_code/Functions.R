@@ -136,7 +136,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
 
   # Pixel centres for the study region
   pixel.centres <- pixel.info[,1:2]
-  # Creating a matrix that has an entry for each pixel centre in the survey region. Each entry will indicate the order in which that pixel occurs in the 'pixel.centres' object (which we assume is created by the centres() function found below) 
+  # Creating a matrix that has an entry for each pixel centre in the survey region. Each entry will indicate the order in which that pixel occurs in the 'pixel.centres' object (which we assume is created by the centres() function found below)
   # Note that if we start at the bottom row and read each row from left to right, the indices increase in value
   pixel.centres.order <- matrix(1:nrow(pixel.info), ncol=sqrt(nPix), nrow=sqrt(nPix), byrow=T)
   pixel.centres.order <- pixel.centres.order[nrow(pixel.centres.order):1,]
@@ -174,7 +174,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
   }
   # And now, making sst equal to the 'starting.pixel.indices' object we have just created
   sst <- starting.pixel.indices
-  # Finding sx and sy -- these are the row/column indices for each entry in 'pixel.centres.order' that is stored in 'sst' 
+  # Finding sx and sy -- these are the row/column indices for each entry in 'pixel.centres.order' that is stored in 'sst'
   sx_sy_init <- matrix(0, ncol=2, nrow=length(sst))
   for (i in (1:length(sst))) {
     sx_sy_init[i,] <- which(pixel.centres.order==sst[i], arr.ind=T)
@@ -183,7 +183,7 @@ run.MCMC.inhom <- function(data, pixel.info, M, inits.vec, dmax = 56, n.iter, n.
   sx_init <- sx_sy_init[,1]
   # Initial values for sy
   sy_init <- sx_sy_init[,2]
-  # What we end up providing to our NIMBLE model in the way of initial activity centres is 'sst', 'sx' and 'sy'. So, we provide: the index of the pixel in which each animals' initial activity centre falls into (based on the 'pixel.centres' object), and the row/column indices that can be used to identify this pixel in the 'pixel.centres.order' object, respectively. 
+  # What we end up providing to our NIMBLE model in the way of initial activity centres is 'sst', 'sx' and 'sy'. So, we provide: the index of the pixel in which each animals' initial activity centre falls into (based on the 'pixel.centres' object), and the row/column indices that can be used to identify this pixel in the 'pixel.centres.order' object, respectively.
 
   # Covariate values we want to use in our model
   mona.densities <- pixel.info[,3]
@@ -325,7 +325,7 @@ check.trace.plots <-  function(results, inhom=FALSE) {
 
 ## Note that this function was written explicitly to work with the covariate used in the paper
 
-## Function to generate the covariate values that we use when putting together the EACD plots. When running the function, the 'mona-inputs.RData' file must already be loaded into R. 
+## Function to generate the covariate values that we use when putting together the EACD plots. When running the function, the 'mona-inputs.RData' file must already be loaded into R.
 eacd.covariate <- function() {
   # Subsetting the covariate values from the data loaded in from the 'mona-inputs.RData' file
   mona.densities <-  small_blurry_mona_df[,c("x", "y", "Dblur")]
@@ -406,7 +406,7 @@ centres <- function(xlim, ylim, x.pixels, y.pixels) {
 
 # --------------------------------------------------------
 
-## See the paper for more information on the equation we use to calculate animal density in each pixel here 
+## See the paper for more information on the equation we use to calculate animal density in each pixel here
 
 ## Function to create vector of density values for the EACD maps we want to create. The arguments are:
 # * 'results': an MCMC object, which contains samples for the parameters 'beta0' and 'beta1'
@@ -419,7 +419,7 @@ eacd.density.vector <- function(results, covariate, nPix) {
     if(i%%100==0) print(i) # Track progress
     # Posterior distribution for the density of the ith pixel
     density.posterior <- exp(results[,'beta0'] + results[,'beta1'] * (covariate[i]))
-    # Posterior mean of this density -- gives the density value for the ith pixel we will use in an EACD map 
+    # Posterior mean of this density -- gives the density value for the ith pixel we will use in an EACD map
     density[i] <- mean(density.posterior)
   }
   # Returning the resulting vector
@@ -437,7 +437,7 @@ eacd.density.vector <- function(results, covariate, nPix) {
 # * 'results': the MCMC samples produced using run.MCMC.inhom(). We assume that the parameters: 'beta0', 'beta1', 'lambda0' and 'sigma' have been monitored
 # * 'mask': mask to use in secr.fit()
 # * 'array': the name of the array we want to use. If working with Figure 4, array should be "3x3". If working with Figure 5, array should be "7x7".
-# * 'j': this will be a value in {1, 2, 3} and represents the index of the objects we want to work with from the RData objects we need to have loaded in (to load in, use load("../output/revision/mona-inputs.RData')). If array="3x3" and we want objects generated using 18, 52 or 111 sampling occasions, use j=1,2,3, respectively. If array="7x7" and we want objects generated using 7, 25 or 55 sampling occasions, use j=1,2,3, respectively. 
+# * 'j': this will be a value in {1, 2, 3} and represents the index of the objects we want to work with from the RData objects we need to have loaded in (to load in, use load("../output/revision/mona-inputs.RData')). If array="3x3" and we want objects generated using 18, 52 or 111 sampling occasions, use j=1,2,3, respectively. If array="7x7" and we want objects generated using 7, 25 or 55 sampling occasions, use j=1,2,3, respectively.
 # Note that the model we specify for secr.fit() is not an argument here -- we will be using "D~log(Dblur)" as the model every time we use this function. Same for the detection function -- for our purposes, we will always use 'detectfn=HHN'
 check.inhom.mcmc <- function(results, j, mask, array) {
   if (array=="3x3") {
@@ -453,7 +453,7 @@ check.inhom.mcmc <- function(results, j, mask, array) {
       capthist <- capthists_few_alloccs_7x7$capthist[[j]]
     }
   }
-  
+
   # Fitting the SCR model using secr.fit()
   fit <- secr.fit(capthist=capthist, model=D~log(Dblur), mask=mask, detectfn="HHN", trace=FALSE)
 
@@ -511,12 +511,47 @@ eacd.quantile.plots <- function(results, covariate, nPix, quantile) {
   quantile.vals
 }
 
+## Function that creates data frames we use to create the data frames we require for our EACD uncertainty plots (below). The main purpose of this function is to manipulate the pixel centres we work with so that our final data frame for each individual plot contains pixel edges for the whole map area, so that the resulting plot is filled in correctly. (We want to colour pixels from pixel edge to pixel edge, rather than from pixel centre to pixel centre. The manipulation we do below achieves this -- if we don't do the manipulation, we'll apply colours from pixel centre to pixel centre, so each pixel won't be coloured correctly).
+## Note that this function is specifically written to work with the pixel centres generated using the function call: centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+## Arguments are:
+# * 'pixel.values': the values that we want to use to colour each pixel in our EACD uncertainty plot, we expect these will be produced using the eacd.quantile.plots() or eacd.density.vector() function (so the order of these values will match the order of the pixel centres we generate below)
+# * 'nocc': a scalar indicating the number of sampling occasions we want to work with
+eacd.quantile.df <- function(pixel.values, nocc) {
+  # Array size we are working with
+  if (nocc %in% c(18, 52, 111)) {
+    array <- "3x3"
+  } else {
+    array <- "7x7"
+  }
+  # Pixel centres
+  pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+  # Subtracting 0.5, so now contains pixel edges (excluding rightmost and topmost edges of map)
+  pixel.edges <- pixel.centres - 0.5
 
-## Function to calculate the 0.05 quantile values, EACD values and 0.95 quantile values for each pixel in our survey area, for a specified number of sampling occasions. The result will be returned as a data frame, which will also include additional information we require for our uncertainty figure (including pixel centres, array size, number of sampling occasions, etc.)
+  # Putting together a data frame containg information for our EACD uncertainty plot
+  dat <- data.frame(x=pixel.edges[,1], y=pixel.edges[,2],
+                    covtype=rep("D~log(Dblur)", 2500),
+                    occasions=rep(nocc, 2500),
+                    array_size=rep(array, 2500),
+                    value=pixel.values)
+  # Extracting and editing entries in this data frame, so that there are entries representing the topmost and rightmost edges of our map area (otherwise, these edges are left out).
+  dup1 <- dat[(dat$y==49.5 | dat$x==49.5),]
+  save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
+  save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5 # If we don't run these two lines, then we'll miss these two sets of pixel edges in our data frame
+  dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5 # Editing all of the entries in dup1, so that they represent pixel edges along the right and top edges of the map area
+  dup1 <- rbind(dup1, save1, save2)
+  # Putting everything together
+  dat <- rbind(dat, dup1)
+
+  # Returning the data frame
+  dat
+}
+
+
+## Function to calculate the 0.05 quantile values, EACD values and 0.95 quantile values for each pixel in our survey area, for a specified number of sampling occasions. The results will be collated and returned as a data frame, which will also include additional information we require for our uncertainty figure (including pixel edges, array size, number of sampling occasions, etc.)
 ## When running this function, we assume that the MCMC results for the given number of sampling occasions are already loaded into R (with burn-in already discarded).
 ## Arguments are:
-# * 'results', 'covariate', 'nPix': same as above
-# * 'nocc': a scalar indicating the number of sampling occasions that we want to work with
+# * 'results', 'covariate', 'nPix', 'nocc': same as above
 eacd.quantile.info <- function(results, covariate, nPix, nocc) {
   # Retrieving object containing MCMC results we wish to use
   mcmc.results <- get(paste0("inhom.results.", nocc, "occ"))
@@ -527,22 +562,15 @@ eacd.quantile.info <- function(results, covariate, nPix, nocc) {
   # 95% quantile values for each pixel
   upperq <- eacd.quantile.plots(results=mcmc.results, covariate=covariate, nPix=nPix, quantile=0.95)
 
-  ## Additional values we will add to the final data frame
-  # Pixel centres
-  pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
-  # Array size
-  if (nocc %in% c(18, 52, 111)) {
-    array <- "3x3"
-  } else {
-    array <- "7x7"
-  }
+  # Putting together a data frame containing info for the 0.05 quantile plot
+  dat.lowerq <- eacd.quantile.df(lowerq, nocc)
+  # Doing the same for the EACD plot
+  dat.eacd <- eacd.quantile.df(eacd, nocc)
+  # And for the 0.95 quantile
+  dat.upperq <- eacd.quantile.df(upperq, nocc)
 
   # Putting together and returning the final data frame
-  dat <- data.frame(x=rep(pixel.centres[,1], 3), y=rep(pixel.centres[,2], 3),
-                    covtype=rep("D~log(Dblur)", 7500),
-                    occasions=rep(nocc, 7500),
-                    array_size=rep(array, 7500),
-                    value=c(lowerq, eacd, upperq))
+  dat <- rbind(dat.lowerq, dat.eacd, dat.upperq)
   dat
 }
 
@@ -574,7 +602,7 @@ uncertainty.values.racd <- function(xlim, ylim, results, M, pixel.index, cv) {
   Sy <- S[,-(1:M)]
 
   ## For each MCMC iteration, storing the number of animals alive and with their activity centres in each cell -- building up posterior distribution of number of activity centres in each pixel
-  # Number of pixels we are working with 
+  # Number of pixels we are working with
   npix <- 2500/(pixel.index^2)
   Dn.vals <-  matrix(0, nrow=nrow(results), ncol=npix)
   for (i in 1:nrow(results)) {
@@ -586,7 +614,7 @@ uncertainty.values.racd <- function(xlim, ylim, results, M, pixel.index, cv) {
     Dn.vals[i,] <-  as.vector(table(Sxout, Syout))
   }
 
-  # Dividing total number of act cent in each aggreggated pixel by new pixel area, which is 4 -- this gives us the posterior we want to work with! 
+  # Dividing total number of act cent in each aggreggated pixel by new pixel area, which is 4 -- this gives us the posterior we want to work with!
   Dn.vals <- Dn.vals/(pixel.index^2)
 
   ## Posterior mean for number of activity centres in each pixel

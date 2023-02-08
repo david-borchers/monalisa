@@ -67,11 +67,11 @@ data.111occ <- organise.data(3)
 # Creating the objects we specifically need for the plots in Row 1 of Figure 4
 ## ---------------------------------------------------------------------------------------
 
-## Row 1 consists of RACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is a homogeneous Poisson process. 
+## Row 1 consists of RACD maps. The SCR models that we fit to create these maps assume that the state process (the random process governing the distribution of the activity centres) is a homogeneous Poisson process.
 
 ##### Running the MCMC #####
 
-## Uncomment the lines below if want to run the MCMC 
+## Uncomment the lines below if want to run the MCMC
 ## Running MCMC for simulated data from 18, 52 and 111 sampling occasions.
 #results.18occ <- run.MCMC(data=data.18occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 #save(results.18occ, file="MCMC_Results/Figure4/HomPP_18occ.RData")
@@ -82,7 +82,7 @@ data.111occ <- organise.data(3)
 #results.111occ <- run.MCMC(data=data.111occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 #save(results.111occ, file="MCMC_Results/Figure4/HomPP_111occ.RData")
 
-## Loading in the RData files containing the MCMC results 
+## Loading in the RData files containing the MCMC results
 load("MCMC_Results/Figure4/HomPP_18occ.RData")
 load("MCMC_Results/Figure4/HomPP_52occ.RData")
 load("MCMC_Results/Figure4/HomPP_111occ.RData")
@@ -98,7 +98,7 @@ check.trace.plots(results.111occ)
 
 ##### Creating the objects we need for the RACD plots #####
 
-## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps that are based on MCMC results. 
+## Row 1 consists of RACD maps. So, we will create vectors that contain the posterior mean of the number of activity centres in each pixel -- these are the density values for each pixel in RACD maps that are based on MCMC results.
 racd.18occ <- racd.density.vector(results=results.18occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.52occ <-  racd.density.vector(results=results.52occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 racd.111occ <- racd.density.vector(results=results.111occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
@@ -111,19 +111,19 @@ racd.111occ <- racd.density.vector(results=results.111occ, M=300, xlim=c(0.5, 50
 
 ##### 'pixel.info' object needed for MCMC #####
 
-## Uncomment if want to run MCMC 
+## Uncomment if want to run MCMC
 #pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 #pixel.info <- cbind(pixel.centres, log.dblur)
 
 ##### Covariate value for each pixel #####
 
-# Note, see 'Functions.R' for an explanation of this function. It basically just working with the data objects we have loaded into R by this point to extract the covariate values for each pixel. 
+# Note, see 'Functions.R' for an explanation of this function. It basically just working with the data objects we have loaded into R by this point to extract the covariate values for each pixel.
 log.dblur <- eacd.covariate()
 
 ##### Running the MCMC #####
 
-## Uncomment the lines below if want to run the MCMC. Note that depending on the computer, all of the MCMC chains below can take below 5 or 10 minutes to run. 
-# 18 sampling occasions, saving the results 
+## Uncomment the lines below if want to run the MCMC. Note that depending on the computer, all of the MCMC chains below can take below 5 or 10 minutes to run.
+# 18 sampling occasions, saving the results
 #inhom.results.18occ <- run.MCMC.inhom(data=data.18occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
 #save(inhom.results.18occ, file="MCMC_Results/Figure4/InhomPP_18occ.RData")
 
@@ -135,7 +135,7 @@ log.dblur <- eacd.covariate()
 #inhom.results.111occ <- run.MCMC.inhom(data=data.111occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
 #save(inhom.results.111occ, file="MCMC_Results/Figure4/InhomPP_111occ.RData")
 
-## Loading in the RData files containing the MCMC results 
+## Loading in the RData files containing the MCMC results
 load("MCMC_Results/Figure4/InhomPP_18occ.RData")
 load("MCMC_Results/Figure4/InhomPP_52occ.RData")
 load("MCMC_Results/Figure4/InhomPP_111occ.RData")
@@ -165,7 +165,7 @@ eacd.111occ <- eacd.density.vector(results=inhom.results.111occ, covariate=log.d
 ######################## Creating the objects needed for Figure 5 ########################
 ## ---------------------------------------------------------------------------------------
 
-## In this figure, the first column uses simulated data w/ 7 sampling occasions. The second column uses simulated data w/ 25 sampling occasions, and the third column uses simulated data w/ 55 sampling occasions. 
+## In this figure, the first column uses simulated data w/ 7 sampling occasions. The second column uses simulated data w/ 25 sampling occasions, and the third column uses simulated data w/ 55 sampling occasions.
 
 ## ---------------------------------------------------------------------------------------
 # Creating the data objects we need for all MCMC samples for Figure 5
@@ -213,7 +213,7 @@ data.55occ <- organise.data(3)
 
 ##### Running the MCMC #####
 
-## Uncomment the lines below if want to run the MCMC 
+## Uncomment the lines below if want to run the MCMC
 ## Running MCMC for simulated data from 7, 25 and 55 sampling occasions.
 #results.7occ <- run.MCMC(data=data.7occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 #save(results.7occ, file="MCMC_Results/Figure5/HomPP_7occ.RData")
@@ -224,7 +224,7 @@ data.55occ <- organise.data(3)
 #results.55occ <- run.MCMC(data=data.55occ, M=300, parameters=c("lambda0", "coeff", "sigma", "N", "D", "z", "s"), n.iter=10000, n.burn=1000, lambda0.start=1, log_coeff.start=-5)
 #save(results.55occ, file="MCMC_Results/Figure5/HomPP_55occ.RData")
 
-## Loading in the RData files containing the MCMC results 
+## Loading in the RData files containing the MCMC results
 load("MCMC_Results/Figure5/HomPP_7occ.RData")
 load("MCMC_Results/Figure5/HomPP_25occ.RData")
 load("MCMC_Results/Figure5/HomPP_55occ.RData")
@@ -237,7 +237,7 @@ check.trace.plots(results.7occ)
 check.trace.plots(results.25occ)
 # 55 sampling occasions
 check.trace.plots(results.55occ)
-# For 25 and 55 sampling occasions, we have very restricted mixing of N (N only ranges over a small range of values). As D is calculated directly from N, this means we also have restricted mixing of D. Note that for 25 and 55 sampling occasions, the lower limit of N is equal to the total number of observed animals, which seems sensible. 
+# For 25 and 55 sampling occasions, we have very restricted mixing of N (N only ranges over a small range of values). As D is calculated directly from N, this means we also have restricted mixing of D. Note that for 25 and 55 sampling occasions, the lower limit of N is equal to the total number of observed animals, which seems sensible.
 # Changing the value of M or the prior for sigma doesn't change this. Lambda0 and sigma seem to be mixing well, which seems to further reinforce that changing the priors for lambda0 and sigma would not help.
 # It seems likely that in these cases, having many traps (49 traps) and many sampling occasions (25, 55 sampling occasions) means that we have enough information that we become fairly sure of the true value of N in the region of interest, resulting in the limited mixing we see. This seems to be supported by the fact that if we run: 'table(results.55occ[,"N"]); table(results.25occ[,"N"])', we can see that with 55 sampling occasions, the mixing for N is considerably more limited than for 25 occasions (we are even more sure about the value of N, due to the increase in sampling occasions). So, we will continue.
 
@@ -256,7 +256,7 @@ racd.55occ <- racd.density.vector(results=results.55occ, M=300, xlim=c(0.5, 50.5
 
 ##### 'pixel.info' object needed for MCMC #####
 
-## Uncomment if want to run MCMC 
+## Uncomment if want to run MCMC
 #pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
 #pixel.info <- cbind(pixel.centres, log.dblur)
 
@@ -267,8 +267,8 @@ log.dblur
 
 ##### Running the MCMC #####
 
-## Uncomment the lines below if want to run the MCMC. Note that all of the MCMC chains below take below 10 minutes to run. 
-# 7 sampling occasions, saving the results 
+## Uncomment the lines below if want to run the MCMC. Note that all of the MCMC chains below take below 10 minutes to run.
+# 7 sampling occasions, saving the results
 #inhom.results.7occ <- run.MCMC.inhom(data=data.7occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
 #save(inhom.results.7occ, file="MCMC_Results/Figure5/InhomPP_7occ.RData")
 
@@ -280,7 +280,7 @@ log.dblur
 #inhom.results.55occ <- run.MCMC.inhom(data=data.55occ, pixel.info=pixel.info, M=300, inits.vec=c(10, 4, 0), n.iter=100000, n.burn=1000)
 #save(inhom.results.55occ, file="MCMC_Results/Figure5/InhomPP_55occ.RData")
 
-## Loading in the RData files containing the MCMC results 
+## Loading in the RData files containing the MCMC results
 load("MCMC_Results/Figure5/InhomPP_7occ.RData")
 load("MCMC_Results/Figure5/InhomPP_25occ.RData")
 load("MCMC_Results/Figure5/InhomPP_55occ.RData")
@@ -318,8 +318,6 @@ eacd.55occ <- eacd.density.vector(results=inhom.results.55occ, covariate=log.dbl
 ## Function to summarise the data for the RACD maps
 # The 'nocc' argument is the number of sampling occasions, and 'fig' is the number of the figure for which we wish to summarise data
 racd.summary <- function(nocc, fig) {
-  # Pixel centres that we are working with
-  pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
   # Name of array we are working with -- if Figure 4, the name is '3x3' and if Figure 5, the name is '7x7'
   if (fig==4) {
     array <- "3x3"
@@ -329,16 +327,32 @@ racd.summary <- function(nocc, fig) {
     }
   }
   # Obtaining the values for the necessary RACD map
-  racd.vals <- get(paste0("racd.", nocc, "occ")) 
+  racd.vals <- get(paste0("racd.", nocc, "occ"))
+
+  # Pixel centres that we are working with
+  pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+  # Subtracting 0.5 so we are dealing with pixel edges
+  pixel.edges <- pixel.centres - 0.5
+  # We want to work with pixel edges rather than pixel centres, as this means that our resulting map will be coloured correctly (colours will extend to the edge of each pixel, based on density of that pixel). Otherwise, if we work with pixel centres, colours will go from centre to centre (so we won't be colouring each full pixel correctly).
+  # At the moment, 'pixel.edges' is missing pixel edges along the right and topmost edges of the map area. Once we create our data frame, we will do some manipulation to remedy this.
+
   # Data frame of information we want
-  dat <- data.frame(x=pixel.centres[,1], y=pixel.centres[,2], covtype=rep("D~1", 2500), occasions=rep(nocc, 2500), array_size=rep(array, 2500), value=racd.vals)
+  dat <- data.frame(x=pixel.edges[,1], y=pixel.edges[,2], covtype=rep("D~1", 2500), occasions=rep(nocc, 2500), array_size=rep(array, 2500), value=racd.vals)
+  # Manipulating this data frame so it includes pixel edges along the right and topmost edges of the map
+  dup1 <- dat[(dat$y==49.5 | dat$x==49.5),]
+  save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
+  save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5 # If we don't run these two lines, then we'll miss these two sets of pixel edges in our data frame
+  dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5 # Editing all of the entries in dup1, so that they represent pixel edges along the right and top edges of the map area
+  dup1 <- rbind(dup1, save1, save2)
+  # Putting everything together
+  dat <- rbind(dat, dup1)
+
   # Returning this data frame
   dat
 }
 
 ## Function to summarise the data for the EACD maps -- arguments are the same as the function above
 eacd.summary <- function(nocc, fig) {
-  pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
   if (fig==4) {
     array <- "3x3"
   } else {
@@ -346,8 +360,20 @@ eacd.summary <- function(nocc, fig) {
       array <- "7x7"
     }
   }
-  eacd.vals <- get(paste0("eacd.", nocc, "occ")) 
-  dat <- data.frame(x=pixel.centres[,1], y=pixel.centres[,2], covtype=rep("D~log(Dblur)", 2500), occasions=rep(nocc, 2500), array_size=rep(array, 2500), value=eacd.vals)
+  eacd.vals <- get(paste0("eacd.", nocc, "occ"))
+
+  pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
+  pixel.edges <- pixel.centres - 0.5
+
+  dat <- data.frame(x=pixel.edges[,1], y=pixel.edges[,2], covtype=rep("D~log(Dblur)", 2500), occasions=rep(nocc, 2500), array_size=rep(array, 2500), value=eacd.vals)
+  # Doing the same manipulation as above, so we work with pixel edges to colour our map
+  dup1 <- dat[(dat$y==49.5 | dat$x==49.5),]
+  save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
+  save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5
+  dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5
+  dup1 <- rbind(dup1, save1, save2)
+  dat <- rbind(dat, dup1)
+
   dat
 }
 
@@ -385,14 +411,14 @@ detectors_df_all <- res_acd %>% purrr::map_depth(1, "detectors_df") %>% map_df(b
 detectors_df_all <- detectors_df_all %>% distinct()
 
 # Saving objects we have created, for use in appendix.Rnw
-save(predicted_densities_all, file="fig4_fig5.RData")
-save(detectors_df_all, file="detectors.RData")
+#save(predicted_densities_all, file="fig4_fig5.RData")
+#save(detectors_df_all, file="detectors.RData") # Same as 'detectors.RData' we save in 'UncertaintyPlots_Code.R'
 
 ##### Defining the max value of the colour scale #####
 
 ## We want this value to be the same for both Figures 4 and 5.
 
-nn <- 3 # Number of simulated datasets we use in each figure  
+nn <- 3 # Number of simulated datasets we use in each figure
 xx <- predicted_densities_all %>% filter(array_size == "3x3", occasions %in% capthists_few_alloccs_3x3$noccasions[1:nn])
 maxval1 <- max(xx$value) # Max density value found across all plots in Figure 4
 xx <- predicted_densities_all %>% filter(array_size == "7x7", occasions %in% capthists_few_alloccs_7x7$noccasions[1:nn])
@@ -415,18 +441,18 @@ paster <- function(nd,na){
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist() # Column lables for Figure 4
 
 ## Adding the column labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
-predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions, 
+predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions,
                                              levels = occ,
                                              labels = capthist_labels)
-detectors_df_all$occasions2 <- factor(detectors_df_all$occasions, 
+detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ,
                                       labels = capthist_labels)
 
 ## Adding the row labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
-predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype, 
+predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype,
                                            levels = unique(predicted_densities_all$covtype),
                                            labels = c("Realised AC", "Expected AC"))
-detectors_df_all$covtype2 <- factor(detectors_df_all$covtype, 
+detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
                                     labels = c("Realised AC", "Expected AC"))
 
@@ -434,9 +460,9 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
 
 fig4 <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
-  ggplot(aes(x, y)) + 
+  ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0, maxval)) + 
+  scale_fill_distiller(limits=c(0, maxval)) +
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -449,7 +475,7 @@ fig4 <- predicted_densities_all %>%
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
-        strip.background = element_rect(fill=NA, colour = NA), 
+        strip.background = element_rect(fill=NA, colour = NA),
         legend.position="right", legend.key.width = unit(0.5, "cm"),
         legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
@@ -477,18 +503,18 @@ paster <- function(nd,na){
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist()
 
 ## Adding the column labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
-predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions, 
+predicted_densities_all$occasions2 <- factor(predicted_densities_all$occasions,
                                              levels = occ,
                                              labels = capthist_labels)
-detectors_df_all$occasions2 <- factor(detectors_df_all$occasions, 
+detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
                                       levels = occ,
                                       labels = capthist_labels)
 
 ## Adding the row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
-predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype, 
+predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype,
                                            levels = unique(predicted_densities_all$covtype),
                                            labels = c("Realised AC", "Expected AC"))
-detectors_df_all$covtype2 <- factor(detectors_df_all$covtype, 
+detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
                                     labels = c("Realised AC", "Expected AC"))
 
@@ -496,9 +522,9 @@ detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
 
 fig5 <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
-  ggplot(aes(x, y)) + 
+  ggplot(aes(x, y)) +
   geom_raster(aes(fill = value)) +
-  scale_fill_distiller(limits=c(0, maxval)) + 
+  scale_fill_distiller(limits=c(0, maxval)) +
   facet_grid(covtype2 ~ occasions2) +
   geom_point(data = detectors_df_all %>% filter(occasions %in% occ[1:nn], array_size %in% asz), inherit.aes = T,
              colour = "gray80", pch = 4, size = 2) +
@@ -511,7 +537,7 @@ fig5 <- predicted_densities_all %>%
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.spacing=unit(-1, "lines"),
-        strip.background = element_rect(fill=NA, colour = NA), 
+        strip.background = element_rect(fill=NA, colour = NA),
         legend.position="right", legend.key.width = unit(0.5, "cm"),
         legend.key.height = unit(1.3,"cm"), legend.title = element_blank(),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
