@@ -209,7 +209,7 @@ pixels.5by5 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=10, y.pixels
 cvinfo.5by5 <- data.frame(x=pixels.5by5[,1], y=pixels.5by5[,2], covtype=rep("D~1", 100), occasions=rep(18, 100), array_size=rep("3x3", 100), value=cv.5by5, pixel.size=rep("5x5 pixels", 100))
 # Overall data frame
 cv_values_all = rbind(cvinfo.1by1, cvinfo.2by2, cvinfo.5by5)
-## Extracting and editing entries from this data frame, so it contains pixel edges for our whole map area (right now, are missing pixel edges for rightmost and topmost edge), along with their corresponding CV value. Doing this means that we will colour our whole map area correctly.
+## Extracting and editing entries from this data frame, so it contains pixel edges for our whole map area (right now, are missing pixel edges for rightmost and topmost edge), along with their corresponding CV value. Doing this means that we will colour the pixels in our map area correctly.
 # 1x1 pixels
 dup1 <- cv_values_all[(cv_values_all$pixel.size=="1x1 pixels" & cv_values_all$y==49.5 | cv_values_all$pixel.size=="1x1 pixels" & cv_values_all$x==49.5),]
 save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
@@ -297,7 +297,7 @@ pixels.5by5 <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=10, y.pixels
 sdinfo.5by5 <- data.frame(x=pixels.5by5[,1], y=pixels.5by5[,2], covtype=rep("D~1", 100), occasions=rep(18, 100), array_size=rep("3x3", 100), value=sd.5by5, pixel.size=rep("5x5 pixels", 100))
 # Overall data frame
 sd_values_all = rbind(sdinfo.1by1, sdinfo.2by2, sdinfo.5by5)
-## Extracting and editing entries from this data frame as we did above. Recall, we want to colour our map using pixel edges rather than pixel centres, so the whole map will be filled in correctly. Our manipulation below allows for this.
+## Extracting and editing entries from this data frame as we did above. Recall, we want to colour our map using pixel edges rather than pixel centres, so the pixels across the map will be filled in correctly. Our manipulation below allows for this.
 dup1 <- sd_values_all[(sd_values_all$pixel.size=="1x1 pixels" & sd_values_all$y==49.5 | sd_values_all$pixel.size=="1x1 pixels" & sd_values_all$x==49.5),]
 save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
 save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5
@@ -361,22 +361,30 @@ racd.cv.fig/racd.sd.fig
 
 ## Want to add corresponding RACD plot onto left, generating this RACD plot and attaching it to create the final figure:
 
-load("MCMC_Results/Figure4/HomPP_18occ.RData") # Just to be sure is good
+load("MCMC_Results/Figure4/HomPP_18occ.RData") # Just to be sure it is loaded as required
 
 ## Vector we need to create the map:
 racd.18occ <- racd.density.vector(results=results.18occ, M=300, xlim=c(0.5, 50.5), ylim=c(0.5, 50.5))
 
-## Summarising plot info
+## Summarising plot info. Note that once again, are manipulating data frame so it contains pixel edges rather than pixel centres, so the pixels in the map are coloured correctly
 pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
-predicted_densities_all <- data.frame(x=pixel.centres[,1], y=pixel.centres[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=racd.18occ)
+pixel.edges <- pixel.centres - 0.5
+dat <- data.frame(x=pixel.edges[,1], y=pixel.edges[,2], covtype=rep("D~1", 2500), occasions=rep(18, 2500), array_size=rep("3x3", 2500), value=racd.18occ)
+dup1 <- dat[(dat$y==49.5 | dat$x==49.5),]
+save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
+save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5
+dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5
+dup1 <- rbind(dup1, save1, save2)
+dat <- rbind(dat, dup1)
+predicted_densities_all <- dat
 # Faceting variables we will use
 chs <- data.frame(do.call(rbind, lapply(capthists_few_alloccs_3x3$capthist, summary, terse = TRUE)))
 paster <- function(nd,na){
   paste0(nd," detections\n(",na, " individuals)")
 }
 capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% unlist()
-predicted_densities_all$occasions2 <- rep(capthist_labels[1], 2500)
-predicted_densities_all$covtype2 <- rep("Realised AC", 2500)
+predicted_densities_all$occasions2 <- rep(capthist_labels[1], 2601)
+predicted_densities_all$covtype2 <- rep("Realised AC", 2601)
 
 ## Saving values to use in Appendix.Rnw
 #save(predicted_densities_all, file="racd_18occ.RData")
@@ -414,8 +422,8 @@ fig4.18occ <- predicted_densities_all %>%
 fig4.18occ
 
 ## Okay, now trying to put all three pieces together to create the final figure :)
-library(ggpubr)
 # One possible configuration
 ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heights=c(1, 2))
 # Another
-ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), ncol=2, widths=c(1, 2))
+#ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), ncol=2, widths=c(1, 2))
+ggsave("SD_CV_uncertainty.png", ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heights=c(1, 2)), width=8, height=10, bg="white")

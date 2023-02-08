@@ -358,7 +358,7 @@ capthist_labels <- map2(.x = chs$Detections, .y = chs$Animals, .f = paster) %>% 
 ## Adding faceting info to 'values_all' for rows that we will use in this uncertainty figure
 values_all$covtype2 <- factor(values_all$covtype, levels=unique(values_all$covtype),
                               labels=c("Expected AC"))
-values_all$quantile <- factor(rep(c(rep("0.05 quantile", 2500), rep("Mean", 2500), rep("0.95 quantile", 2500)), 3),
+values_all$quantile <- factor(rep(c(rep("0.05 quantile", 2601), rep("Mean", 2601), rep("0.95 quantile", 2601)), 3),
                               levels=c("0.05 quantile", "Mean", "0.95 quantile"))
 values_all$occasions2 <- factor(values_all$occasions,
                                 levels = occ,

@@ -333,7 +333,7 @@ racd.summary <- function(nocc, fig) {
   pixel.centres <- centres(xlim=c(0.5,50.5), ylim=c(0.5,50.5), x.pixels=50, y.pixels=50)
   # Subtracting 0.5 so we are dealing with pixel edges
   pixel.edges <- pixel.centres - 0.5
-  # We want to work with pixel edges rather than pixel centres, as this means that our resulting map will be coloured correctly (colours will extend to the edge of each pixel, based on density of that pixel). Otherwise, if we work with pixel centres, colours will go from centre to centre (so we won't be colouring each full pixel correctly).
+  # We want to work with pixel edges rather than pixel centres, as this means that our resulting map will be coloured correctly (colours will extend to the edge of each pixel, based on density of that pixel). Otherwise, if we work with pixel centres, colours will go from centre to centre (so we won't be colouring each pixel correctly).
   # At the moment, 'pixel.edges' is missing pixel edges along the right and topmost edges of the map area. Once we create our data frame, we will do some manipulation to remedy this.
 
   # Data frame of information we want
