@@ -32,15 +32,15 @@
 \author[4]{Koustubh Sharma}
 \author[3]{Ben C. Stevenson}
 
-\affil[1]{\footnotesize Centre for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
-\affil[2]{\footnotesize Centre for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
+\affil[1]{\footnotesize center for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
+\affil[2]{\footnotesize center for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
 \affil[3]{\footnotesize Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
 \affil[4]{\footnotesize Snow Leopard Trust, Seattle, Washington, United States of America}
 \affil[*]{\footnotesize Corresponding author: indurbach@gmail.com}
 
 \date{}
 
-\title{Supplementary Material: That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
+\title{Supporting Information for That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
 
 
 \begin{document}
@@ -65,7 +65,7 @@ results.
 
 We fitted Bayesian versions of the maximum-likelihood models presented
 in Section 4 to each data set. Again, we used models with constant
-density to estimate realized AC and realized usage surfaces, and a
+density to estimate predicted AC location surfaces, and a
 model with inhomogeneous density characterized by a log-linear
 relationship with a spatial covariate to estimate expected AC density
 surfaces.
@@ -73,7 +73,7 @@ surfaces.
 We fitted our models in NIMBLE \citep{deValpine:17, Turek:21} using
 data augmentation \citep{Tanner:87}, which has become the prevailing
 way to fit SCR models under a Bayesian framework. This approach
-involves sampling a superpopulation of $M$ activity centres, including
+involves sampling a superpopulation of $M$ activity centers, including
 those of the $n$ animals detected on the SCR survey. We have an
 indicator variable $z_i$ for the $i$th animal, denoting whether the
 $i$th animal in the augmented population `exists' in a given MCMC
@@ -94,7 +94,7 @@ $\sigma$ directly:
   \log\left(\frac{1}{2\sigma^2}\right) &\sim \text{Uniform}(-10, 10)
 \end{align*}
 
-For the constant density model, the activity centres were given a
+For the constant density model, the activity centers were given a
 uniform prior distribution over the survey region and the data
 augmentation parameter was given a uniform prior from 0 to 1. For the
 inhomogeneous density model, we used the following uninformative
@@ -180,10 +180,10 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
 ## Adding the row labels for Figure 4 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype,
                                            levels = unique(predicted_densities_all$covtype),
-                                           labels = c("Realised AC", "Expected AC"))
+                                           labels = c("Predicted AC", "Expected AC"))
 detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
-                                    labels = c("Realised AC", "Expected AC"))
+                                    labels = c("Predicted AC", "Expected AC"))
 
 ## Plotting Figure 4
 
@@ -237,10 +237,10 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
 ## Adding the row labels for Figure 5 to the 'predicted_densities_all' and 'detectors_df_all' objects
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype,
                                            levels = unique(predicted_densities_all$covtype),
-                                           labels = c("Realised AC", "Expected AC"))
+                                           labels = c("Predicted AC", "Expected AC"))
 detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
-                                    labels = c("Realised AC", "Expected AC"))
+                                    labels = c("Predicted AC", "Expected AC"))
 
 ## Plotting Figure 5
 
@@ -285,14 +285,14 @@ posterior mean for each pixel. For a frequentist analysis, calculating
 measures of uncertainty (standard errors and confidence intervals) can
 be achieved using the delta method or a bootstrap, for example.
 
-We also considered uncertainty in realized AC density surface
+We also considered uncertainty in predicted AC location surface
 estimates. For a Bayesian analysis, we can approximate the posterior
-distribution of a pixel's realized AC density by counting the number
+distribution of a pixel's AC density by counting the number
 of ACs within the pixel on each MCMC iteration, and dividing by the
 area of the pixel. For a frequentist analysis, defining and
 calculating uncertainty is more complicated: both the delta method and
 the bootstrap are designed to calculate variance of estimates across
-multiple realizations of the AC point process, but realized AC density
+multiple realizations of the AC point process, but predicted AC location
 surfaces are specific a single realization.
 
 Here we consider both the posterior standard deviation the coefficient
@@ -313,9 +313,9 @@ for differences in uncertainty across pixels caused by variation in
 the posterior mean. The spatial patterns in CV were the opposite of
 those for the posterior standard deviation, with highest levels of
 relative uncertainty in the pixels with the smallest estimates of
-realized AC density.
+AC location density.
 
-We found that uncertainty in realized AC density was sensitive to
+We found that uncertainty in predicted AC location density was sensitive to
 pixel size. Using smaller pixels results in larger uncertainty due to
 smaller samples of ACs within the pixel across the MCMC iterations,
 while for larger pixels the relative number of ACs per unit area
@@ -325,14 +325,14 @@ We do not get the same result for uncertainty in expected AC density
 surface estimates, because these deal with the expected (rather than
 observed) number of ACs per unit area in the pixel. The CVs for
 expected AC density estimates are substantially lower than for
-realized AC density estimates, because estimating the mean of a
+predicted AC location estimates, because estimating the mean of a
 distribution can be achieved more accurately than predicting a
 realization from that distribution. Predicting outcomes of random
 variables requires that we account for the variance of the
 distribution itself, in addition to variation due to uncertainty in
 estimating the mean.
 
-<<fig4-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity centre surfaces from Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
+<<fig4-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity center surfaces from Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
 ## For each EACD plot in Figures 4 and 5, we will create two uncertainty plots: one showing the lower 5% quantile for the posterior distribution of the density for each pixel, the other will show the upper 95% quantile.
 
 ## Loading in the data that we need
@@ -391,7 +391,7 @@ uncertainty.fig4 <- values_all %>%
 uncertainty.fig4
 @
 
-<<fig5-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity centre surfaces from Figure 5.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
+<<fig5-uncertainty, echo = FALSE, include = TRUE, fig.cap = "Plots visualising the uncertainty present in the expected activity center surfaces from Figure 5.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
 ## Creating the uncertainty figure for Figure 5 ##
 
 nn <- 3
@@ -436,7 +436,7 @@ uncertainty.fig5 <- values_all %>%
 uncertainty.fig5
 @
 
-<<fig4-plot1-cv, echo = FALSE, include = TRUE, fig.cap = "Plots visualising how the CV and posterior standard deviation values change as pixel size changes, using the the leftmost RACD surface in Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
+<<fig4-plot1-cv, echo = FALSE, include = TRUE, fig.cap = "Plots visualising how the CV and posterior standard deviation values change as pixel size changes, using the the leftmost predicted AC location surface in Figure 4.", message=FALSE, fig.width=8, warning=FALSE, results='hide'>>=
 ## FIRST, working on the plots that show the CV values
 # Loading in the data that we need
 load("cv_plots.RData")
@@ -446,7 +446,7 @@ load("detectors_cv_plots.RData")
 maxval <- max(cv_values_all$value)
 
 # Creating the CV Figure
-cv_values_all$valtype <- factor(rep("Realised AC CV (%)", nrow(cv_values_all)))
+cv_values_all$valtype <- factor(rep("Predicted AC CV (%)", nrow(cv_values_all)))
 nn <- 3
 asz <- c("3x3")
 occ <- 18
@@ -475,6 +475,8 @@ racd.cv.fig  <-  cv_values_all %>%
 ## NEXT, working on the plots that show the SD values
 # Loading in the data
 load("sd_plots.RData")
+
+sd_values_all$valtype <- "Predicted AC SD"
 
 # Max SD value across all 3 plots
 sdmaxval <- max(sd_values_all$value)
@@ -508,6 +510,7 @@ racd.sd.fig  <-  sd_values_all %>%
 ## NEXT, creating corresponding RACD
 # Loading in the data we need
 load("racd_18occ.RData")
+predicted_densities_all$covtype2 <- "Predicted AC"
 
 # Max density value, setting it to be the same as Figures 4 and 5
 maxval <- 0.2301
@@ -551,7 +554,7 @@ ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heigh
 %% Estimation of realised usage density is a similar process for both
 %% maximum likelihood and Bayesian approaches: we sum usage densities for
 %% each individual animal, each of which is calculated by convolving the
-%% posterior probability density function of its activity centre with an
+%% posterior probability density function of its activity center with an
 %% individual usage distribution.
 
 %% \subsection{The maximum likelihood approach}
@@ -573,13 +576,13 @@ ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heigh
 %%   $\bm{\omega}_i$ at location $\bm{s}$ at a randomly selected point in
 %%   time;
 %% \item $f_{\bm{x} \mid \bm{\omega}}(\bm{x} \mid \bm{\omega}_i;
-%%   \bm{\widehat{\theta}})$ is the estimated PDF of the activity centre
+%%   \bm{\widehat{\theta}})$ is the estimated PDF of the activity center
 %%   of an individual with capture history $\bm{\omega}_i$ (see Section
 %%   3); and
 %% \item $f_{\bm{s} \mid \bm{x}}(\bm{s} \mid \bm{x}; \bm{\widehat{\theta}})$ is the
 %%   estimated usage distribution of the individual conditional on the
-%%   activity centre, providing the probability density of the individual
-%%   being at location $\bm{s}$ given that its activity centre is at
+%%   activity center, providing the probability density of the individual
+%%   being at location $\bm{s}$ given that its activity center is at
 %%   $\bm{x}$.
 %% \end{itemize}
 %% Estimated usage density at location $\bm{s}$ is then given by
@@ -590,7 +593,7 @@ ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heigh
 
 %% Here we constructed the individual usage distribution under the
 %% assumption that the density of an individual being at location
-%% $\bm{s}$ given its activity centre is at $\bm{x}$ is proportional to
+%% $\bm{s}$ given its activity center is at $\bm{x}$ is proportional to
 %% the encounter function $h\{d(\bm{s}, \bm{x});
 %% \widehat{\bm{\theta}}\}$, where $d(\bm{s}, \bm{x})$ is the Euclidean
 %% distance between $\bm{s}$ and $\bm{x}$, and so
@@ -601,7 +604,7 @@ ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heigh
 
 %% \subsection{The Bayesian approach}
 
-%% Bayesian models fitted via MCMC can directly sample activity centres
+%% Bayesian models fitted via MCMC can directly sample activity centers
 %% of detected individuals, and also of undetected individuals using data
 %% augmentation, thus obtaining samples from $f_{\bm{x} \mid
 %%   \bm{\omega}}(\bm{x} \mid \bm{\omega})$ for each individual. We can
@@ -612,7 +615,7 @@ ggarrange(fig4.18occ, ggarrange(racd.cv.fig, racd.sd.fig, nrow=2), nrow=2, heigh
 %%   \frac{1}{J} \sum_{j = 1}^J f_{\bm{s} \mid \bm{x}}(\bm{s} \mid
 %%   \bm{x}_{(j)}, \bm{\theta}_{(j)}),
 %% \end{equation}
-%% where $\bm{x}_{(j)}$ and $\bm{{\theta}}_{(j)}$ are the activity centre
+%% where $\bm{x}_{(j)}$ and $\bm{{\theta}}_{(j)}$ are the activity center
 %% and a vector of encounter function parameters that were sampled on the
 %% $j$th of $J$ total MCMC iterations, respectively. The estimated usage
 %% distribution is therefore not conditional on one particular set of

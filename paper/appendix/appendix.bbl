@@ -1,0 +1,33 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{de~Valpine, Turek, Paciorek, Anderson-Berman,
+  {Temple Lang}, and Bodik}{de~Valpine et~al.}{2017}]{deValpine:17}
+de~Valpine, P., Turek, D., Paciorek, C.~J., Anderson-Berman, C., {Temple Lang},
+  D., and Bodik, R. (2017).
+\newblock Programming with models: writing statistical algorithms for general
+  model structures with {NIMBLE}.
+\newblock {\em Journal of Computational and Graphical Statistics} {\bf 26,}
+  403--413.
+
+\bibitem[\protect\citeauthoryear{K\'{e}ry and Schaub}{K\'{e}ry and
+  Schaub}{2012}]{Kery+Schaub:12}
+K\'{e}ry, M. and Schaub, M. (2012).
+\newblock {\em {Bayesian Population Analysis using WinBUGS}}.
+\newblock Academic Press, Oxford.
+
+\bibitem[\protect\citeauthoryear{Tanner and Wong}{Tanner and
+  Wong}{1987}]{Tanner:87}
+Tanner, M.~A. and Wong, W.~H. (1987).
+\newblock The calculation of posterior distributions by data augmentation.
+\newblock {\em Journal of the American Statistical Association} {\bf 82,}
+  528--540.
+
+\bibitem[\protect\citeauthoryear{Turek, Milleret, Ergon, Br{\o}seth, Dupont,
+  Bischof, and de~Valpine}{Turek et~al.}{2021}]{Turek:21}
+Turek, D., Milleret, C., Ergon, T., Br{\o}seth, H., Dupont, P., Bischof, R.,
+  and de~Valpine, P. (2021).
+\newblock Efficient estimation of large-scale spatial capture–recapture
+  models.
+\newblock {\em Ecosphere} {\bf 12,} e03385.
+
+\end{thebibliography}

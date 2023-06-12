@@ -364,28 +364,86 @@ scrtraps = make.grid(nx=4,ny=4,spacex=10,detector="count",origin=c(35,35))
 plot(boundary)
 plot(scrtraps,add=TRUE)
 plot(trapboundary,add=TRUE)
-set.seed(1)
+set.seed(2)
 simch = sim.capthist(scrtraps,pop,detectpar=list(g0=1,sigma=10),noccasions=1)
+set.seed(2)
+simch_notrenum = sim.capthist(scrtraps,pop,detectpar=list(g0=1,sigma=10),noccasions=1, renumber = FALSE)
+set.seed(93)
+simch2 = sim.capthist(scrtraps,pop,detectpar=list(g0=1,sigma=10),noccasions=1)
+set.seed(93)
+simch2_notrenum = sim.capthist(scrtraps,pop,detectpar=list(g0=1,sigma=10),noccasions=1, renumber = FALSE)
+
+founddet <- FALSE
+thisseed <- 1
+while(!founddet){
+  thisseed <- thisseed + 1
+  set.seed(thisseed)
+  thisch = sim.capthist(scrtraps,pop,detectpar=list(g0=1,sigma=10),noccasions=1, renumber = FALSE)
+  if(c('95') %in% row.names(thisch)){
+    founddet = setequal(c(13), which(thisch["95",1,] > 0)) 
+    }
+}
+# 32,93 for det13
+# 5 for det14
+# 2 for det15
+# 20 for det16
+
+
+xx2 <- simch2_notrenum[,1,]
+row.names(simch_notrenum)
+row.names(simch2_notrenum)
+which(row.names(simch_notrenum) == "95")
+which(row.names(simch2_notrenum) == "95")
+which(row.names(simch_notrenum) == "61")
+which(row.names(simch2_notrenum) == "61")
+
 summary(simch)
 plot(simch,tracks=TRUE,border=0)
 simfit = secr.fit(simch,mask=mask)
 fxtot = fx.total(simfit,mask=mask)
+simfit2 = secr.fit(simch2,mask=mask)
+fxtot2 = fx.total(simfit2,mask=mask)
 #plotcovariate(fxtot,covariate="D.sum",what="image")
 #plot(scrtraps,add=TRUE)
-simfit$capthist[1,,] = c(rep(0,15),1) # make top right only detection for this animal
 
+# prob of ch 1 / ch 2
+g0 <- predict(simfit)[2,2]
+sigma <- predict(simfit)[3,2]
+d2 <- sqrt(sum((pop[95,] - scrtraps[13,])^2))
+d1 <- sqrt(sum((pop[95,] - scrtraps[15,])^2))
+p2 <- g0 * exp(-d2^2 / (2*sigma^2))
+p1 <- g0 * exp(-d1^2 / (2*sigma^2))
+p2
+p1
+p1/p2
 
-pdf(file="./paper/screrr.pdf",h=4,w=4)
-par(mar=c(1,1,1,1))
+pdf(file="./paper/screrr.pdf",h=4,w=8)
+par(mar=c(1,1,1,1), mfrow = c(1,2))
+
+#dev.off()
+#pdf(file="./paper/screrr.pdf",h=4,w=4)
 plot(trapboundary)
-fxi.contour(simfit,i=1,nx=200,add=TRUE,drawlabels=FALSE)
-fxi.contour(simfit,i=9,nx=200,add=TRUE,drawlabels=FALSE) # this is an animal in the centre of the grid
+fxi.contour(simfit2,i=c(20,5),nx=200,add=TRUE,drawlabels=FALSE)
+sf1 <- fxi.contour(simfit2,i=c(20,5),nx=200,add=TRUE,drawlabels=FALSE, plt = FALSE, output = "sf")
 plot(scrtraps,add=TRUE)
-ch9 = simfit$capthist[9,1,]
-detected9 = which(ch9>0)
-points(scrtraps$x[detected9],scrtraps$y[detected9],pch=15)
-ch1 = simfit$capthist[1,1,]
+ch1 = simfit2$capthist[20,1,]
 detected1 = which(ch1>0)
-points(scrtraps$x[detected1],scrtraps$y[detected1],pch=17)
-dev.off()
+points(scrtraps$x[detected1],scrtraps$y[detected1],pch=15)
+ch2 = simfit2$capthist[5,1,]
+detected2 = which(ch2>0)
+points(scrtraps$x[detected2],scrtraps$y[detected2],pch=17)
+text(pop[95,], "A")
+text(pop[61,], "B")
 
+plot(trapboundary)
+fxi.contour(simfit,i=c(20,6),nx=200,add=TRUE,drawlabels=FALSE)
+plot(scrtraps,add=TRUE)
+ch1 = simfit$capthist[20,1,]
+detected1 = which(ch1>0)
+points(scrtraps$x[detected1],scrtraps$y[detected1],pch=15)
+ch2 = simfit$capthist[6,1,]
+detected2 = which(ch2>0)
+points(scrtraps$x[detected2],scrtraps$y[detected2],pch=17)
+text(pop[95,], "A")
+text(pop[61,], "B")
+dev.off()

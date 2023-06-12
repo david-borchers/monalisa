@@ -66,11 +66,11 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
 
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype,
                                            levels = unique(predicted_densities_all$covtype),
-                                           labels = c("Realised AC", "Expected AC"))
+                                           labels = c("Predicted AC", "Expected AC"))
 
 detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
-                                    labels = c("Realised AC", "Expected AC"))
+                                    labels = c("Predicted AC", "Expected AC"))
 
 # use same top of colour scale for all plots
 xx <- predicted_densities_all %>% filter(array_size == "3x3", occasions %in% capthists_few_alloccs_3x3$noccasions[1:nn])
@@ -108,6 +108,15 @@ i2 <- small_mona_df %>%
         legend.position="none", legend.key.width = unit(1, "cm"),
         panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank())
+
+small_mona_df$x <- small_mona_df$x - 0.5
+small_mona_df$y <- small_mona_df$y - 0.5
+dup1 <- small_mona_df[(small_mona_df$y==49.5 | small_mona_df$x==49.5),]
+save1 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save1$x=50.5
+save2 <- dup1[(dup1$x==49.5 & dup1$y==49.5),]; save2$y=50.5 # if we don't run these two lines, then we'll miss these two sets of pixel edges in our data frame
+dup1$x[dup1$x==49.5] = 50.5; dup1$y[dup1$y==49.5] = 50.5 # editing all of the entries in dup1, so that they represent pixel edges along the right and top edges of the map area
+dup1 <- rbind(dup1, save1, save2)
+small_mona_df <- rbind(small_mona_df, dup1)
 
 i3 <- small_mona_df %>%
   ggplot(aes(x, y)) +
@@ -194,11 +203,11 @@ detectors_df_all$occasions2 <- factor(detectors_df_all$occasions,
 
 predicted_densities_all$covtype2 <- factor(predicted_densities_all$covtype,
                                            levels = unique(predicted_densities_all$covtype),
-                                           labels = c("Realised AC", "Expected AC"))
+                                           labels = c("Predicted AC", "Expected AC"))
 
 detectors_df_all$covtype2 <- factor(detectors_df_all$covtype,
                                     levels = unique(detectors_df_all$covtype),
-                                    labels = c("Realised AC", "Expected AC"))
+                                    labels = c("Predicted AC", "Expected AC"))
 
 p2b <- predicted_densities_all %>%
   filter(occasions %in% occ[1:nn], array_size %in% asz) %>%
