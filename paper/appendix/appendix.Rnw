@@ -17,8 +17,8 @@
 \rhead{That's not the Mona Lisa}
 \lhead{}
 
-\usepackage{lineno}
-\linenumbers
+%\usepackage{lineno}
+%\linenumbers
 %\linespread{1.6}
 
 \renewcommand{\thesection}{Appendix \Alph{section}}
@@ -46,6 +46,18 @@
 \begin{document}
 
 \maketitle
+
+\section{Equivalent formulations of the predicted AC location surface}
+
+To show that the two formulations of the predicted AC location surface given in Section 2 of the main paper,
+\begin{equation} \label{eq:pls1}
+D_p(\bm{s}|\bm{\Omega}_n,\hat{\bm{\theta}},\hat{\bm{\beta}}) = \sum_{i=1}^n f(\bm{s}|\bm{\omega}_i, \hat{\bm{\theta}}, \hat{\bm{\beta}}) + \hat{N}_{\bm{0}} f(\bm{s}|\bm{\omega}=\bm{0}, \hat{\bm{\theta}},\hat{\bm{\beta}})
+\end{equation}
+where $\hat{N}_{\bm{0}}=\int_{\mathcal{S}} P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})D(\bm{s}|\hat{\bm{\beta}}) d\bm{s}$, and 
+\begin{equation} \label{eq:pls2}
+D_p(\bm{s}|\bm{\Omega}_n,\hat{\bm{\theta}},\hat{\bm{\beta}}) = \sum_{i=1}^n f(\bm{s}|\bm{\omega}_i, \hat{\bm{\theta}}, \hat{\bm{\beta}}) + D(\bm{s}|\hat{\bm{\beta}})P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})
+\end{equation}
+are equivalent, note that by Bayes rule $$f(\bm{s}|\bm{\omega}=\bm{0},\hat{\bm{\theta}},\hat{\bm{\beta}})=\displaystyle\frac{P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})f(\bm{s}|\hat{\bm{\beta}})}{\int_{\mathcal{S}} P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})f(\bm{s}|\hat{\bm{\beta}})d\bm{s}}.$$ Rearranging terms gives $$P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}}) = \displaystyle\frac{f(\bm{s}|\bm{\omega},\hat{\bm{\theta}},\hat{\bm{\beta}})\int_{\mathcal{S}} P(\bm{\omega}|\bm{s},\hat{\bm{\theta}})f(\bm{s}|\hat{\bm{\beta}}) d\bm{s}}{f(\bm{s}|\hat{\bm{\beta}})}.$$ Replacing $f(\bm{s}|\hat{\bm{\beta}})$ with $D(\bm{s}|\hat{\bm{\beta}})/\int_{\mathcal{S}} D(\bm{s}|\hat{\bm{\beta}}) d\bm{s}$, $$P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}}) = \displaystyle\frac{f(\bm{s}|\bm{\omega},\hat{\bm{\theta}},\hat{\bm{\beta}})\int_{\mathcal{S}} P(\bm{\omega}|\bm{s},\hat{\bm{\theta}})D(\bm{s}|\hat{\bm{\beta}}) d\bm{s}}{D(\bm{s}|\hat{\bm{\beta}})} $$ Substituting this into \eqref{eq:pls2} gives \eqref{eq:pls1}.  
 
 \section{Bayesian models}
 

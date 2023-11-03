@@ -63,12 +63,16 @@
 \usepackage[]{todonotes}
 \presetkeys{todonotes}{fancyline, color=white}{}
 
+\usepackage{geometry}
+\geometry{margin=3cm}
+
+
 \pagestyle{fancy}
 \rhead{That's not the Mona Lisa}
 \lhead{}
 
-\usepackage{lineno}
-\linenumbers
+%\usepackage{lineno}
+%\linenumbers
 %\linespread{1.6}
 
 \renewcommand{\thesection}{Appendix \Alph{section}}
@@ -82,19 +86,31 @@
 \author[4]{Koustubh Sharma}
 \author[3]{Ben C. Stevenson}
 
-\affil[1]{\footnotesize center for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
-\affil[2]{\footnotesize center for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
+\affil[1]{\footnotesize Center for Research into Ecological and Environmental Modelling, School of Mathematics and Statistics, Univeristy of St Andrews, The Observatory, St Andrews, Fife, KY16 9LZ, Scotland}
+\affil[2]{\footnotesize Center for Statistics in Ecology, the Environment and Conservation, Department of Statistical Sciences, University of Cape Town, South Africa}
 \affil[3]{\footnotesize Department of Statistics, University of Auckland, Auckland 1010, New Zealand}
 \affil[4]{\footnotesize Snow Leopard Trust, Seattle, Washington, United States of America}
 \affil[*]{\footnotesize Corresponding author: indurbach@gmail.com}
 
 \date{}
 
-\title{Supporting Information for That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
+\title{Supplementary Materials for That's not the Mona Lisa! How to interpret spatial capture-recapture density surface estimates}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 \maketitle
+
+\section{Equivalent formulations of the predicted AC location surface}
+
+To show that the two formulations of the predicted AC location surface given in Section 2 of the main paper,
+\begin{equation} \label{eq:pls1}
+D_p(\bm{s}|\bm{\Omega}_n,\hat{\bm{\theta}},\hat{\bm{\beta}}) = \sum_{i=1}^n f(\bm{s}|\bm{\omega}_i, \hat{\bm{\theta}}, \hat{\bm{\beta}}) + \hat{N}_{\bm{0}} f(\bm{s}|\bm{\omega}=\bm{0}, \hat{\bm{\theta}},\hat{\bm{\beta}})
+\end{equation}
+where $\hat{N}_{\bm{0}}=\int_{\mathcal{S}} P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})D(\bm{s}|\hat{\bm{\beta}}) d\bm{s}$, and 
+\begin{equation} \label{eq:pls2}
+D_p(\bm{s}|\bm{\Omega}_n,\hat{\bm{\theta}},\hat{\bm{\beta}}) = \sum_{i=1}^n f(\bm{s}|\bm{\omega}_i, \hat{\bm{\theta}}, \hat{\bm{\beta}}) + D(\bm{s}|\hat{\bm{\beta}})P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})
+\end{equation}
+are equivalent, note that by Bayes rule $$f(\bm{s}|\bm{\omega}=\bm{0},\hat{\bm{\theta}},\hat{\bm{\beta}})=\displaystyle\frac{P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})f(\bm{s}|\hat{\bm{\beta}})}{\int_{\mathcal{S}} P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}})f(\bm{s}|\hat{\bm{\beta}})d\bm{s}}.$$ Rearranging terms gives $$P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}}) = \displaystyle\frac{f(\bm{s}|\bm{\omega},\hat{\bm{\theta}},\hat{\bm{\beta}})\int_{\mathcal{S}} P(\bm{\omega}|\bm{s},\hat{\bm{\theta}})f(\bm{s}|\hat{\bm{\beta}}) d\bm{s}}{f(\bm{s}|\hat{\bm{\beta}})}.$$ Replacing $f(\bm{s}|\hat{\bm{\beta}})$ with $D(\bm{s}|\hat{\bm{\beta}})/\int_{\mathcal{S}} D(\bm{s}|\hat{\bm{\beta}}) d\bm{s}$, $$P(\bm{\omega}=\bm{0}|\bm{s},\hat{\bm{\theta}}) = \displaystyle\frac{f(\bm{s}|\bm{\omega},\hat{\bm{\theta}},\hat{\bm{\beta}})\int_{\mathcal{S}} P(\bm{\omega}|\bm{s},\hat{\bm{\theta}})D(\bm{s}|\hat{\bm{\beta}}) d\bm{s}}{D(\bm{s}|\hat{\bm{\beta}})} $$ Substituting this into \eqref{eq:pls2} gives \eqref{eq:pls1}.  
 
 \section{Bayesian models}
 
